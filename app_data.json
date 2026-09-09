@@ -1,0 +1,278 @@
+{
+  "archive": [
+    {
+      "id": "whs_60_drone",
+      "title": "The Iconic 'WHS 60' Drone Formation",
+      "category": "jubilee",
+      "src": "frame_whs_60_drone.jpg",
+      "videoTime": 282,
+      "badge": "60th Jubilee Landmark",
+      "desc": "The defining visual spectacle of the Batch of 2026: the entire student body gathered on the emerald sports turf in a synchronized aerial formation spelling out 'WHS 60' to commemorate six decades of excellence (1966-2026)."
+    },
+    {
+      "id": "60_years_crest",
+      "title": "Diamond Jubilee Wreath of Excellence",
+      "category": "jubilee",
+      "src": "frame_60_years_crest.jpg",
+      "videoTime": 288,
+      "badge": "1966 - 2026",
+      "desc": "The official commemorative 60th Anniversary golden crest, bearing the legendary WHS motto 'Work is Devotion' with the iconic book and flame insignia."
+    },
+    {
+      "id": "campus_aerial",
+      "title": "Gupkar Campus Panoramas & Mountain Foothills",
+      "category": "heritage",
+      "src": "frame_campus_aerial.jpg",
+      "videoTime": 7.5,
+      "badge": "Campus Vista",
+      "desc": "Sweeping aerial vista capturing the heritage red-gabled campus on Gupkar Road, nestled at the lush foothills of Takht-e-Sulaiman (Shankaracharya Hill)."
+    },
+    {
+      "id": "neon_crest",
+      "title": "Illuminated WHS Heritage Emblem",
+      "category": "heritage",
+      "src": "frame_neon_crest.jpg",
+      "videoTime": 14.5,
+      "badge": "Campus Facade",
+      "desc": "The illuminated neon shield crest shining on the campus wall with the timeless institutional philosophy: 'Work is Devotion'."
+    },
+    {
+      "id": "pickleball",
+      "title": "Franklin Pickleball Arena Championship",
+      "category": "sports",
+      "src": "frame_pickleball.jpg",
+      "videoTime": 42.5,
+      "badge": "Modern Athletics",
+      "desc": "Senior students competing on the newly inaugurated Franklin Pickleball court, demonstrating speed, precision, and lightning paddle reflexes."
+    },
+    {
+      "id": "cricket_nets",
+      "title": "Turf Cricket Practice Nets",
+      "category": "sports",
+      "src": "frame_cricket_nets.jpg",
+      "videoTime": 62.0,
+      "badge": "Cricket Squad",
+      "desc": "Pace bowlers and batsmen honing their technique in the enclosed green turf cricket nets beneath the campus chinar trees."
+    },
+    {
+      "id": "football_turf",
+      "title": "Inter-House Futsal & Football Clash",
+      "category": "sports",
+      "src": "frame_football_turf.jpg",
+      "videoTime": 84.0,
+      "badge": "Inter-House Arena",
+      "desc": "High-intensity football action on the all-weather green turf. Fast passes, strategic positioning, and unwavering team camaraderie."
+    },
+    {
+      "id": "boy_jersey",
+      "title": "Senior Player with WHS Insignia",
+      "category": "sports",
+      "src": "frame_boy_jersey.jpg",
+      "videoTime": 105.0,
+      "badge": "Batch of 2026",
+      "desc": "Class 10th senior athlete resting on the field with the football, donning the custom blue and white sports jersey featuring the embroidered WHS crest."
+    },
+    {
+      "id": "chess_focus",
+      "title": "Outdoor Garden Chess Strategy",
+      "category": "academics",
+      "src": "frame_chess_focus.jpg",
+      "videoTime": 116.0,
+      "badge": "Battle of Minds",
+      "desc": "A tense, thoughtful chess match under the garden canopy. Every pawn move and knight fork calculated in the serene Gupkar courtyard."
+    },
+    {
+      "id": "carrom_circle",
+      "title": "Courtyard Carrom Masters Circle",
+      "category": "sports",
+      "src": "frame_carrom_circle.jpg",
+      "videoTime": 142.0,
+      "badge": "6 Decades of Carrom",
+      "desc": "Senior players gathered around the classic tournament carrom board in the outdoor garden, demonstrating precision pocket strikes."
+    },
+    {
+      "id": "science_lab_modern",
+      "title": "Class 10 Science Innovation Laboratory",
+      "category": "academics",
+      "src": "frame_science_lab.jpg",
+      "videoTime": 176.0,
+      "badge": "Hands-on Research",
+      "desc": "Class 10 students in white laboratory aprons conducting scientific demonstrations, testing hypotheses with chemical apparatus and biological models."
+    },
+    {
+      "id": "slider_11",
+      "title": "Class 10 Chemistry Experiment in Winter Uniform",
+      "category": "academics",
+      "src": "slider_11.jpg",
+      "badge": "Senior Lab Archive",
+      "desc": "Class 10th boys in formal navy blazers, red sweaters, and ties observing a chemical reaction and burner apparatus demonstration in the heritage science wing."
+    },
+    {
+      "id": "smart_class",
+      "title": "Smart Digital Learning & Lenovo Labs",
+      "category": "tech",
+      "src": "frame_smart_class.jpg",
+      "videoTime": 193.0,
+      "badge": "Next-Gen Classroom",
+      "desc": "Students utilizing individual digital tablets and laptops in the multimedia lab, exploring curriculum concepts with interactive software."
+    },
+    {
+      "id": "smartboard_lesson",
+      "title": "Interactive 3D Geometry Smartboard",
+      "category": "tech",
+      "src": "frame_smartboard_lesson.jpg",
+      "videoTime": 247.0,
+      "badge": "Smart Class",
+      "desc": "Mathematics faculty demonstrating 3D conic projections on the wall-mounted interactive smart screen before the senior class."
+    },
+    {
+      "id": "library_study",
+      "title": "Heritage Library & Literary Sanctuary",
+      "category": "academics",
+      "src": "frame_library_study.jpg",
+      "videoTime": 208.0,
+      "badge": "Reading Hall",
+      "desc": "Quiet reading hours among floor-to-ceiling white bookshelves stocked with world literature, science treatises, and classic philosophy."
+    },
+    {
+      "id": "corridor_walk",
+      "title": "Discipline in the Heritage Verandas",
+      "category": "heritage",
+      "src": "frame_corridor_walk.jpg",
+      "videoTime": 228.0,
+      "badge": "Tradition & Order",
+      "desc": "Senior boys marching with poise and discipline through the veranda corridors adjacent to the historic assembly hall."
+    },
+    {
+      "id": "assembly_drone",
+      "title": "Grand Morning Assembly from the Skies",
+      "category": "heritage",
+      "src": "frame_assembly_drone.jpg",
+      "videoTime": 240.5,
+      "badge": "Morning Assembly",
+      "desc": "Overhead drone perspective of the school assembly: neat color-coded house rows standing united in morning prayer and national anthem."
+    },
+    {
+      "id": "slider_14",
+      "title": "Kho-Kho Match on Gupkar Court",
+      "category": "sports",
+      "src": "slider_14.jpg",
+      "badge": "Sports Ground",
+      "desc": "Thrilling Kho-Kho match on the outdoor tarmac grounds with the iconic red-brick building and Shankaracharya hill towering in the backdrop."
+    },
+    {
+      "id": "slider_15",
+      "title": "Senior Boys Sports Felicitation",
+      "category": "sports",
+      "src": "slider_15.jpg",
+      "badge": "Athletic Honors",
+      "desc": "Senior boys receiving congratulations from leadership and physical education instructors following an inter-house tournament."
+    },
+    {
+      "id": "slider_17",
+      "title": "Class Captain & Science Project Exhibition",
+      "category": "academics",
+      "src": "slider_17.jpg",
+      "badge": "Student Council",
+      "desc": "Senior boy proudly wearing the golden 'CLASS CAPTAIN' badge while presenting hand-crafted architectural and scientific models."
+    },
+    {
+      "id": "slider_18",
+      "title": "Classic Classroom & Wooden Double-Benches",
+      "category": "heritage",
+      "src": "slider_18.jpg",
+      "badge": "Daily School Life",
+      "desc": "Senior students seated at the traditional polished wooden benches in the Gupkar classroom, surrounded by project charts."
+    },
+    {
+      "id": "slider_16",
+      "title": "Founder's Day Stage Celebration",
+      "category": "jubilee",
+      "src": "slider_16.jpg",
+      "badge": "Annual Celebration",
+      "desc": "The grand outdoor stage erected in the main courtyard for annual theatrical presentations, debate triumphs, and academic honors."
+    },
+    {
+      "id": "chairmans_desk",
+      "title": "Principal's Office & Leadership",
+      "category": "heritage",
+      "src": "chairmans_desk.jpg",
+      "badge": "Administration",
+      "desc": "Chairman & Principal Mr. Riki Singh at the office desk, overseeing the six-decade growth and academic standards of the institution."
+    },
+    {
+      "id": "school_logo_crest",
+      "title": "Official Golden Shield Crest",
+      "category": "heritage",
+      "src": "school_logo.png",
+      "badge": "Emblem of Honor",
+      "desc": "The high-resolution heraldic crest of WHS: incorporating the torch of knowledge, open book of wisdom, and the motto 'Work is Devotion'."
+    }
+  ],
+  "chapters": [
+    {
+      "time": 0,
+      "title": "Heritage Legacy Intro"
+    },
+    {
+      "time": 8,
+      "title": "Campus Aerials"
+    },
+    {
+      "time": 14,
+      "title": "Illuminated WHS Shield"
+    },
+    {
+      "time": 24,
+      "title": "Franklin Pickleball"
+    },
+    {
+      "time": 62,
+      "title": "Cricket Nets"
+    },
+    {
+      "time": 84,
+      "title": "Turf Football Arena"
+    },
+    {
+      "time": 105,
+      "title": "Senior Player & Crest"
+    },
+    {
+      "time": 116,
+      "title": "Garden Chess Strategy"
+    },
+    {
+      "time": 142,
+      "title": "Carrom Championship"
+    },
+    {
+      "time": 176,
+      "title": "Class 10 Science Lab"
+    },
+    {
+      "time": 193,
+      "title": "Smart Class & Tablets"
+    },
+    {
+      "time": 208,
+      "title": "Heritage Library"
+    },
+    {
+      "time": 228,
+      "title": "Veranda Discipline"
+    },
+    {
+      "time": 240,
+      "title": "Morning Assembly Drone"
+    },
+    {
+      "time": 247,
+      "title": "Interactive Smartboard"
+    },
+    {
+      "time": 282,
+      "title": "'WHS 60' Drone Formation"
+    }
+  ]
+}

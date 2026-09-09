@@ -1,0 +1,263 @@
+[
+  {
+    "id": "story_1966",
+    "title": "1966 Foundation",
+    "category": "Origins & Founding",
+    "date": "May 1966",
+    "cover": "school_logo.png",
+    "badge": "Est. 1966",
+    "zoneId": "office",
+    "summary": "Founded in 1966 at the picturesque foothills of Shankaracharya, establishing a standard of academic excellence and holistic character formation with the motto 'Work is Devotion'.",
+    "media": [
+      {
+        "src": "school_logo.png",
+        "caption": "The heraldic crest bearing the founding year 1966 and institutional motto 'Work is Devotion'.",
+        "type": "image"
+      },
+      {
+        "src": "chairmans_desk.jpg",
+        "caption": "The historic administrative office of the Chairman and Principal on Gupkar Road.",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "story_60_jubilee",
+    "title": "60 Years Diamond Jubilee",
+    "category": "60th Anniversary",
+    "date": "2026 Milestone",
+    "cover": "frame_whs_60_drone.jpg",
+    "badge": "Diamond Jubilee",
+    "zoneId": "ground",
+    "summary": "Six decades of learning, values, and leadership. Commemorated by senior students forming the monumental 'WHS 60' turf aerial assembly on the main sports field.",
+    "media": [
+      {
+        "src": "frame_whs_60_drone.jpg",
+        "caption": "Monumental 'WHS 60' human formation assembled by senior students on the main sports turf.",
+        "type": "image"
+      },
+      {
+        "src": "frame_60_years_crest.jpg",
+        "caption": "The Diamond Jubilee official golden insignia commemorating 60 glorious years (1966-2026).",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "story_class_10_2026",
+    "title": "Class 10th Batch of 2026",
+    "category": "Senior Batch Archive",
+    "date": "Academic Year 2025-2026",
+    "cover": "slider_14.jpg",
+    "badge": "Boys Wing Batch",
+    "zoneId": "ground",
+    "summary": "The graduating Class 10th cohort of the Boys Wing: athletic champions on the turf, academic leaders in smart classrooms, and future torchbearers of the institution.",
+    "media": [
+      {
+        "src": "slider_14.jpg",
+        "caption": "Class 10 boys engaged in high-intensity inter-house Kho-Kho matches on the mountain tarmac.",
+        "type": "image"
+      },
+      {
+        "src": "frame_boy_jersey.jpg",
+        "caption": "Class 10 senior athlete representing the Boys Wing in the official blue and white athletic kit.",
+        "type": "image"
+      },
+      {
+        "src": "slider_15.jpg",
+        "caption": "Senior cohort felicitation ceremony honoring excellence in character, teamwork, and leadership.",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "story_science_2026",
+    "title": "Science & Art Expo 2026",
+    "category": "Innovation & Discovery",
+    "date": "Recent Exhibition",
+    "cover": "frame_science_lab.jpg",
+    "badge": "Research & Creativity",
+    "zoneId": "science_lab",
+    "summary": "Where curiosity meets creativity! The annual exhibition uniting innovative working science prototypes, robotics, and creative artistic expressions from senior students.",
+    "media": [
+      {
+        "src": "frame_science_lab.jpg",
+        "caption": "Students demonstrating chemical reactions and physical laws inside the research laboratory wing.",
+        "type": "image"
+      },
+      {
+        "src": "frame_smart_class.jpg",
+        "caption": "Interactive smartboard multimedia learning sessions analyzing scientific principles.",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "story_athletics_pickleball",
+    "title": "Turf Sports & Pickleball Arena",
+    "category": "Athletic Excellence",
+    "date": "Championship Season",
+    "cover": "frame_pickleball.jpg",
+    "badge": "State of Art Sports",
+    "zoneId": "courts",
+    "summary": "Featuring Kashmir's premier tournament-grade Franklin Pickleball court, enclosed pace-bowling cricket nets, and synthetic all-weather football turf.",
+    "media": [
+      {
+        "src": "frame_pickleball.jpg",
+        "caption": "Fast-paced doubles pickleball championship rallies on the specialized court.",
+        "type": "image"
+      },
+      {
+        "src": "frame_cricket_nets.jpg",
+        "caption": "Batsmen and fast bowlers refining batting strokes and swing mechanics inside the cricket nets.",
+        "type": "image"
+      },
+      {
+        "src": "frame_football_turf.jpg",
+        "caption": "Inter-house football tournament matches held on the lush green synthetic turf.",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "story_alumni_voices",
+    "title": "Alumni Torchbearers",
+    "category": "Global Alumni Network",
+    "date": "Ongoing Legacy",
+    "cover": "chairmans_desk.jpg",
+    "badge": "Distinguished Alumni",
+    "zoneId": "office",
+    "summary": "Honoring illustrious alumni who carry the WHS spirit across the globe: from hospitality pioneer Mr. Rohit Khattar (Founder, Indian Accent) to healthcare leader Dr. Raies Khan (Batch 1994) and entrepreneur Adnan Shah (Batch 2005).",
+    "media": [
+      {
+        "src": "chairmans_desk.jpg",
+        "caption": "Generations of students inspired by the values inculcated at the Gupkar Road campus.",
+        "type": "image"
+      },
+      {
+        "src": "gallery_1.jpg",
+        "caption": "School leadership and alumni gathered before the heritage colonial facade.",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "story_future_2026_2027",
+    "title": "Future Horizons (2026-27)",
+    "category": "Academic Calendar & Future",
+    "date": "Upcoming Announcements",
+    "cover": "frame_smartboard_lesson.jpg",
+    "badge": "Future Roadmap",
+    "zoneId": "classrooms",
+    "summary": "Looking forward into 2026 and 2027: introduction of advanced computer science labs, high-altitude botanical ecology projects, and regional robotics Olympiads.",
+    "media": [
+      {
+        "src": "frame_smartboard_lesson.jpg",
+        "caption": "Next-generation digital curriculum and experiential laboratory expansion.",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "story_ig_post_1",
+    "title": "WHS Gupkar Road sonwar srinagar celebrates  it's 60t...",
+    "category": "60 Years Diamond Jubilee",
+    "date": "Official Instagram (@whssgr)",
+    "cover": "ig_post_1.jpg",
+    "badge": "Instagram Update",
+    "zoneId": "ground",
+    "summary": "WHS Gupkar Road sonwar srinagar celebrates  it's 60th foundation day",
+    "media": [
+      {
+        "src": "ig_post_1.jpg",
+        "caption": "WHS Gupkar Road sonwar srinagar celebrates  it's 60th foundation day",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "story_ig_post_2",
+    "title": "60 Years. One Legacy. A Thousand Journeys. \u2764\ufe0f",
+    "category": "60 Years Diamond Jubilee",
+    "date": "Official Instagram (@whssgr)",
+    "cover": "ig_post_2.jpg",
+    "badge": "Instagram Update",
+    "zoneId": "ground",
+    "summary": "60 Years. One Legacy. A Thousand Journeys. \u2764\ufe0f\n\nFor six decades, WHS Gupkar Road, Srinagar has been more than a place of learning. It has been a place where curiosity is encouraged, character is shaped, talent is nurtured, and dreams take fl...",
+    "media": [
+      {
+        "src": "ig_post_2.jpg",
+        "caption": "60 Years. One Legacy. A Thousand Journeys. \u2764\ufe0f\n\nFor six decades, WHS Gupkar Road, Srinagar has been more than a place of learning. It has been a place where curiosity is encouraged, character is shaped, talent is nurtured, and dreams take flight.\n\nFrom the classroom to the playing field, from the laboratory to the chessboard, WHS has always believed that true education is about developing minds that think, hearts that care, and individuals who lead.\n\nToday, we celebrate six decades of learning, values, friendships, achievements and memories \u2014 carried forward by generations of WHS Students & Alumni across the world.\n\n60 years of shaping minds.\n60 years of building character.\n60 years of inspiring futures.\n\nThe legacy continues.\n\nThis is WHS. \u2764\ufe0f\n\nHappy 60th Anniversary, WHS Gupkar Road! \ud83c\udf89\n\n#60Years #WHSHouseSchool #WHS #Srinagar #60yearsofexcellence",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "story_ig_post_3",
+    "title": "60 Years of Memories. 60 Years of Inspiration. \ud83d\udc99\ud83d\udc9b",
+    "category": "Alumni Voices - Healthcare",
+    "date": "Official Instagram (@whssgr)",
+    "cover": "ig_post_3.jpg",
+    "badge": "Instagram Update",
+    "zoneId": "office",
+    "summary": "60 Years of Memories. 60 Years of Inspiration. \ud83d\udc99\ud83d\udc9b\n\nAs we celebrate 60 glorious years of WHS Gupkar Road, Srinagar, we are delighted to share the journey of one of our proud alumni, Dr. Raies Khan, Batch of 1994.\n\nFrom the classrooms of WHS ...",
+    "media": [
+      {
+        "src": "ig_post_3.jpg",
+        "caption": "60 Years of Memories. 60 Years of Inspiration. \ud83d\udc99\ud83d\udc9b\n\nAs we celebrate 60 glorious years of WHS Gupkar Road, Srinagar, we are delighted to share the journey of one of our proud alumni, Dr. Raies Khan, Batch of 1994.\n\nFrom the classrooms of WHS to a career spanning over two decades in healthcare, Dr. Raies Khan\u2019s journey has taken him across India and into international and overseas healthcare initiatives, with organisations including GVK EMRI, Shalby Hospitals, ASG Hospitals, and Paras Health, among others.\n\nReflecting on his journey, Dr. Raies shares how WHS gave him more than an education\u2014it gave him a strong foundation of values, friendships, confidence, and memories that have remained with him throughout the years.\n\nFrom Kashmir to different parts of India and beyond, every chapter of his professional journey has been shaped by the experiences and values he carries with him from his school years.\n\nProud to be a WHS Students & Alumni, Dr. Raies remains grateful to the school that helped shape the person and professional he is today.\n\nAs we celebrate six remarkable decades of learning, friendships, growth, and cherished memories, stories like his remind us of the lasting impact of WHS Gupkar Road and the remarkable journeys of its alumni.\n\nHere\u2019s to 60 years of WHS, 60 years of memories, and 60 years of inspiring generations.\n\nHappy 60th Anniversary, WHS Gupkar Road, Srinagar! \ud83d\udc99\ud83d\udc9b\n\n#60YearsOfWHS #WHSHouseSchool #WHSSrinagar #WHS60 #60YearsOfInspiringMinds \n\n(AlumniVoices, WHSFamily, LegacyOfLearning, 60YearsOfMemories, Srinagar)",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "story_ig_post_4",
+    "title": "\ud83c\udf1f Celebrating Our Distinguished Alumni \u2013 Mr. Rohit K...",
+    "category": "Distinguished Alumni Spotlight",
+    "date": "Official Instagram (@whssgr)",
+    "cover": "ig_post_4.jpg",
+    "badge": "Instagram Update",
+    "zoneId": "office",
+    "summary": "\ud83c\udf1f Celebrating Our Distinguished Alumni \u2013 Mr. Rohit Khattar\n\nOne of the earliest students of WHS Gupkar Road, Mr. Rohit Khattar has gone on to become a pioneering entrepreneur and a leading name in Indian hospitality.\n\nAs the Founder-Chairma...",
+    "media": [
+      {
+        "src": "ig_post_4.jpg",
+        "caption": "\ud83c\udf1f Celebrating Our Distinguished Alumni \u2013 Mr. Rohit Khattar\n\nOne of the earliest students of WHS Gupkar Road, Mr. Rohit Khattar has gone on to become a pioneering entrepreneur and a leading name in Indian hospitality.\n\nAs the Founder-Chairman of Old World Hospitality and the visionary behind acclaimed brands including Indian Accent and Chor Bizarre, his journey from the early days of WHS House to the heights of the hospitality industry is truly remarkable.\n\nHis achievements continue to be a source of immense pride for the entire WHS House community.\n\nAs we celebrate 60 years of WHS Gupkar Road, we honour the alumni who have carried the spirit of our school into the world. \ud83d\udc99\n\n#WHSHouseSchool #60YearsOfWHSHouse #DistinguishedAlumni #RohitKhattar #indianaccent",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "story_ig_post_5",
+    "title": "\ud83d\udd2c\ud83c\udfa8 SCIENCE & ART EXHIBITION 2026",
+    "category": "Science & Art Exhibition 2026",
+    "date": "Official Instagram (@whssgr)",
+    "cover": "ig_post_5.jpg",
+    "badge": "Instagram Update",
+    "zoneId": "science_lab",
+    "summary": "\ud83d\udd2c\ud83c\udfa8 SCIENCE & ART EXHIBITION 2026\n\nWhere curiosity meets creativity! \u2728\n\nWHS Gupkar Road proudly hosted the Science & Art Exhibition 2026, bringing together the imagination, creativity and scientific curiosity of our students.\n\nFrom innovativ...",
+    "media": [
+      {
+        "src": "ig_post_5.jpg",
+        "caption": "\ud83d\udd2c\ud83c\udfa8 SCIENCE & ART EXHIBITION 2026\n\nWhere curiosity meets creativity! \u2728\n\nWHS Gupkar Road proudly hosted the Science & Art Exhibition 2026, bringing together the imagination, creativity and scientific curiosity of our students.\n\nFrom innovative science models and engaging experiments to thoughtful artwork and creative expressions, our students turned their ideas into something truly inspiring. \ud83c\udf31\ud83d\udd2c\ud83c\udfa8\n\nThe exhibition was a wonderful reflection of learning beyond the classroom, encouraging our students to explore, experiment, create and confidently present their ideas.\n\nA celebration of young minds, big ideas and endless possibilities! \ud83d\udc99\n\n60 Years of Excellence. A legacy of learning, creativity and discovery.\n\n#Srinagar #Kashmir #JammuAndKashmir #Students #School \n\n(Education, SchoolLife, StudentLife, Science Art, ScienceExhibition, ArtExhibition, Learning, Creativity, Innovation, YoungMinds, KashmirSchools, SrinagarSchools,  WHSHouseSchool)",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "story_ig_post_6",
+    "title": "60 Years of Memories. 60 Years of Inspiring Generati...",
+    "category": "Alumni Voices - Entrepreneurship",
+    "date": "Official Instagram (@whssgr)",
+    "cover": "ig_post_6.jpg",
+    "badge": "Instagram Update",
+    "zoneId": "office",
+    "summary": "60 Years of Memories. 60 Years of Inspiring Generations. \ud83d\udc99\n\nAs we celebrate 60 remarkable years of WHS Gupkar Road, Srinagar, we are reminded that a school\u2019s true legacy lives on through the generations it shapes, the dreams it nurtures, th...",
+    "media": [
+      {
+        "src": "ig_post_6.jpg",
+        "caption": "60 Years of Memories. 60 Years of Inspiring Generations. \ud83d\udc99\n\nAs we celebrate 60 remarkable years of WHS Gupkar Road, Srinagar, we are reminded that a school\u2019s true legacy lives on through the generations it shapes, the dreams it nurtures, the friendships it creates, and the memories that stay with us forever.\n\nIn this special anniversary message, alumnus Adnan Shah, Batch of 2005, looks back with pride and gratitude at his journey as a part of the WHS family.\n\nFrom classrooms to lifelong connections, WHS has continued to inspire young minds and create a legacy that extends far beyond school years.\n\nHere\u2019s to 60 glorious years of learning, growth, friendship, and memories, and to many more years of inspiring generations to come.\n\n#60YearsOfWHS #WHSHouseSchool #WHSSrinagar #WHAS60 #60YearsOfInspiringMinds\n\n(AlumniVoices, WHSFamily, LegacyOfLearning, Srinagar)",
+        "type": "image"
+      }
+    ]
+  }
+]

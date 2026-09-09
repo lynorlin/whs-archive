@@ -1,0 +1,274 @@
+[
+  {
+    "id": "ground",
+    "name": "Main Sports Ground & Turf",
+    "subtitle": "All-Weather Synthetic Turf & Football Field",
+    "pin": {
+      "x": 52,
+      "y": 74
+    },
+    "video": "campus_scenic_tour.mp4",
+    "videoTitle": "Main Sports Grounds & Estate Flyover (Scenic - No Humans)",
+    "desc": "Situated in the foreground of the campus, the expansive green sports turf hosts inter-house football, Kho-Kho tournaments, and school drills set against the mountain slopes.",
+    "photos": [
+      {
+        "src": "ig_post_1.jpg",
+        "title": "60th Foundation Day Turf Gathering",
+        "badge": "Live Instagram",
+        "desc": "Celebrating 60 glorious years of character and learning with student assemblies and sports displays on the synthetic turf."
+      },
+      {
+        "src": "slider_14.jpg",
+        "title": "Kho-Kho Match on Ground",
+        "badge": "Tarmac Match",
+        "desc": "Class 10 students competing in the inter-house Kho-Kho tournament with Shankaracharya hill in the background."
+      },
+      {
+        "src": "frame_football_turf.jpg",
+        "title": "Inter-House Football Action",
+        "badge": "Senior Match",
+        "desc": "Fast-paced futsal and football match between senior house squads on the green turf."
+      },
+      {
+        "src": "frame_boy_jersey.jpg",
+        "title": "Class 10 Player in WHS Kit",
+        "badge": "Batch Athlete",
+        "desc": "Senior student athlete on the turf in the official blue and white WHS sports jersey."
+      },
+      {
+        "src": "slider_15.jpg",
+        "title": "Sports Felicitation & Honors",
+        "badge": "Accolades",
+        "desc": "Senior boys receiving congratulations from leadership and physical education staff."
+      },
+      {
+        "src": "frame_whs_60_drone.jpg",
+        "title": "The 'WHS 60' Turf Formation",
+        "badge": "Milestone",
+        "desc": "The graduating cohort and student body assembled on the turf in the landmark human formation."
+      }
+    ]
+  },
+  {
+    "id": "courts",
+    "name": "Pickleball Arena & Cricket Nets",
+    "subtitle": "Franklin Pickleball Court & Enclosed Practice Nets",
+    "pin": {
+      "x": 60,
+      "y": 60
+    },
+    "video": "clip_mountain_aerial.mp4",
+    "videoTitle": "Athletic Grounds & Foothills Sweep (Scenic - No Humans)",
+    "desc": "Adjoining the main turf, this specialized athletic zone features the tournament-grade Franklin Pickleball court and enclosed cricket practice nets beneath the trees.",
+    "photos": [
+      {
+        "src": "frame_pickleball.jpg",
+        "title": "Franklin Pickleball Championship",
+        "badge": "Doubles Rally",
+        "desc": "Senior students playing fast doubles pickleball with paddles and wiffle balls."
+      },
+      {
+        "src": "frame_cricket_nets.jpg",
+        "title": "Turf Cricket Training Nets",
+        "badge": "Bowling & Batting",
+        "desc": "Pace bowlers and batsmen honing their technique in the enclosed practice nets."
+      }
+    ]
+  },
+  {
+    "id": "office",
+    "name": "Heritage House & Administration",
+    "subtitle": "Principal's Office, Administration & Central Facade",
+    "pin": {
+      "x": 52,
+      "y": 49
+    },
+    "video": "clip_heritage_house.mp4",
+    "videoTitle": "Heritage House Colonial Architecture (Scenic - No Humans)",
+    "desc": "The colonial centerpiece of the campus, featuring multi-gabled red tin roofs, bay windows, and white brickwork housing the Chairman and Principal's office and administrative chambers.",
+    "photos": [
+      {
+        "src": "ig_post_4.jpg",
+        "title": "Distinguished Alumni: Mr. Rohit Khattar",
+        "badge": "Old World Hospitality",
+        "desc": "Pioneering entrepreneur and founder of Indian Accent & Chor Bizarre, celebrating six decades of institutional inspiration."
+      },
+      {
+        "src": "ig_post_3.jpg",
+        "title": "Alumni Voices: Dr. Raies Khan (Batch 1994)",
+        "badge": "Healthcare Leader",
+        "desc": "Senior healthcare executive (Paras Health, Shalby Hospitals) reflecting on values and character built on Gupkar Road."
+      },
+      {
+        "src": "chairmans_desk.jpg",
+        "title": "Principal & Chairman's Office",
+        "badge": "Administration",
+        "desc": "Principal Mr. Riki Singh at the administrative desk overseeing institutional operations."
+      },
+      {
+        "src": "gallery_1.jpg",
+        "title": "Leadership at Heritage Facade",
+        "badge": "Heritage Block",
+        "desc": "School leadership assembled before the historic brick building on Gupkar Road."
+      },
+      {
+        "src": "campus_whs.jpg",
+        "title": "Official 1966 School Crest",
+        "badge": "Insignia",
+        "desc": "The heraldic seal bearing the founding year 1966 and the motto 'Work is Devotion'."
+      },
+      {
+        "src": "frame_neon_crest.jpg",
+        "title": "Illuminated Wall Crest",
+        "badge": "Facade Emblem",
+        "desc": "The glowing neon shield crest mounted on the exterior campus facade."
+      }
+    ]
+  },
+  {
+    "id": "classrooms",
+    "name": "Academic Wing & Classrooms",
+    "subtitle": "Verandas, Wooden Benches & Smart Teaching Labs",
+    "pin": {
+      "x": 35,
+      "y": 65
+    },
+    "video": "clip_academic_block.mp4",
+    "videoTitle": "Academic Wing & Verandas Flyover (Scenic - No Humans)",
+    "desc": "The multi-story western wing containing senior lecture halls, traditional dual-seater wooden benches, multimedia Lenovo labs, and wide verandas looking out onto the grounds.",
+    "photos": [
+      {
+        "src": "slider_18.jpg",
+        "title": "Traditional Senior Classroom",
+        "badge": "Classroom Life",
+        "desc": "Class 10 students seated at polished wooden desks during classroom instruction."
+      },
+      {
+        "src": "frame_smartboard_lesson.jpg",
+        "title": "Smartboard 3D Mathematics",
+        "badge": "Interactive Board",
+        "desc": "Faculty demonstrating conic sections on the interactive smart display screen."
+      },
+      {
+        "src": "frame_smart_class.jpg",
+        "title": "Digital Learning & Tablet Lab",
+        "badge": "Digital Lab",
+        "desc": "Students working with digital tablets and laptops in the IT classroom."
+      },
+      {
+        "src": "frame_corridor_walk.jpg",
+        "title": "Veranda Hallway Discipline",
+        "badge": "Campus Order",
+        "desc": "Senior boys marching in uniform along the white colonnaded veranda."
+      }
+    ]
+  },
+  {
+    "id": "science_lab",
+    "name": "Science Laboratory Wing",
+    "subtitle": "Physics, Chemistry & Biology Practical Wing",
+    "pin": {
+      "x": 39,
+      "y": 58
+    },
+    "video": "clip_academic_block.mp4",
+    "videoTitle": "Laboratory Wing & Campus Architecture (Scenic - No Humans)",
+    "desc": "Dedicated science research rooms equipped with glassware, Bunsen burners, optical microscopes, and working models where Class 10 conducts board practicals.",
+    "photos": [
+      {
+        "src": "ig_post_5.jpg",
+        "title": "Science & Art Exhibition 2026",
+        "badge": "Live Instagram",
+        "desc": "Senior students presenting working science prototypes, biochemical models, and creative arts in the annual exhibition."
+      },
+      {
+        "src": "slider_11.jpg",
+        "title": "Chemistry Burner Demonstration",
+        "badge": "Winter Uniform",
+        "desc": "Class 10 boys in navy blazers and red pullovers conducting chemical reactions."
+      },
+      {
+        "src": "frame_science_lab.jpg",
+        "title": "Biology & Anatomy Research",
+        "badge": "Lab Aprons",
+        "desc": "Senior students in white lab coats examining anatomical wall charts and apparatus."
+      },
+      {
+        "src": "slider_17.jpg",
+        "title": "Class Captain & Science Models",
+        "badge": "Captain Badge",
+        "desc": "Senior boy wearing 'CLASS CAPTAIN' badge presenting handmade architectural projects."
+      },
+      {
+        "src": "shot_187.0s.jpg",
+        "title": "Student Exhibition Bench",
+        "badge": "Model Projects",
+        "desc": "Working models of day/night, water condensation, and planetary systems."
+      }
+    ]
+  },
+  {
+    "id": "library",
+    "name": "Heritage Library & Reading Hall",
+    "subtitle": "Literary Archives & World Classics Collection",
+    "pin": {
+      "x": 52,
+      "y": 43
+    },
+    "video": "clip_heritage_house.mp4",
+    "videoTitle": "Heritage Reading Sanctuary & Estate (Scenic - No Humans)",
+    "desc": "Quiet reading sanctuary lined with floor-to-ceiling white bookcases holding encyclopedias, international literature, and curriculum reference books.",
+    "photos": [
+      {
+        "src": "frame_library_study.jpg",
+        "title": "Library Reading Session",
+        "badge": "Study Hall",
+        "desc": "Students quietly reading literature at the solid wood study tables."
+      },
+      {
+        "src": "shot_199.0s.jpg",
+        "title": "Classical Literature Study",
+        "badge": "Reading Focus",
+        "desc": "Senior student exploring classic philosophy and literature."
+      }
+    ]
+  },
+  {
+    "id": "courtyard",
+    "name": "Courtyard Gardens & Main Gate",
+    "subtitle": "Entrance on Gupkar Road, Chinar Gardens & Outdoor Games",
+    "pin": {
+      "x": 62,
+      "y": 53
+    },
+    "video": "campus_scenic_tour.mp4",
+    "videoTitle": "Courtyard Gardens & Panoramic Grounds (Scenic - No Humans)",
+    "desc": "The leafy garden sector near Gupkar Road with aged chinar trees, hedge walkways, outdoor chess and carrom stations, and morning assembly court.",
+    "photos": [
+      {
+        "src": "frame_chess_focus.jpg",
+        "title": "Garden Chess Match",
+        "badge": "Mind Sports",
+        "desc": "Tense tactical chess battle on a circular bench under the tree canopy."
+      },
+      {
+        "src": "frame_carrom_circle.jpg",
+        "title": "Courtyard Carrom Tournaments",
+        "badge": "Carrom Board",
+        "desc": "Senior students gathered around the classic tournament carrom board in the garden."
+      },
+      {
+        "src": "frame_assembly_drone.jpg",
+        "title": "Morning Assembly Formation",
+        "badge": "Assembly",
+        "desc": "Aerial drone shot of the morning assembly in the garden courtyard."
+      },
+      {
+        "src": "slider_16.jpg",
+        "title": "Founder's Day Courtyard Stage",
+        "badge": "Annual Stage",
+        "desc": "Grand celebration stage erected in the courtyard for performances and awards."
+      }
+    ]
+  }
+]

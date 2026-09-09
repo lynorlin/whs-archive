@@ -1,0 +1,174 @@
+{
+  "last_updated": "2026-09-08T20:45:00Z",
+  "ai_engine": "OmniRoute AI Intelligence Processor",
+  "school_profile": {
+    "name": "WHS Gupkar Road (Boys Wing)",
+    "location": "Sonwar Bagh, Foot of Shankaracharya Hill, Srinagar, Jammu & Kashmir",
+    "elevation": "1,595 meters ASL",
+    "established": "May 1966",
+    "motto": "Work is Devotion",
+    "ranking": {
+      "valley_rank": "Rank #1 Heritage Institution in Srinagar",
+      "state_standing": "Top 3 Premier Day-Schools in Jammu & Kashmir",
+      "academic_board_pass": "100% Passing Record (Class 10th)",
+      "distinction_rate": "88.4% Distinction & First Division Rate",
+      "sports_infrastructure": "Grade-A+ Synthetic Turf & International Franklin Pickleball Arena",
+      "alumni_impact": "60 Years of Global Leaders in Medicine, Hospitality & Public Service"
+    }
+  },
+  "video_analyses": [
+    {
+      "id": "vid_analysis_1",
+      "title": "Diamond Jubilee (60 Years) & Campus Aerial Flyover",
+      "video_file": "campus_scenic_tour.mp4",
+      "duration": "04:54",
+      "analysis_badge": "AI Speech & Visual Breakdown",
+      "summary_of_speech": "The narration celebrates six decades of transformative learning (1966 to 2026). It highlights the core ethos that true education develops minds that think, hearts that care, and leaders of high moral character. It reflects on the thousands of student journeys that originated in these classrooms and athletic fields.",
+      "what_is_happening": "High-definition aerial drone flyover starting over the expansive green sports turf, gliding past the colonial multi-gabled Heritage Manor, sweeping across the academic classroom verandas, and panning toward the misty forested slopes of Shankaracharya Hill.",
+      "topics_discussed": [
+        "Founding milestone (May 1966) by visionary educationists",
+        "Evolution into Kashmir's leading academic institution",
+        "Senior cohort 'WHS 60' human turf formation",
+        "Holistic synthesis of scholastic rigor and sportsmanship"
+      ],
+      "upcoming_events_mentioned": "Diamond Jubilee Grand Alumni Conclave scheduled on campus grounds."
+    },
+    {
+      "id": "vid_analysis_2",
+      "title": "Science & Art Exhibition: Innovation Beyond Classroom",
+      "video_file": "clip_academic_block.mp4",
+      "duration": "03:12",
+      "analysis_badge": "AI Research & Lab Breakdown",
+      "summary_of_speech": "Student presenters and faculty supervisors elaborate on experiential learning where theory meets practice. Senior students discuss working prototypes covering clean energy, robotic automation, biochemical assays, and artistic interpretations of Kashmir's biodiversity.",
+      "what_is_happening": "Close-up inspections of chemistry titration burettes, physics circuitry, biological diagrams, and students confidently presenting empirical findings to academic supervisors and visiting scholars.",
+      "topics_discussed": [
+        "Modernized chemistry, physics, and biology research wing",
+        "Interactive smartboard pedagogical integration",
+        "Student-led environmental and climate models"
+      ],
+      "upcoming_events_mentioned": "Regional STEM & Robotics Olympiad participation."
+    },
+    {
+      "id": "vid_analysis_3",
+      "title": "Alumni Voices: Foundations of Character",
+      "video_file": "clip_heritage_house.mp4",
+      "duration": "03:45",
+      "analysis_badge": "AI Alumni Perspective",
+      "summary_of_speech": "Distinguished alumni, including hospitality pioneer Mr. Rohit Khattar (Founder, Indian Accent) and senior healthcare executive Dr. Raies Khan (Batch of 1994, Paras Health / Shalby Hospitals), recount how the school's culture of discipline, humility, and critical thinking laid the bedrock for their national and international careers.",
+      "what_is_happening": "Cinematic sweeps of the colonial administrative facade, the Chairman's historic study, and archival photographs spanning 60 years of student cohorts.",
+      "topics_discussed": [
+        "Dr. Raies Khan's 20-year healthcare leadership journey",
+        "Mr. Rohit Khattar's pioneering role in luxury hospitality",
+        "Adnan Shah's entrepreneurship journey from the Batch of 2005"
+      ],
+      "upcoming_events_mentioned": "Launch of the Global Alumni Mentorship Fellowship for Class 10 graduates."
+    }
+  ],
+  "faculty_and_teachers": [
+    {
+      "name": "Mr. Riki Singh",
+      "role": "Chairman & Executive Principal",
+      "department": "Institutional Leadership & Strategic Governance",
+      "tenure": "30+ Years",
+      "profile": "Stewarding the institution's 60-year pedagogical tradition while pioneering state-of-the-art synthetic sports infrastructure, modern research laboratories, and digital classrooms."
+    },
+    {
+      "name": "Mrs. Amteshwar Singh",
+      "role": "Principal",
+      "department": "Academic Affairs & School Administration",
+      "tenure": "25+ Years",
+      "profile": "Dedicated to nurturing individual student potential, fostering ethical leadership, and maintaining the school's top-tier ranking in Jammu & Kashmir."
+    },
+    {
+      "name": "Mrs. Farah Fatima",
+      "role": "Senior Academic Supervisor",
+      "department": "Physical & Biological Sciences Wing",
+      "tenure": "18+ Years",
+      "profile": "Oversees the senior science laboratory curriculum, board practicals, and student entries in national science symposia."
+    },
+    {
+      "name": "Mrs. Chesfida Fayaz",
+      "role": "Academic Supervisor",
+      "department": "Mathematics & Quantitative Analytics",
+      "tenure": "15+ Years",
+      "profile": "Spearheads mathematical reasoning programs, advanced calculus for senior boys, and academic scheduling."
+    },
+    {
+      "name": "Mrs. Sharifa Arshad Mir",
+      "role": "Academic Supervisor",
+      "department": "Humanities, Languages & Debating Society",
+      "tenure": "16+ Years",
+      "profile": "Mentors the parliamentary debate teams, elocution champions, and oversees literature curricula."
+    },
+    {
+      "name": "Mrs. Fozia Majeed",
+      "role": "Academic Supervisor",
+      "department": "Evaluations, Board Examination & Student Affairs",
+      "tenure": "14+ Years",
+      "profile": "Leads board assessment preparedness, student counseling, and co-curricular coordination."
+    },
+    {
+      "name": "Athletic & Physical Education Directorate",
+      "role": "Sports Directors & Head Coaches",
+      "department": "Football, Cricket, Kho-Kho & Pickleball",
+      "tenure": "Elite Coaching Staff",
+      "profile": "Training senior batch squads on the all-weather synthetic turf and tournament-grade Franklin pickleball courts."
+    }
+  ],
+  "upcoming_sports": [
+    {
+      "sport": "Inter-School Kho-Kho Championship",
+      "season": "Spring 2026",
+      "venue": "Main Campus Tarmac Grounds",
+      "details": "Class 10 senior house squads competing for the annual championship trophy beneath Shankaracharya Hill."
+    },
+    {
+      "sport": "WHS Senior Futsal & Football League",
+      "season": "Summer 2026",
+      "venue": "All-Weather Synthetic Turf",
+      "details": "Fast-paced 7-a-side and 11-a-side inter-house tournament under floodlights."
+    },
+    {
+      "sport": "Franklin Pickleball Doubles Tournament",
+      "season": "Ongoing 2026",
+      "venue": "Specialized Franklin Court",
+      "details": "Kashmir's first dedicated school pickleball championship featuring doubles and mixed doubles rallies."
+    },
+    {
+      "sport": "Pace-Bowling Cricket Training League",
+      "season": "Spring-Summer 2026",
+      "venue": "Enclosed Turf Practice Nets",
+      "details": "Specialized coaching in seam, swing, and spin bowling technique with automated bowling machines."
+    }
+  ],
+  "upcoming_events": [
+    {
+      "title": "Diamond Jubilee Grand Alumni Conclave",
+      "date": "Summer 2026",
+      "badge": "60-Year Milestone",
+      "location": "Central Heritage Lawn & Grounds",
+      "desc": "Gathering six decades of alumni from across India and abroad to celebrate the founding legacy (1966-2026)."
+    },
+    {
+      "title": "Annual Science, Robotics & Art Exposition",
+      "date": "Autumn 2026",
+      "badge": "STEM & Arts",
+      "location": "Science Wing & Multipurpose Hall",
+      "desc": "Public exhibition showcasing interactive working models, AI demonstrations, and creative fine arts."
+    },
+    {
+      "title": "Inter-House Parliamentary Debate Trophy",
+      "date": "May 2026",
+      "badge": "Literary & Oratory",
+      "location": "Heritage Library Hall",
+      "desc": "High-stakes debate on technology ethics, environmental conservation, and global affairs."
+    },
+    {
+      "title": "High-Altitude Botanical & Ecology Trek",
+      "date": "June 2026",
+      "badge": "Expedition",
+      "location": "Zabarwan Range & Shankaracharya Trails",
+      "desc": "Senior biology students documenting indigenous alpine flora and medicinal plant species."
+    }
+  ]
+}

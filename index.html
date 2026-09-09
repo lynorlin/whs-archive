@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Woodland House Archive</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;700&family=JetBrains+Mono:wght@100;400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+<style>
+/* EDITORIAL BRUTALISM AESTHETIC */
+:root {
+    --bg: #F4F4F0;
+    --text: #111111;
+    --accent: #D9381E; 
+    --border: #111111;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
+body {
+    font-family: 'JetBrains Mono', monospace;
+    background-color: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); border-left: 1px solid var(--border); }
+::-webkit-scrollbar-thumb { background: var(--text); }
+
+.cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 10000; pointer-events: none; }
+.cursor-dot { width: 8px; height: 8px; background: var(--accent); }
+.cursor-outline { width: 40px; height: 40px; border: 2px solid var(--text); transition: width 0.2s, height 0.2s, background 0.2s; }
+@media (max-width: 768px) { .cursor-dot, .cursor-outline { display: none; } * { cursor: auto !important; } }
+
+#preloader {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: var(--text); color: var(--bg); z-index: 9999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 20px; text-align: center;
+}
+#preloader h1 { font-size: clamp(2rem, 5vw, 4rem); letter-spacing: 5px; }
+.load-bar-container { width: 100%; max-width: 300px; height: 2px; background: rgba(255,255,255,0.2); margin-top: 20px; overflow: hidden; }
+.load-bar { width: 0%; height: 100%; background: var(--accent); }
+
+.grid-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-image: linear-gradient(rgba(17,17,17,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(17,17,17,0.05) 1px, transparent 1px);
+    background-size: 50px 50px; z-index: -1; pointer-events: none;
+}
+
+h1, h2, h3, .display-text { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+
+nav {
+    position: fixed; top: 0; left: 0; width: 100%; border-bottom: 2px solid var(--border);
+    display: flex; justify-content: space-between; padding: 20px 40px;
+    background: var(--bg); z-index: 100; text-transform: uppercase; font-weight: 700;
+}
+.nav-links a { text-decoration: none; color: var(--text); margin-left: 30px; position: relative; }
+@media (max-width: 768px) {
+    nav { padding: 15px 20px; flex-direction: column; gap: 10px; text-align: center; }
+    .nav-links a { margin: 0 10px; font-size: 0.8rem; }
+}
+
+.hero {
+    min-height: 100vh; padding: 140px 40px 40px 40px; display: flex; flex-direction: column; justify-content: space-between;
+    border-bottom: 2px solid var(--border);
+}
+.hero-line-container { font-family:'Oswald'; font-size: clamp(3rem, 10vw, 10rem); line-height: 1; margin-bottom: 40px; text-transform:uppercase; }
+.hero-marquee { overflow: hidden; white-space: nowrap; border-top: 2px solid var(--border); border-bottom: 2px solid var(--border); padding: 10px 0; margin-bottom: 40px; }
+.marquee-content { display: inline-block; font-size: 8vw; font-family: 'Oswald', sans-serif; font-weight: 700; letter-spacing: -2px; }
+@media (max-width: 768px) { .hero { padding: 120px 20px 20px 20px; } }
+
+section { border-bottom: 2px solid var(--border); }
+.section-header { padding: 40px; border-bottom: 2px solid var(--border); background: var(--text); color: var(--bg); }
+.section-title { font-size: clamp(2.5rem, 5vw, 4rem); letter-spacing: 2px; }
+@media (max-width: 768px) { .section-header { padding: 20px; } }
+
+/* Timeline */
+.events-wrapper { display: flex; flex-wrap: wrap; }
+.event-col { flex: 1; min-width: 100%; border-right: none; border-bottom: 2px solid var(--border); }
+@media (min-width: 768px) {
+    .event-col { min-width: 300px; border-right: 2px solid var(--border); border-bottom: none; }
+    .event-col:last-child { border-right: none; }
+}
+.event-col-title { padding: 20px 40px; border-bottom: 2px solid var(--border); font-size: 1.5rem; background: var(--bg); color: var(--text); font-weight:bold; }
+.event-item { padding: 30px 40px; border-bottom: 2px solid var(--border); transition: background 0.3s; position: relative; }
+.event-item:last-child { border-bottom: none; }
+.event-item:hover { background: #e5e5df; }
+.e-date { font-size: 0.8rem; color: var(--accent); margin-bottom: 10px; font-weight: 700; }
+.e-title { font-size: 2rem; font-family: 'Oswald'; margin-bottom: 10px; line-height: 1.2; }
+@media (max-width: 768px) { .event-col-title, .event-item { padding: 20px; } .e-title { font-size: 1.5rem; } }
+
+.notify-btn {
+    margin-top: 15px; padding: 10px 20px; border: 2px solid var(--text); background: transparent;
+    font-family: 'Oswald'; text-transform: uppercase; font-weight: 700; transition: all 0.3s;
+}
+.notify-btn:hover { background: var(--text); color: var(--bg); }
+
+/* Story Playlist UI */
+.story-playlist-container {
+    border-bottom: 2px solid var(--border); padding: 40px; background: var(--bg);
+}
+.story-playlist-title { font-size: 1.5rem; font-family: 'Oswald'; text-transform: uppercase; margin-bottom: 20px; }
+.story-scroll { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; }
+.story-scroll::-webkit-scrollbar { height: 6px; }
+.story-scroll::-webkit-scrollbar-track { background: transparent; }
+.story-scroll::-webkit-scrollbar-thumb { background: var(--text); }
+.story-item { min-width: 200px; width: 200px; border: 2px solid var(--border); background: #000; position: relative; cursor: pointer; aspect-ratio: 9/16; flex-shrink: 0; overflow: hidden; }
+.story-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 0.3s; filter: grayscale(100%); }
+.story-item:hover img { opacity: 1; filter: grayscale(0%); transform: scale(1.05); }
+.story-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 2px solid #fff; color: #fff; background: rgba(0,0,0,0.5); padding: 10px; font-family: 'Oswald'; text-transform: uppercase; font-size: 0.8rem; pointer-events: none; opacity: 0; transition: 0.3s; }
+.story-item:hover .story-play-btn { opacity: 1; }
+
+/* Filter Bar */
+.filter-bar { padding: 20px 40px; border-bottom: 2px solid var(--border); display: flex; gap: 15px; background: var(--bg); overflow-x: auto; }
+.filter-btn { padding: 8px 20px; border: 2px solid var(--text); background: transparent; font-family: 'Oswald'; font-weight: bold; text-transform: uppercase; transition: 0.3s; white-space: nowrap; }
+.filter-btn:hover, .filter-btn.active { background: var(--text); color: var(--bg); }
+
+/* Archives Grid */
+.archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.memory-card { border-right: 2px solid var(--border); border-bottom: 2px solid var(--border); position: relative; overflow: hidden; background: var(--bg); transition: 0.3s; display: block; }
+.memory-card.hidden { display: none; }
+.memory-media { width: 100%; aspect-ratio: 1/1; position: relative; border-bottom: 2px solid var(--border); overflow: hidden; background: #000; }
+.memory-media img, .memory-media video { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.5s; filter: grayscale(100%); pointer-events: none; }
+.memory-card:hover .memory-media img, .memory-card:hover .memory-media video { opacity: 1; filter: grayscale(0%); transform: scale(1.05); }
+.memory-info { padding: 25px; pointer-events: none; }
+.m-type { font-size: 0.7rem; background: var(--text); color: var(--bg); padding: 5px 10px; display: inline-block; margin-bottom: 15px; text-transform: uppercase; font-weight: bold; }
+.type-story { background: var(--accent); }
+.type-video { background: #000; color: #fff; }
+.m-title { font-size: 1.5rem; font-family: 'Oswald'; margin-bottom: 10px; line-height: 1.2; }
+.m-desc { font-size: 0.85rem; line-height: 1.5; max-height: 80px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; }
+
+.play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 2px solid #fff; color: #fff; background: rgba(0,0,0,0.5); padding: 15px 30px; font-family: 'Oswald'; text-transform: uppercase; opacity: 0; transition: opacity 0.3s; pointer-events: none; text-align: center; }
+.memory-card:hover .play-btn { opacity: 1; }
+
+@media (max-width: 768px) { 
+    .play-btn { opacity: 1; padding: 10px 20px; font-size: 0.8rem; } 
+    .story-play-btn { opacity: 1 !important; }
+    .story-item img { opacity: 1 !important; filter: grayscale(0%) !important; }
+    .memory-media img, .memory-media video { opacity: 1 !important; filter: grayscale(0%) !important; }
+}
+
+/* Modal */
+#video-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(17,17,17,0.98); z-index: 100000; display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; padding: 20px; }
+#modal-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 1.5rem; font-family: 'Oswald'; font-weight: bold; padding: 10px; z-index: 100001; }
+#modal-content-container { width: 100%; max-width: 1000px; max-height: 70vh; position: relative; border: 2px solid var(--accent); background: #000; box-shadow: 0 20px 50px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; }
+#modal-media { width: 100%; height: 100%; max-height: 70vh; object-fit: contain; display: block; }
+#modal-caption { color: #fff; font-family: 'JetBrains Mono'; margin-top: 20px; text-align: center; max-width: 800px; line-height: 1.5; font-size: 0.9rem; overflow-y: auto; max-height: 15vh; padding: 0 20px; }
+
+#toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; font-family: 'Oswald'; font-size: 1.2rem; padding: 15px 40px; border-radius: 5px; z-index: 999999; box-shadow: 0 10px 30px rgba(217, 56, 30, 0.4); text-transform: uppercase; letter-spacing: 1px; }
+
+/* Audio Player */
+#audio-controls {
+    position: fixed; bottom: 30px; right: 30px; z-index: 9999;
+}
+#audio-toggle {
+    padding: 10px 20px; border: 2px solid var(--text); background: var(--bg); color: var(--text);
+    font-family: 'Oswald'; font-weight: bold; text-transform: uppercase; box-shadow: 4px 4px 0 var(--text);
+    transition: all 0.2s;
+}
+#audio-toggle:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--text); }
+@media (max-width: 768px) { #audio-controls { bottom: 15px; right: 15px; } }
+
+/* Mentors */
+.mentors-grid { display: flex; flex-wrap: wrap; }
+.mentor-card { flex: 1 1 250px; border-right: 2px solid var(--border); border-bottom: 2px solid var(--border); padding: 40px; text-align: center; transition: background 0.3s; }
+.mentor-card:hover { background: var(--text); color: var(--bg); }
+.mentor-card:hover .mentor-role { color: var(--bg); }
+.mentor-name { font-size: 2rem; font-family: 'Oswald'; margin-bottom: 10px; }
+.mentor-role { font-size: 0.8rem; color: var(--accent); text-transform: uppercase; font-weight: 700; transition: color 0.3s; }
+@media (max-width: 768px) { .mentor-card { padding: 30px; } }
+
+footer { padding: 80px 40px; background: var(--text); color: var(--bg); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+footer h1 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 10px; line-height: 1; }
+.footer-quotes { font-size: 0.9rem; max-width: 600px; line-height: 1.6; opacity: 0.8; }
+.footer-poetic { font-family: 'Oswald', sans-serif; font-size: 1.5rem; color: var(--accent); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
+@media (max-width: 768px) { footer { padding: 40px 20px; } }
+</style>
+</head>
+<body>
+
+<audio id="bg-audio" loop src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Chopin_-_Nocturne_Op_9_No_2_E_Flat_Major.ogg" crossorigin="anonymous"></audio>
+<div id="audio-controls">
+    <button id="audio-toggle" class="hover-target">[ PLAY AUDIO ]</button>
+</div>
+
+<div class="cursor-dot" id="cursor-dot"></div>
+<div class="cursor-outline" id="cursor-outline"></div>
+
+<div id="toast">NOTIFICATION SET</div>
+
+<div id="preloader">
+    <h1>ARCHIVE LOADING</h1>
+    <div class="load-bar-container"><div class="load-bar"></div></div>
+</div>
+
+<div id="video-modal">
+    <div id="modal-close" class="hover-target">CLOSE [X]</div>
+    <div id="modal-content-container"></div>
+    <div id="modal-caption"></div>
+</div>
+
+<div class="grid-overlay"></div>
+
+<nav id="nav">
+    <div>Woodland House School</div>
+    <div class="nav-links">
+        <a href="#events" class="hover-target">Events</a>
+        <a href="#archives" class="hover-target">Archives</a>
+        <a href="#mentors" class="hover-target">Mentors</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div>
+        <p style="font-size: 1.2rem; margin-bottom: 20px; font-weight:bold;">EST. 1964</p>
+        <div class="hero-line-container">
+            <div class="hero-line">Uncompromising</div>
+            <div class="hero-line" style="color: var(--accent);">Legacy</div>
+        </div>
+    </div>
+    <div class="hero-marquee hover-target">
+        <div class="marquee-content">
+            WHS ARCHIVES 60 YEARS WHS ARCHIVES 60 YEARS WHS ARCHIVES 60 YEARS WHS ARCHIVES 60 YEARS
+        </div>
+    </div>
+</section>
+
+<section id="events">
+    <div class="section-header"><h2 class="section-title">Timeline</h2></div>
+    <div class="events-wrapper">
+        <div class="event-col">
+            <div class="event-col-title">Upcoming</div>
+            <div id="up-list"></div>
+        </div>
+        <div class="event-col">
+            <div class="event-col-title">Past</div>
+            <div id="past-list"></div>
+        </div>
+    </div>
+</section>
+
+<section id="archives">
+    <div class="section-header"><h2 class="section-title">The Vault</h2></div>
+    
+    <div class="story-playlist-container" id="story-container" style="display:none;">
+        <div class="story-playlist-title">Highlights & Stories</div>
+        <div class="story-scroll" id="story-scroll"></div>
+    </div>
+
+    <div class="filter-bar">
+        <button class="filter-btn hover-target active" data-filter="all">ALL</button>
+        <button class="filter-btn hover-target" data-filter="video">VIDEOS</button>
+        <button class="filter-btn hover-target" data-filter="post">POSTS</button>
+    </div>
+    
+    <div class="archive-grid" id="gallery"></div>
+</section>
+
+<section id="mentors">
+    <div class="section-header"><h2 class="section-title">Mentors</h2></div>
+    <div class="mentors-grid" id="mentors-grid"></div>
+</section>
+
+<footer>
+    <h1 class="footer-title">WHS 1964</h1>
+    <div class="footer-poetic">"True elegance belongs to the sincere student, never to the masks of two faces."</div>
+    <div class="footer-quotes">CRAFTED BY A STUDENT OF WOODLAND HOUSE SCHOOL, CLASS 10TH.</div>
+</footer>
+
+<script>
+const RAW_MEMORIES = [
+    {
+        "title": "Post Archive",
+        "desc": "60 Years of Excellence. A Lifetime of Memories. \ud83d\udc99\ud83d\udc9b\n\nWHS turns 60 \u2014 and we\u2019re bringing generations of alumni back home to reconnect, relive memories, and celebrate the WHS spirit.\n\n\u2728 Alumni Fun Day | 4 September 2026\n\ud83c\udfc6 Alumni Sports Day | 5 September 2026\n\nYour friends. Your batch. Your school. Your memories.\n\nCome Back Home to WHS. \ud83d\udc99\n\n\ud83d\udccd Woodlands House School, Sonwar Bagh, Srinagar\n\ud83d\udd17 Register now & be part of the celebration!\n\n#WHS60 #WoodlandsHouseSchool #WHSAlumni #ComeBackHome #AlumniReunion",
+        "img": "https://scontent-ber1-1.cdninstagram.com/v/t51.82787-15/780648615_18104042597593133_7894668791518524018_n.heic?stp=dst-jpg_e35_tt6&_nc_cat=102&ig_cache_key=Mzk2Nzc2NjkwMjg2MjQ0Nzc0Mg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMiJ9&_nc_ohc=yem3C9pfvWwQ7kNvwGws0-x&_nc_oc=AdqxexCg7ZVNOa8s5G7JKXf_N8eO7YBE7XGyjgSQVcIk_8HhFaKt0UvAW_wCBkNF20s&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ber1-1.cdninstagram.com&_nc_gid=2fUfIa4GEnSKylmlIIm04Q&_nc_ss=7a22e&oh=00_AQKHUGom2duAmqUcZfvJ9iHNtKfoMzf8r-stjMK3D3JeCg&oe=6AA6D50D",
+        "video": "",
+        "date": "2026-08-20",
+        "type": "Post"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "\ud83d\udd2c\ud83c\udfa8 SCIENCE & ART EXHIBITION 2026\n\nWhere curiosity meets creativity! \u2728\n\nWoodlands House School proudly hosted the Science & Art Exhibition 2026, bringing together the imagination, creativity and scientific curiosity of our students.\n\nFrom innovative science models and engaging experiments to thoughtful artwork and creative expressions, our students turned their ideas into something truly inspiring. \ud83c\udf31\ud83d\udd2c\ud83c\udfa8\n\nThe exhibition was a wonderful reflection of learning beyond the classroom, encouraging our students to explore, experiment, create and confidently present their ideas.\n\nA celebration of young minds, big ideas and endless possibilities! \ud83d\udc99\n\n60 Years of Excellence. A legacy of learning, creativity and discovery.\n\n#Srinagar #Kashmir #JammuAndKashmir #Students #School \n\n(Education, SchoolLife, StudentLife, Science Art, ScienceExhibition, ArtExhibition, Learning, Creativity, Innovation, YoungMinds, KashmirSchools, SrinagarSchools,  WoodlandsHouseSchool)",
+        "img": "https://instagram.ftgz1-1.fna.fbcdn.net/v/t51.82787-15/789488935_18105583874593133_4206608933485017855_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=109&ig_cache_key=Mzk3NTg1NzIzMTUyNDExMzM1MzE4MTA1NTgzODcxNTkzMTMz.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjcyMC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=cmMo1VrYRWgQ7kNvwGfYmJp&_nc_oc=AdoQmsqUDQLhicqQEpmt9Gh3iyC4aIr0eI2x2BsP62YMzBrcowQOy2ihKtI9x6o9grcqYVbGjpcfC9MA5i1Jq4ko&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftgz1-1.fna&_nc_gid=yBBBf_KzUqjv_gxxX0pFBg&_nc_ss=7a22e&oh=00_AQLO9to728PwUroDEiQHGo3SvtmXnzb36ILrl8stQlNUtA&oe=6AA6AA17",
+        "video": "https://instagram.ftgz1-2.fna.fbcdn.net/o1/v/t2/f2/m86/AQPSm_gRPYuOa4iuSXx7Mve6mHZtBN95y3deA2InHetX13D59-AY7W6r4E5u3Ji5LsJ_kX_VRjTwNkx_G1r51ProxCdOZCkU_3dTexg.mp4?_nc_cat=111&_nc_oc=AdphE1hyOEM1zYzaXhTrUiLpMSkyuql2Vfdr8cP5PRFkgzrmp3qtax4B_a_sDLt8Vq8HvcN6vlE1V4hAd_Yztq5D&_nc_sid=5e9851&_nc_ht=instagram.ftgz1-2.fna.fbcdn.net&_nc_ohc=SbPEp0F63xEQ7kNvwGPBUvn&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTA4NDczODUyMDY5ODE5MCwiYXNzZXRfYWdlX2RheXMiOjgsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjo1NSwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=90e69003628da4ea&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8wNzRDNDM2NzdCMjBCN0NENkU2QjI5QkJEMEVDOTBCQl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzhFNDU0Rjg2NTY0NDVBOURERDExM0U5QkFGMERENUJGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACactZrji6TtAxUCKAJDMywXQEu6n752yLQYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=yBBBf_KzUqjv_gxxX0pFBg&_nc_zt=28&_nc_ss=7a22e&oh=00_AQLn_rNXBV7GBfh45mQ3-T3WXbQCgGPhYI45EhYPzNMTuQ&oe=6AA2DCD4",
+        "date": "2026-08-31",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "#60YearsOfWoodlands | #WoodlandersForever \ud83c\udf93\ud83d\udc99\n\n60 years of shaping minds, nurturing dreams, and creating journeys that last a lifetime.\n\nFrom the classrooms and corridors of Woodlands House School to inspiring the next generation, our alumni carry a piece of their school journey wherever they go.\n\nIn this special alumni story, Ahtesham Farhat, Batch of 2016, takes us back to the moments that shaped him, the teacher who made a lasting impact, and the journey that eventually led him to become a JEE educator.\n\nHis story is a beautiful reminder that sometimes, a teacher\u2019s expectations can become a turning point in a child\u2019s life.\n\nAs we celebrate 60 Years of Woodlands House School, we celebrate not just our legacy, but the countless stories of our students who continue to learn, lead, inspire and make us proud.\n\n60 years. Countless journeys. One Woodlands. \ud83d\udc99\n\n#60YearsOfWoodlands #WoodlandsHouseSchool #WoodlandersForever \n\n(WHSAlumni, 60YearsOfExcellence, Celebrating60Years, AlumniStories, EducationBeyondBooks, TeacherImpact, ProudWoodlander)",
+        "img": "https://instagram.fagp1-1.fna.fbcdn.net/v/t51.71878-15/775799324_2366633547476425_2614606676397782666_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=105&ig_cache_key=Mzk2NTczODI3OTgwODU3MDk4MDIyMzA1MzY2NzQ1NjQ0MjQ%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=SZ6T4Lbcn98Q7kNvwFrUoVy&_nc_oc=AdqEq3rCIjHSdwgGlAX2zcf5A7lHNze6sOe1UL2iL0UyDaAB7C4dJFD5SsjndZl77XA&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fagp1-1.fna&_nc_gid=sk6mvP-hEBY9vRvYfB08kw&_nc_ss=7a22e&oh=00_AQJVG5vga_pm2fhS8A3klRn350KaaYRXVD4k3uhixZlZog&oe=6AA6AE1A",
+        "video": "https://instagram.fagp1-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQNWsZ32GDvilpoG56oic__IlO1e0Jti-3SjO9FgjPKGOtZZN3HwhbM1BOHfzox6mWLv-WGXPd0w0v8bxzD6Grf_DcZWW8Jf8LwZomc.mp4?_nc_cat=103&_nc_oc=AdqU1J-gx-U-mk6UiTB6n0JqxFEN1DBno_PVth031YGo5hf5TBpknnNIORDjR8Hn6M4&_nc_sid=5e9851&_nc_ht=instagram.fagp1-1.fna.fbcdn.net&_nc_ohc=PagG0FPQrgwQ7kNvwGXGui2&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MjIzMDUzNTQ1NDU2NDU0NiwiYXNzZXRfYWdlX2RheXMiOjIyLCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MjE3LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=8626b3c087aa7f08&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC82ODRENTFBN0U3NTZFNjYxNEY1NDgyMUQ0OUY0MkRBMF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0Y2NDFBQUVDRTI5MzA3ODJEOEQ1NzNBN0FBRDUyMUJEX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaEg-2WoKr2BxUCKAJDMywXQGslT987ZFoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=sk6mvP-hEBY9vRvYfB08kw&_nc_zt=28&_nc_ss=7a22e&oh=00_AQKmXlNgsHxQIM6CXUBLgw2VCyGdNltgTp5X9-xOrJAN1g&oe=6AA2C520",
+        "date": "2026-08-17",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "#60YearsOfWoodlands | #WoodlandersForever \ud83c\udf93\ud83d\udc99\n\n60 years of shaping minds, nurturing dreams, and creating journeys that last a lifetime.\n\nMr. Ahtesham Farhat, Batch of 2016\n\n\u2728 Once a Woodlander, Always a Woodlander.\n\n#WoodlandsHouseSchool #60YearsOfExcellence #WoodlandersForever \n\n(WoodlandsAlumni, 60YearsOfWoodlands, ProudWoodlander, AlumniStories, MemoriesThatLast)",
+        "img": "https://instagram.fbcn4-1.fna.fbcdn.net/v/t51.71878-15/775147657_1069908232066658_4887997966797194667_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=101&ig_cache_key=Mzk2NjkwNjIzMDcxNjkzMDExMA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=yDTxD2BaT3kQ7kNvwHqlOHc&_nc_oc=AdoZfSVxf96Gg6V01cGS2nb5hDa8dXlp2QIlvtgVNtZ5BlDREC0jQDhUK-sAluuTOnQ&_nc_ad=z-m&_nc_cid=1006&_nc_zt=23&_nc_ht=instagram.fbcn4-1.fna&_nc_gid=oLUrBxG4t2SpomOCNj1_mg&_nc_ss=7a22e&oh=00_AQKFhgS8Ui2xS2bTmSrq1FD20FIveDcjDLm7CX_E0eQvog&oe=6AA6BC93",
+        "video": "https://instagram.fbcn4-1.fna.fbcdn.net/o1/v/t2/f2/m367/AQPrR9_vq_2dPsWD8wEK6hnAnxEm8bE2Km0MPOT4cCHGg9SNLHFdWMZBZy5mn87dWeNsc-tuFtMfzNizsi1ZrMJ0v82l7FHrMM_MdsjbUGdz5g.mp4?_nc_cat=101&_nc_oc=Adpe_34iqIoNJsVG06Kcy1CQCAAhTYcXFmjZZZMT9_28hvPzQG4Ckh1P0XtTAzP5yVg&_nc_sid=9ca052&_nc_ht=instagram.fbcn4-1.fna.fbcdn.net&_nc_ohc=Rig4xiTn4PcQ7kNvwFe580g&efg=eyJ2ZW5jb2RlX3RhZyI6ImlnLXhwdmRzLmNsaXBzLmMyLUMzLmRhc2hfdnA5LWJhc2ljLWdlbjJfNzIwcCIsInZpZGVvX2lkIjpudWxsLCJvaWxfdXJsZ2VuX2FwcF9pZCI6OTM2NjE5NzQzMzkyNDU5LCJjbGllbnRfbmFtZSI6ImlnIiwieHB2X2Fzc2V0X2lkIjoyODMwNjY1MTAzODk0NjM4MCwiYXNzZXRfYWdlX2RheXMiOjIxLCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MjcsImJpdHJhdGUiOjczMjk4NSwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&_nc_gid=oLUrBxG4t2SpomOCNj1_mg&_nc_ss=7a22e&_nc_zt=28&oh=00_AQJuIZqJj7Ue7neX8ksN_R6L72C7kgUXyHA5ATWrL5LJJw&oe=6AA6BBE3",
+        "date": "2026-08-19",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "60 Years of Memories. 60 Years of Inspiring Generations. \ud83d\udc99\n\nAs we celebrate 60 remarkable years of Woodlands House School, Srinagar, we are reminded that a school\u2019s true legacy lives on through the generations it shapes, the dreams it nurtures, the friendships it creates, and the memories that stay with us forever.\n\nIn this special anniversary message, alumnus Adnan Shah, Batch of 2005, looks back with pride and gratitude at his journey as a part of the Woodlands family.\n\nFrom classrooms to lifelong connections, Woodlands has continued to inspire young minds and create a legacy that extends far beyond school years.\n\nHere\u2019s to 60 glorious years of learning, growth, friendship, and memories, and to many more years of inspiring generations to come.\n\n#60YearsOfWoodlands #WoodlandsHouseSchool #WoodlandsSrinagar #WHAS60 #60YearsOfInspiringMinds\n\n(AlumniVoices, WoodlandsFamily, LegacyOfLearning, Srinagar)",
+        "img": "https://instagram.flba1-1.fna.fbcdn.net/v/t51.71878-15/786755288_27863100516704127_8394270582667543088_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=110&ig_cache_key=Mzk3MTUwODQ3NjkwMTM3Mjk2ODQzMTExODUyMzU4MTMyMzM%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=nAlPVo1POScQ7kNvwEayUFC&_nc_oc=AdpQPyTV5e5oPfw6xs4M7pIql_uCMAWj7i2lDBrNvsFkmKAN167hd4C77c7dnpeTuyLju3mi_3sTKcvq5R30bWtW&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.flba1-1.fna&_nc_gid=MqbkJgHPS9zdV7z3p63A0A&_nc_ss=7a22e&oh=00_AQK40Kke93oKhRms8evN6nhjT3A54aWwcU-gbHi1U-f_Sg&oe=6AA6D64B",
+        "video": "https://instagram.flba1-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQMg1jh-bvswqNoAgvoejS-bKE2_COawG8MDoCxzdRfBhMKdWRVURwW8_VjvTz8oncwJj4fB_O7eSOZGJvBho8ngShi_pQw2T-BiWII.mp4?_nc_cat=106&_nc_oc=AdqUACAesaeZT9yYju4-TtiNm-M-3p5BnIIiauCk6quANLvBMqWVt3njMLIr6t59wqP5aTl5Su6oE_vJ25S7oUnK&_nc_sid=5e9851&_nc_ht=instagram.flba1-1.fna.fbcdn.net&_nc_ohc=8yXbj4bhcdMQ7kNvwEPsqFf&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6NDMxMTE4NDI2OTE0NjY2MywiYXNzZXRfYWdlX2RheXMiOjE0LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MzEsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=5bfed98f6dfe1152&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC80MjQ2RTFBQjBDMzY0RjQ0QzNCN0U5MEY5MDRGQUFBM192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0ZCNDMxOUFFQkI2NDY0RjU2OEY1REFGNTcyRDMwMjlFX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbO6OPu-b-oDxUCKAJDMywXQD9qfvnbItEYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=MqbkJgHPS9zdV7z3p63A0A&_nc_zt=28&_nc_ss=7a22e&oh=00_AQKuv-YsCqG8-Vf6Eq1ok528YG6TvoEmkRbXNcMVJ-Qs5w&oe=6AA2DB9F",
+        "date": "2026-08-25",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "\ud83c\udf1f Celebrating Our Distinguished Alumni \u2013 Mr. Rohit Khattar\n\nOne of the earliest students of Woodlands House School, Mr. Rohit Khattar has gone on to become a pioneering entrepreneur and a leading name in Indian hospitality.\n\nAs the Founder-Chairman of Old World Hospitality and the visionary behind acclaimed brands including Indian Accent and Chor Bizarre, his journey from the early days of Woodlands House to the heights of the hospitality industry is truly remarkable.\n\nHis achievements continue to be a source of immense pride for the entire Woodlands House community.\n\nAs we celebrate 60 years of Woodlands House School, we honour the alumni who have carried the spirit of our school into the world. \ud83d\udc99\n\n#WoodlandsHouseSchool #60YearsOfWoodlandsHouse #DistinguishedAlumni #RohitKhattar #indianaccent",
+        "img": "https://instagram.fpbc1-2.fna.fbcdn.net/v/t51.82787-15/795471687_18106162448593133_8114736413883172072_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=104&ig_cache_key=Mzk3ODg2ODM4Nzk1NjIyNzgwMjE4MTA2MTYyNDQ1NTkzMTMz.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjEyNjAuc2RyLnZpZGVvX2RlZmF1bHRfY292ZXJfZnJhbWUuQzMifQ%3D%3D&_nc_ohc=24ZNcrHr9jIQ7kNvwGSccAo&_nc_oc=AdrBuyU9g2hDx6WvYyL1bj13DOV7BFZsCWQsTisVuYuBqyrtFdSOCaAaFplJvgQzmpP5q7iJxn_5-t80Z1KhV2m_&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fpbc1-2.fna&_nc_gid=wLAgAaio_ZURmABSE9gPJg&_nc_ss=7a22e&oh=00_AQLp3snKVCDEPK1ptygssFbnUMzHh2x7G5OKRAFMBCHZng&oe=6AA6ACE2",
+        "video": "https://instagram.fpbc1-2.fna.fbcdn.net/o1/v/t2/f2/m86/AQPX2ZqU3qiRb-LejFQa6EEcxyNJJ2eIlXq877ui_wb-svQiE42M_KtaHZJbctsRFnffDlSjkEgLXyeqNAGH6V3kAOlZFzBokLhMArw.mp4?_nc_cat=107&_nc_oc=Adr2ZMJ-FWH-IxQ8yudFWIiXyMSWum54KJ57ejfo0UYI86AoxEe2Zo_-j4tdla1SmVzHIYtHyz-Vm0Bad3NN34X9&_nc_sid=5e9851&_nc_ht=instagram.fpbc1-2.fna.fbcdn.net&_nc_ohc=IOw6CvVPIgUQ7kNvwETAn1M&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTYyMzExNjc5NjEwMTE1MywiYXNzZXRfYWdlX2RheXMiOjQsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoxNiwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=8e17c35c00b7a2c5&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC80QjQ2RTM2REIxNUNCNkQ0MEJCOTExRTNFRkE1RjdCQ192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdGNEZCQ0EyNzFCMjM1MTRCNDYyQzI4ODc0Q0Q2MEE1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbCiPzA6o3iBRUCKAJDMywXQDCqfvnbItEYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=wLAgAaio_ZURmABSE9gPJg&_nc_zt=28&_nc_ss=7a22e&oh=00_AQKAGXy1Vj5aT1u3-JTdcI9DsG16SLj8sn8lg_tApvERhw&oe=6AA2EA30",
+        "date": "2026-09-04",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "60 Years of Memories. 60 Years of Inspiration. \ud83d\udc99\ud83d\udc9b\n\nAs we celebrate 60 glorious years of Woodlands House School, Srinagar, we are delighted to share the journey of one of our proud alumni, Dr. Raies Khan, Batch of 1994.\n\nFrom the classrooms of WHS to a career spanning over two decades in healthcare, Dr. Raies Khan\u2019s journey has taken him across India and into international and overseas healthcare initiatives, with organisations including GVK EMRI, Shalby Hospitals, ASG Hospitals, and Paras Health, among others.\n\nReflecting on his journey, Dr. Raies shares how WHS gave him more than an education\u2014it gave him a strong foundation of values, friendships, confidence, and memories that have remained with him throughout the years.\n\nFrom Kashmir to different parts of India and beyond, every chapter of his professional journey has been shaped by the experiences and values he carries with him from his school years.\n\nProud to be a Woodlandite, Dr. Raies remains grateful to the school that helped shape the person and professional he is today.\n\nAs we celebrate six remarkable decades of learning, friendships, growth, and cherished memories, stories like his remind us of the lasting impact of Woodlands House School and the remarkable journeys of its alumni.\n\nHere\u2019s to 60 years of WHS, 60 years of memories, and 60 years of inspiring generations.\n\nHappy 60th Anniversary, Woodlands House School, Srinagar! \ud83d\udc99\ud83d\udc9b\n\n#60YearsOfWoodlands #WoodlandsHouseSchool #WoodlandsSrinagar #WHS60 #60YearsOfInspiringMinds \n\n(AlumniVoices, WoodlandsFamily, LegacyOfLearning, 60YearsOfMemories, Srinagar)",
+        "img": "https://scontent-waw2-2.cdninstagram.com/v/t51.71878-15/798688218_2199027827625227_3307225752503996115_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=103&ig_cache_key=Mzk4MDI3MzQxMDIzNzgxMTQ0Mg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=YkF-dIBM6voQ7kNvwHcaeFo&_nc_oc=Adpj6kSShVT_72C83zUxfarriVSASDh-YoHs3hVRMexjnhE8v9StS5QWLUMSwstmZtY&_nc_ad=z-m&_nc_cid=1479&_nc_zt=23&_nc_ht=scontent-waw2-2.cdninstagram.com&_nc_gid=PCc8vV3MI5fFuMriUL2dyA&_nc_ss=7a22e&oh=00_AQK-vHEUZB5bsvqq6PDWXVzUkKjdbicrVkxrDjyPTxXMbw&oe=6AA6AE91",
+        "video": "https://scontent-waw2-2.cdninstagram.com/o1/v/t2/f2/m86/AQM2tcgRI4VMcQFOdWIoqOEBLGcJtjUDnLnmCB8xQp-M1MztrqGrX5mW_AYS0_jU46uWCHk_GrvLkPbQOxzhNY2v1VzXnCzkSOgRWUg.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-waw2-2.cdninstagram.com&_nc_ohc=h1Y0rksS-EUQ7kNvwE0JPyq&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTM3MjQyOTMzMTU5Mzk3NywiYXNzZXRfYWdlX2RheXMiOjIsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoyMiwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=87bc1804bb8ef24f&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9EOTQzQ0UzNDI2RjU3MUEwMEMwQzI3NjM5QjI3NDY5M192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0I4NDg1NjFGRjVDMUY2REVERjE1N0E0QjREOTJFQzk1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACby68-s843wBBUCKAJDMywXQDbVP3ztkWgYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=PCc8vV3MI5fFuMriUL2dyA&_nc_ss=7a22e&_nc_zt=28&oh=00_AQK_1qFJ83ehjxJbao-0CL0Jw-y0EOgftPQIWBIU6i1q_Q&oe=6AA2B5F4",
+        "date": "2026-09-06",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "At Woodlands House School, Independence Day was celebrated with pride, passion, and the vibrant spirit of our students. \ud83c\uddee\ud83c\uddf3\u2728\n\nFrom energetic performances and patriotic songs to cultural presentations that reflected the beauty of our nation, every moment was a tribute to India\u2019s freedom and unity. Our students filled the campus with enthusiasm, creativity, and love for the country, making the celebration truly memorable.\n\nWe are proud of our young learners for embracing the values of patriotism, respect, and togetherness that define our nation.\n\nWoodlands House School wishes everyone a Happy Independence Day! \ud83c\uddee\ud83c\uddf3\n\n#WoodlandsHouseSchool #IndependenceDay #StudentCelebration #ProudToBeIndian #Patriotism",
+        "img": "https://instagram.frca1-1.fna.fbcdn.net/v/t51.71878-15/775027662_1365041855782321_3502018087286602765_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=107&_nc_map=urlgen_bucketless&ig_cache_key=Mzk2NDMxODA3NzkyOTg1ODUwMzMxMDYwMzU1ODMxMTY4NDU%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=KHJcrvYLr8YQ7kNvwHLjISi&_nc_oc=Adq4L86a2KCPUlvtzmjcoZqHSkCnnbLoRUxd-lDh21D_eFx_Fq_iwB_WceT3xVNhbKs&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.frca1-1.fna&_nc_gid=RLovpESHZIrjfmznZiQp5Q&_nc_ss=7a22e&oh=00_AQIxUjxxGvtOpBupKEsCnOO2u_fU9ehmN3-MI-_F7yxgWw&oe=6AA6DA6D",
+        "video": "https://instagram.frca1-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQNWsfyqaGUtPu6Rcq9bzPgzHxiiS48Q4Ltjzdo_M4LlJTxmJBNT8gM-Ufai0hvzA8pGq5YoLfuoaspPoohJ7GvcWYvCXKuMDOe4H1Q.mp4?_nc_cat=106&_nc_oc=AdrSwf3K7g5a-ilXX1y99pcot_QlBJy96ruW3_InfPACHk0gW98VzlFw2rmpockDu68&_nc_sid=5e9851&_nc_ht=instagram.frca1-1.fna.fbcdn.net&_nc_ohc=bXdCtYOpNiEQ7kNvwEbBQH_&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MzEwNjAzNDY5OTc4MzYwMCwiYXNzZXRfYWdlX2RheXMiOjI0LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6ODgsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=cc947ccec6395f41&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9FMTRENDg4MTdENzg2N0U5NENGNDA0MDhBNkQ0M0NCNl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0U2NEQ1NjA4MjM2NzI2OTZDMENDMkU0OThGM0NDNzhGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbgtobvgbuECxUCKAJDMywXQFYlT987ZFoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=RLovpESHZIrjfmznZiQp5Q&_nc_ss=7a22e&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQJls-KSl-BLTE8jfJEGuTZQp4KRKNU_6j1rTFbaz6m4Ig&oe=6AA2B913",
+        "date": "2026-08-15",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "60 Years. One Legacy. A Thousand Journeys. \u2764\ufe0f\n\nFor six decades, Woodlands House School, Srinagar has been more than a place of learning. It has been a place where curiosity is encouraged, character is shaped, talent is nurtured, and dreams take flight.\n\nFrom the classroom to the playing field, from the laboratory to the chessboard, Woodlands has always believed that true education is about developing minds that think, hearts that care, and individuals who lead.\n\nToday, we celebrate six decades of learning, values, friendships, achievements and memories \u2014 carried forward by generations of Woodlandites across the world.\n\n60 years of shaping minds.\n60 years of building character.\n60 years of inspiring futures.\n\nThe legacy continues.\n\nThis is Woodlands. \u2764\ufe0f\n\nHappy 60th Anniversary, Woodlands House School! \ud83c\udf89\n\n#60Years #WoodlandsHouseSchool #WHS #Srinagar #60yearsofexcellence",
+        "img": "https://scontent-lhr6-2.cdninstagram.com/v/t51.71878-15/798825667_1577130586959501_4657230381669899643_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=105&ig_cache_key=Mzk4MDk5ODk1MDUwNzc4OTYwNTEwODU0NzE3MTc1MTI1NDU%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=9YgJ7h_UTKQQ7kNvwFegQUT&_nc_oc=AdoqyD8BoSWgxx_jEZdVqU93anv31GDYzNwelckJ8F3bbxx0Det_OAG2ka-lVA9I2w7OkNEvnpFBMuNxWVwJwlQt&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-lhr6-2.cdninstagram.com&_nc_gid=gnth7WeyNJRPzCjr9n7KjA&_nc_ss=7a22e&oh=00_AQIoYPnTMIEWUbgx-6jYNVhSIc5hl9WJLh8d4pVpvH5fzQ&oe=6AA6D6C5",
+        "video": "https://scontent-lhr6-2.cdninstagram.com/o1/v/t2/f2/m86/AQMTYIiDzlXX6U9lvnPMwizeHudzEQWQLDHhvP5S47FfdvZ2gUbiXePdrCBIfsI7lDA0FKqKOW26ki6d7_Uen4iubbvQTp5aIfoJGBg.mp4?_nc_cat=105&_nc_sid=5e9851&_nc_ht=scontent-lhr6-2.cdninstagram.com&_nc_ohc=akz6PTvkFJsQ7kNvwFmIixj&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuMTI4MC5kYXNoX2Jhc2VsaW5lXzFfdjEiLCJ4cHZfYXNzZXRfaWQiOjEwODU0MzkwNDQxODI0NzksImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6Mjk0LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=e38e774f7dc841d9&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9GRDQ1MDkyNTZFM0RBNzQ4NjJGNjY5MDUwNUQxMzY5OV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzhCNEYwQUFCOUZFRDEzMzk3QjNEMUMxM0QwNzJGNDk4X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaeh7uK78ztAxUCKAJDMywXQHJszMzMzM0YEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=gnth7WeyNJRPzCjr9n7KjA&_nc_zt=28&_nc_ss=7a22e&oh=00_AQJhDt246ZivvSazRlFK4zljlEjdWnOIDbmvbDYMc2JY8Q&oe=6AA2B54A",
+        "date": "2026-09-07",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Happy 60th to our school, WHS! Here\u2019s to many more!\n.\n.\n.\n.\n.\n#mirsarwar #whssgr #60years",
+        "img": "https://scontent-fra3-1.cdninstagram.com/v/t51.71878-15/777328281_1424816156235139_4811042290958014797_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=103&ig_cache_key=Mzk2ODUwMTcxODkzNTk3NDU3MjE3NjUyMTQ2MDQ2MTIzODY%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=i1_vX9r1YDoQ7kNvwHrmhlW&_nc_oc=AdrsieMzJITYQB-B1d6EVilEpjkTjtfe_LKzl1cmQeuSIr1mQ5_meavJKdCuD3wOvsQ&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-fra3-1.cdninstagram.com&_nc_gid=NFB-lTjg8LqvRxC8Whs0TQ&_nc_ss=7a22e&oh=00_AQJodYhJfrAVB2ELMFeTQGW2Oy4xZcxa9skemplh6umGjw&oe=6AA6CA18",
+        "video": "https://scontent-fra3-2.cdninstagram.com/o1/v/t2/f2/m367/AQNqq2acslGKDOtjIAAoMd8UbkWsclANkw2toc7mN7_1jmjDz2lgAMlNnwGJU0bJtRw1h_5f8a3UynA5IrNZnXwqzCC2yvsAY2f4QGQE-SFyeg.mp4?_nc_cat=111&_nc_sid=9ca052&_nc_ht=scontent-fra3-2.cdninstagram.com&_nc_ohc=0gIxOaa-Z3kQ7kNvwEI7Wk7&efg=eyJ2ZW5jb2RlX3RhZyI6ImlnLXhwdmRzLmNsaXBzLmMyLUMzLmRhc2hfdnA5LWJhc2ljLWdlbjJfMTA4MHAiLCJ2aWRlb19pZCI6bnVsbCwib2lsX3VybGdlbl9hcHBfaWQiOjkzNjYxOTc0MzM5MjQ1OSwiY2xpZW50X25hbWUiOiJpZyIsInhwdl9hc3NldF9pZCI6MTc2NTIxMzE2NDYxMjUzMCwiYXNzZXRfYWdlX2RheXMiOjE4LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MzQsImJpdHJhdGUiOjYzMjk4NywidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&_nc_gid=NFB-lTjg8LqvRxC8Whs0TQ&_nc_zt=28&_nc_ss=7a22e&oh=00_AQKEgPGEmRb9GWyEev5FdCXKXK0YVmkfLd0dqizhUedkhg&oe=6AA6B9A1",
+        "date": "2026-08-21",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "A father\u2019s love is a lesson that stays with us forever. \ud83d\udc99\n\nToday, our students celebrate the superheroes who guide, support, and inspire them every step of the way. Thank you, Dad, for your endless encouragement, sacrifices, and unconditional love.\n\nHappy Father\u2019s Day to all the amazing fathers who help shape bright futures! \ud83d\udc68\u200d\ud83d\udc67\u200d\ud83d\udc66\u2728\n\n#FathersDay #HappyFathersDay #DearDad \n\n[StudentTribute SchoolLife FathersLove Gratitude FutureStartsAtHome]",
+        "img": "https://scontent-iad3-2.cdninstagram.com/v/t51.71878-15/727243012_1333463101539377_844305284999971629_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=111&ig_cache_key=MzkyNDE2MTUzODg0MzYwMDUzODg4MDgwMTI4ODQwMzg3Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=TmWLW0GP74sQ7kNvwFKwsY6&_nc_oc=AdrhlCW-Apl4PrcqybXmDNUxBKegtS_PSd5E5eyI3jUMLHQbA1BEWiKMAT-Acx4DIKoTuXtTxz3G2N-2yz_tPB0t&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=ytmI0KoxHJx0fIreyAyhug&_nc_ss=7a22e&oh=00_AQIrxYjP-YgIY40L7DsW7qEKF3DJIiAiVJaj-IQH11xkDg&oe=6AA6C8C9",
+        "video": "https://scontent-iad6-1.cdninstagram.com/o1/v/t2/f2/m86/AQO96D7FFqxUB7cK1X869wM_QyE5tRoT1jLlAOsOoWY0hgpM-eLBNhaz4o93xAzBD0S6dLGusfn3SuBCRAjtjTbEhLUq6UH1kJc5Ghk.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=6NFGtroxPpQQ7kNvwG8F2sd&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6ODgwODAwNjQxNzM3MjcxLCJhc3NldF9hZ2VfZGF5cyI6ODAsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjo4NywidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=f3f7b0fd5f8049b9&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC80ODQ4MjZDMjAxQ0U0RDE1N0Q2OUQ5NUY3NDQ5OTE4NV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzM5NDA0NTcxM0I0RUE3NURBQzMxODBGREVFNkFEQTg5X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbuiPOVrMWQAxUCKAJDMywXQFXMzMzMzM0YEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=ytmI0KoxHJx0fIreyAyhug&_nc_zt=28&_nc_ss=7a22e&oh=00_AQJymel3V_xF3bCHuX9AuaxqQJrfAFKce7ucW76DPuEayg&oe=6AA2E9E6",
+        "date": "2026-06-21",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "\ud83c\udf4e\ud83e\udd55 Fruits & Vegetables Day at Woodland House School\n\nLearning becomes even more exciting when creativity meets education!\n\nOur young learners brought the world of fruits and vegetables to life through colorful costumes, cheerful participation, and enthusiastic performances. This engaging activity helped children understand the importance of healthy eating while building confidence, imagination, and teamwork.\n\nA wonderful day filled with learning, laughter, and vibrant colors! \ud83c\udf31\u2728\n\n#WoodlandHouseSchool #FruitsAndVegetablesDay #HealthyHabits \n\n[EarlyLearning SchoolActivities CreativeLearning YoungLearners HealthyEating LearningThroughFun WoodlandsHouseSchool]",
+        "img": "https://scontent-phl2-1.cdninstagram.com/v/t51.71878-15/723976957_1441381931366854_8685712153605684236_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=109&ig_cache_key=MzkxNzk2ODMzMTM2OTc4NDgxNjE3MTQ3MDA5Njk2ODM1MTE%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=G7TktEo7tFEQ7kNvwHd5E_k&_nc_oc=AdoUOYkOZnoRllj6CczktSZQJtrBwOyRaQ2UM6cogUal0umIpy3AwoCDhVeLxQ34_q7Xs-WpxaKpTRBbW4zfY1kd&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-phl2-1.cdninstagram.com&_nc_gid=6st777pvfGs5Mm2YhNW7WQ&_nc_ss=7a22e&oh=00_AQLC8A3kz7zMfZG7C2a_52BOoigQz2zqnrNPUSsNKyMzsA&oe=6AA6DCF5",
+        "video": "https://scontent-phl2-1.cdninstagram.com/o1/v/t2/f2/m86/AQPJrapGQabYENDr0UvhEAU9_ENKXriHDPT7fljJvq8ua9v7g6IcAAkQlrklTkSC8PwGsJjvMcyZ2VBstMfrpFmyy9pylwLaigFg3xY.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-phl2-1.cdninstagram.com&_nc_ohc=JDWcXSRNa3UQ7kNvwEPWJ4P&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTcxNDY5MDczNjM1MTIwMSwiYXNzZXRfYWdlX2RheXMiOjg4LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6NDUsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=1221ea52566f9094&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC82RjQ3Q0JDNzA4OTA0RjM1MUI5NTRDODA5OERBOTBCNl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzQ3NDIyOEFFQkNDNUMwMkJBMjVFQUJGNDA4NTk1MDg3X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbCn-vDkeCLBhUCKAJDMywXQEagAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=6st777pvfGs5Mm2YhNW7WQ&_nc_zt=28&_nc_ss=7a22e&oh=00_AQIgd33Df9maXLYLqGAE3cord6Dyxie5XeNk5PiD6HJzcg&oe=6AA2C792",
+        "date": "2026-06-12",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "\ud83d\udcda Every great journey begins with a single page.\n\nAt the Woodlands House School Library, curiosity finds its home, questions lead to discovery, and every book opens the door to new possibilities. From quiet moments of reflection to exciting adventures through words, our library inspires young minds to think, imagine, and grow every single day.\n\nBecause every reader has a story to begin, and every story has the power to shape a brighter future. \u2728\n\n#WoodlandsHouseSchool #WHS #SchoolLibrary #ReadersTodayLeadersTomorrow #LoveForReading \n\n(LearningBeyondClassrooms, CuriousMinds, FutureReady, EducationExcellence, InspiringYoungMinds)",
+        "img": "https://instagram.fcyw1-1.fna.fbcdn.net/v/t51.71878-15/728861358_2324467601290390_5709488634491411848_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=109&ig_cache_key=MzkzMjk0ODE0NjA2MTQ3Mjk1OTEwNzgyNTAwODQ4NzgxMDY%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=L_ooXvQzviIQ7kNvwE2kZzR&_nc_oc=AdoO-TdsEX_X8qIsg2FZqjn27H35an1VYJpUTLOO0Xr0tHNZSXUd-4GL91Ercy5Cuwg&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fcyw1-1.fna&_nc_gid=jEzZyoungVyAwzKHMt_HlA&_nc_ss=7a22e&oh=00_AQLgtrcVTnX1DjVrLs1BgvKNwlXyMuOH2I6y39cQMERdnQ&oe=6AA6D858",
+        "video": "https://instagram.fcyw1-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQOyMT3cKwh4e-mFM0UmECIpZpnKhCH2ujn7EjK_tIBGyWQC1wk5Lvap0HyjRxvWeKMybwG0Tcj7m-4eOebl5EfbHcNmIDnwoneA-JI.mp4?_nc_cat=107&_nc_oc=AdpkrVMUmgiWqJWdcWQe6pWjAxLiwPS1ZdeWDr954ZlAGw3AMbSXAD03Eo2nIDtMvlI&_nc_sid=5e9851&_nc_ht=instagram.fcyw1-1.fna.fbcdn.net&_nc_ohc=KmMoLVnz2lIQ7kNvwErrpbL&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTA3ODI0MjEwMTU0NTU3MSwiYXNzZXRfYWdlX2RheXMiOjY3LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6OTAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=cae986fe2a0c2aab&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC83NDRGNzQyMEQyRDhGRjFERjJBQ0ZFOUE4QzQ4ODY4MV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzNBNDA2ODcxODBDNkFGODk0NEFBQTZDRDM0RkUwMzhBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbGqY7X-anqAxUCKAJDMywXQFaIgxJul40YEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=jEzZyoungVyAwzKHMt_HlA&_nc_zt=28&_nc_ss=7a22e&oh=00_AQKpL7OjBg-34dodBUSQpbsYfWWAtGjELTvEjCzdVeZnKw&oe=6AA2B250",
+        "date": "2026-07-03",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "60 Years of Nurturing Dreams. Inspiring Generations.\n\nAs part of the #WHS60Years celebrations, we were honoured to welcome back our alumna Asma Latif (Batch of 2019), who recently completed her Honours in Psychology and published her book The Land of Dreams and Nightlife.\n\nStanding once again in the corridors where her passion for writing first took shape, Asma shared a heartfelt message about creativity, courage, and the importance of believing in the gifts that each student carries within. She spoke of the teachers who encouraged her, the friends who supported her, and the memories that continue to inspire her journey.\n\nHer story is a powerful reminder that the true legacy of Woodlands House School is not only measured in years, but in the lives it shapes, the voices it empowers, and the dreams it helps bring to life.\n\nAs we celebrate six decades of excellence, we celebrate every student who walked these halls and every dream that began here.\n\n60 Years. Countless Stories. One Legacy Woodlands House School\n\n#WHS60Years #WoodlandsHouseSchool #Srinagar #WoodlandsLegacy",
+        "img": "https://instagram.fmad26-1.fna.fbcdn.net/v/t51.71878-15/769168341_1398927335676883_127250475374029066_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=111&ig_cache_key=Mzk2MzYxMjMzNDM3MzA4MTkxOQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=jrE1hMjtkNgQ7kNvwETVgA1&_nc_oc=Adp_AyVDzOuRQauS7vgmKYx3PkYdTFUVzMcrPtstgTXLQinri84CCU9IudKPj3fGPlQ&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fmad26-1.fna&_nc_gid=2UrRbXSb7qt8OzXM-PYMyw&_nc_ss=7a22e&oh=00_AQKkpHxOHiQWDRW5BduXvD6jeO7_OOn_QadotMVnZMRs_g&oe=6AA6CB05",
+        "video": "https://instagram.fmad26-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQPM0e0klTAMoEdW_JYN3xjGzcFuN2xvK-wved0ni0wVrK8EaC2iE0RttBxBzJP-8S0jmyQmehmBOb2mlqq-DbFovvWhdJHR2fxPIPU.mp4?_nc_cat=103&_nc_oc=AdrEbitI988FZmnIWfkA_kt3OJg0Lsm3TH2tNUaTxMelX-pukMG3g7zGvVaE3Xlia3o&_nc_sid=5e9851&_nc_ht=instagram.fmad26-1.fna.fbcdn.net&_nc_ohc=Yu5ieJ6z574Q7kNvwHy0Iry&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTkwMTA5ODYwNDYzMTUyNywiYXNzZXRfYWdlX2RheXMiOjI1LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6ODQsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=78ed721046eb5d06&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9DNTQwN0JCRDhGQzBGN0FCNzcwRkYwOUQwQ0I0OTVBNF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzU0NDFDNDU3Mjk1ODJBREYyRUU4QUFGNDlFMUNDMzlEX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbO15iwwMLgBhUCKAJDMywXQFUCn752yLQYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=2UrRbXSb7qt8OzXM-PYMyw&_nc_zt=28&_nc_ss=7a22e&oh=00_AQI7rJj0Jo12p4xDgUusqDRWdSSqHWiL8AsmDpzmmG2e5g&oe=6AA2B5B0",
+        "date": "2026-08-14",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Celebrating the love, care and strength that mothers bring into our lives every single day. \ud83c\udf38\n\nToday, students came together to make Mother\u2019s Day extra special with heartfelt expressions of gratitude and appreciation for the women who mean the most to them. \ud83d\udc96\n\n#MothersDay2026 #HappyMothersDay #SchoolCelebration #MotherLove",
+        "img": "https://scontent-yyz1-1.cdninstagram.com/v/t51.71878-15/688841354_973160565197502_6412889420665883961_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=102&ig_cache_key=Mzg5Mzc0OTk0NDE5MjU4MjExMTE1MDUwOTQ1ODEyNTQ3NDY%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=0RC8GvX_FYEQ7kNvwHuqYNh&_nc_oc=AdqIzHEU9g7MqmY7LDqeZjNa8mFFj3T3HApDXeMqzcFzI-kxrSPNDo1FFLhC0dyMmRU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-yyz1-1.cdninstagram.com&_nc_gid=1kBSejrrwz4BgNzW4LwtXA&_nc_ss=7a22e&oh=00_AQL9yGqSHo9qmvRl6DC_1mmXMsksaWxt76GsNid2mZIZlQ&oe=6AA6B10B",
+        "video": "https://scontent-yyz1-1.cdninstagram.com/o1/v/t2/f2/m367/AQP8aXpO3vQj_EsaPNpN6C5FqGy_uBef65AqLB6J4hawT4MLw4kcdUKl4aC35B5wT5hjNh45ByVDHfSWuYGvoiBdNnXB7z7kxWBVe4bpfPp20A.mp4?_nc_cat=111&_nc_sid=9ca052&_nc_ht=scontent-yyz1-1.cdninstagram.com&_nc_ohc=5Lh_9fbtge0Q7kNvwE0t3Hs&efg=eyJ2ZW5jb2RlX3RhZyI6ImlnLXhwdmRzLmNsaXBzLmMyLUMzLmRhc2hfdnA5LWJhc2ljLWdlbjJfMTA4MHAiLCJ2aWRlb19pZCI6bnVsbCwib2lsX3VybGdlbl9hcHBfaWQiOjkzNjYxOTc0MzM5MjQ1OSwiY2xpZW50X25hbWUiOiJpZyIsInhwdl9hc3NldF9pZCI6MTUwNTA3MjQwNDU5MDI5NywiYXNzZXRfYWdlX2RheXMiOjEyMiwidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjU1LCJiaXRyYXRlIjoxNjkwNzEyLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&_nc_gid=1kBSejrrwz4BgNzW4LwtXA&_nc_ss=7a22e&_nc_zt=28&oh=00_AQLZ8_L4xcdmtak4LJYXsK0SQJT3n1gcuB10eaIC_rvidg&oe=6AA6C11D",
+        "date": "2026-05-10",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "#60YearsOfWoodlands | #WoodlandersForever \ud83c\udf93\ud83d\udc99\n\n13 years at Woodlands. A lifetime of memories. A legacy that stays forever.\n\nFor Nahida Bhasu, Batch of 1991\u201392, Woodlands House School was more than a place of education. It was where her journey began, from nursery through Grade 10, shaping the person she would become.\n\nNow, as Woodlands celebrates 60 Years of Excellence, her message is simple and powerful:\n\nLet\u2019s reunite. Let\u2019s reconnect. Let\u2019s relive the memories. And let\u2019s celebrate the school that shaped our future.\n\nBecause no matter how many years pass, once a Woodlander, always a Woodlander. \ud83d\udc99\n\nHere\u2019s to 60 years of memories, friendships, learning, and a legacy that continues to bring generations together.\n\nCome back. Reconnect. Celebrate 60 Years of Woodlands. \u2728\n\n#60YearsOfWoodlands #WoodlandsHouseSchool #WoodlandersForever 60YearsOfExcellence Celebrating60Years WHSAlumni AlumniReunion ReconnectReliveReunite ProudWoodlander WoodlandsLegacy",
+        "img": "https://instagram.fmel5-1.fna.fbcdn.net/v/t51.71878-15/779996527_1580398730491707_7855795288490356585_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=111&ig_cache_key=Mzk2OTE4OTA1ODI0NjcyNDExMzI1NzQzMzc2Mzk2ODQ0Mjg%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=UBFS5I1CKacQ7kNvwHDkAUd&_nc_oc=AdoQnLpd1bz6VM9xpQ-FHzvpZPPNCEcbu_Bkeo6VvPg6_hIq05y05zSOvFfO_SdRRvU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fmel5-1.fna&_nc_gid=icokcV2mhlus6G7hpCkVvQ&_nc_ss=7a22e&oh=00_AQI_4CiES79RoqT4vpJmvjHxYuwsAvaJMr4dh6Dms2JZdQ&oe=6AA6D07D",
+        "video": "https://instagram.fmel5-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQNHTw0zCxN0y1nWjkZP0TiONMd4qXNM8sGJp3D75fSxOaZAP_wZNJgw4QNyGG_yHL5MmMsTSIRtCw8qDJbM-TpzAdBBIxOHUp5JZQo.mp4?_nc_cat=108&_nc_oc=AdoJg8kzcX5_tdQnETE5xKIfH78n7C7-CypNaIz9iqRGpm4m6W60xbkjilGJartBAu0&_nc_sid=5e9851&_nc_ht=instagram.fmel5-1.fna.fbcdn.net&_nc_ohc=fpTn5HagcbEQ7kNvwGbW-kj&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MjU3NDMzNzA2NjM1MTE1MiwiYXNzZXRfYWdlX2RheXMiOjE3LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MjcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=1872964aec263d21&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9DRDQ3MzlGQjQzMjE4NEM4MzY4QkI1REYxNjFDOTc4MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzg1NDA3RDAzNENCOEZDMjY4QkZEQzUyMEYwNDBGQThGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbg6PnlkdaSCRUCKAJDMywXQDtqfvnbItEYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=icokcV2mhlus6G7hpCkVvQ&_nc_zt=28&_nc_ss=7a22e&oh=00_AQKtFdLPK2emfiWjCcDdzOEYGo2Fd54s7NkHILri9ZW_Hg&oe=6AA2C7D5",
+        "date": "2026-08-22",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Today, we bid farewell to an incredible group of students who have filled our school with memories, laughter, and pride. As you begin a new journey, carry our values and lessons with you.\n\nYou will always remain a cherished part of our school family. Wishing you success and happiness in everything ahead. Farewell, Class of 2026! \u2764\ufe0f\ud83c\udf93\n\n#SchoolFarewell #Farewell #SchoolLife #schoolfriends",
+        "img": "https://scontent-lhr11-1.cdninstagram.com/v/t51.71878-15/755868119_4646328262256023_1681218337300140649_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=111&ig_cache_key=Mzk1MDIyNjQ2MDE5OTExMDU3OTI4MTU3ODY2ODIxMzg0MzU%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=-HxD86T7eLMQ7kNvwHhA_l5&_nc_oc=Adqc0M-6Fi9EyCUiapDC_CFjpcBNs_2IMNqF8aSBoZN2JaageVvK_UGiM-P_hEv5YrudNKjBq7V5_0CZ0PtCNbEq&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-lhr11-1.cdninstagram.com&_nc_gid=32Scfm4tToGZ2ghqtEGhmA&_nc_ss=7a22e&oh=00_AQLg6reaLoPrGdWaYT42vT8etP-6B6b6LCjwj5jQo0hASw&oe=6AA6D1EE",
+        "video": "https://scontent-lhr11-1.cdninstagram.com/o1/v/t2/f2/m86/AQMwu-lOCr2uBFhYVMvU0Awbh8kwYXE9cuaMZg3rYK1dr6w1nEg8vwJS8FtPy_6qRMPnWS3HZps4hg9KZN5Mp2JPU-2TYvNXHA0DeXs.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-lhr11-1.cdninstagram.com&_nc_ohc=FyTtc--GRP8Q7kNvwFMjXFp&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MjgxNTc4NTc1MjEzODUyOCwiYXNzZXRfYWdlX2RheXMiOjQ0LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6NjcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=8197d8ac05f2812b&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9EODQzM0JDMTc0RjlFNkYyQzA1OENCMTQ4MDU1RDA4NF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0IzNDgwRDVBMjFGM0RENjU5N0U4NjhFOUFGOTZDRkI0X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbAzKjYpryAChUCKAJDMywXQFDqn752yLQYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=32Scfm4tToGZ2ghqtEGhmA&_nc_zt=28&_nc_ss=7a22e&oh=00_AQIipquhsJ5QW44zkVtCV9pWtccWBsQq-lRT6pokMii4UA&oe=6AA2BB01",
+        "date": "2026-07-27",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Colors spoke louder than words today \ud83c\udfa8\u2728\nCelebrating creativity, imagination, and the beauty of expression on Art Day. Every stroke tells a story, every shade holds a feeling. \ud83d\udcab\n\n#artday #creativeexpression #celebrateart\n\n[art day celebration, creative expression, art inspiration, artistic creativity, painting and drawing, art event ideas, visual arts celebration, creativity day, art lovers community, importance of art]",
+        "img": "https://scontent-hou1-1.cdninstagram.com/v/t51.71878-15/688155164_1309646921231490_5781440563036113829_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=106&ig_cache_key=Mzg4ODc0NzU1MTQxMTExNzYwMzEzMjI1NzMyNjk3ODk4MjA%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=m47g0J7d4hYQ7kNvwFieZ_H&_nc_oc=Adr3NB1K7q10T6spnXvv8REB4QDgUxJ2o5GHpd1YvRYLrG4ngwKwi858TnrUllknrss&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hou1-1.cdninstagram.com&_nc_gid=yLoE7VCyn0rnpeh1D34NtA&_nc_ss=7a22e&oh=00_AQJ7APwo7BKWQtswtEgpdOHQOKMM4HyztY9SvzS8pmE8lQ&oe=6AA6CA03",
+        "video": "https://scontent-hou1-1.cdninstagram.com/o1/v/t2/f2/m86/AQPTdB1sjy8HEVi1THICViXMshs4Khn_S-ZwTlnbICMJRIKdDTEr8DzhK4FbvTcZ-DoKFM4QIiN87Y4XvdfjxIfzJiHLP99le28Yz8k.mp4?_nc_cat=105&_nc_sid=5e9851&_nc_ht=scontent-hou1-1.cdninstagram.com&_nc_ohc=qXUXZX_o_DgQ7kNvwHtxmHB&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTMyMjUxMjUyNjQ2MjU2MSwiYXNzZXRfYWdlX2RheXMiOjEyOCwidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjI3LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=eb905306590d5a39&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC83RDRDRDBBRTlCOTlGMjYwMzNGMDNFQjg1RTZFM0U4MV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzRENEQ4MERCN0Q1NjJCOUIzRUZEQ0ZFRTY1MDFCMUE3X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbCuc6VrrTZBBUCKAJDMywXQDs7peNT988YEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=yLoE7VCyn0rnpeh1D34NtA&_nc_zt=28&_nc_ss=7a22e&oh=00_AQK3hCj5ug7LaaUfmUkp8NAdA2Oi9POaIISMqKxB5aEUlQ&oe=6AA2BFDE",
+        "date": "2026-05-03",
+        "type": "Story"
+    },
+    {
+        "title": "Post Archive",
+        "desc": "We are proud to welcome Woodlands House School as an official partner for the WHS Sports Hub Golf Cup 2026.\n\nA partnership built on quality, excellence and a shared vision for a standout event.\n\n#WHSSportsHub #GolfCup2026 #OfficialPartner #WoodlandsHouseSchool",
+        "img": "https://instagram.fmad17-1.fna.fbcdn.net/v/t51.82787-15/688439672_17941849254191117_4662671042199399306_n.heic?stp=dst-jpg_e35_tt6&_nc_cat=108&ig_cache_key=Mzg5MTU4ODI1NTEwMzYzMzEwNg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=PdTvJDiXtsAQ7kNvwGs7nBC&_nc_oc=AdqpB5cK6cMAEEv25-iVPiEo4rFTHbjAqUqkd0JIHxNBiHwcQme6pURFWrGuNnjr04Y&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fmad17-1.fna&_nc_gid=uCe_7u6RNhnHWHgccDv0LA&_nc_ss=7a22e&oh=00_AQISSvrohYgFlR2juqe6E91nUIOVM0t6AmxVES6-37-Elw&oe=6AA6B4D4",
+        "video": "",
+        "date": "2026-05-07",
+        "type": "Post"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "I will be a defender of my planet!\u201d \ud83c\udf0d Listen to the beautiful voices of our little eco-warriors at Woodlands House School, Srinagar, as they pledge to protect our Earth. Let\u2019s all do our part for a greener tomorrow! \ud83c\udf31\ud83d\udc9a\n\n #EarthDay #WoodlandsHouseSchool #SaveTheEarth #EcoWarriors",
+        "img": "https://instagram.fntr11-1.fna.fbcdn.net/v/t51.71878-15/671608568_980419788005660_423529613371718785_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=110&ig_cache_key=Mzg4MTQ2Njk1MjI3MTc1MTY4OTE4MDg3NzczOTAzNTkzMTMz.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=SURocHLJx6UQ7kNvwHtUYaS&_nc_oc=AdoP6U7B5vumrvQcDKiMYAtifBMOP-MEgfWmOg4x9I7Zxp_FAqGDUbiDFg60Fd2rvxua-2yjJWKm4LeQWYK6ALAB&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fntr11-1.fna&_nc_gid=-b9eopELDnHTe2wNDiMUuA&_nc_ss=7a22e&oh=00_AQJdnj7F46LqtmIO7Nm5_xxdaLz4pQe8YLVTd_vt1VBvpQ&oe=6AA6BDFD",
+        "video": "https://instagram.fntr11-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQPaxUtSsO2T0-eZnyUG3zAYMeGpRb5-7XZ5EvfbY4cjMKCpKf7V8_236ihYJOqIiGB7m15PJyf2ScGtWg4fZrZMRHQWXbvmNdQgx2c.mp4?_nc_cat=108&_nc_oc=AdqC8NZbs012vD_VC-Kq6NTL-UzfXABnl8t1E0ycPjHFEIsphn7FsoGcdHpMcO2bKRGZ4Olxo0PFe6BdAiBa_Gge&_nc_sid=5e9851&_nc_ht=instagram.fntr11-1.fna.fbcdn.net&_nc_ohc=8eEpY4pEaswQ7kNvwG_anwd&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTgwODc3NzMwOTY1OTMxMzMsImFzc2V0X2FnZV9kYXlzIjoxMzgsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoxMDgsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=8c292188356f9798&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC85ODQ0QTY3MDIyRTczQzA4QjYxMzMxNjEwQzYyMUFBRF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0Y0NDEyQ0MwMjYxMjk0Qjc1NUE4NDg5ODEwOThDQkEyX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbam5qj-66hQBUCKAJDMywXQFs9T987ZFoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=-b9eopELDnHTe2wNDiMUuA&_nc_zt=28&_nc_ss=7a22e&oh=00_AQJQFzxPODBed3Nnes7_MNbyOzuKtm2ntywRHzBS-iHAYQ&oe=6AA2DDC5",
+        "date": "2026-04-23",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "\u2728 Waheguru Ji Ka Khalsa, Waheguru Ji Ki Fateh! \u2728\n\n\u200bHappy Vaisakhi from all of us at Woodlands House School, Srinagar! \ud83c\udf3e\ud83d\udc9b\n\n\u200bIn this beautiful presentation, our 7th-grade students take us through the deep cultural and historical significance of Vaisakhi. They beautifully highlight how this auspicious day is not only a celebration of the bountiful harvest season\u2014filled with gratitude, traditional music, and joyful dances\u2014but also a deeply spiritual occasion marking the establishment of the Khalsa Panth by Guru Gobind Singh Ji in 1699 at Anandpur Sahib.\n\n\u200bAs our students remind us, Vaisakhi is a timeless celebration of mutual love, universal brotherhood, and our rich, vibrant heritage. We are incredibly proud of our students for keeping these beautiful traditions alive!\n\n\u200b#Vaisakhi #WoodlandsHouseSchool #WHSSrinagar #Baisakhi #CulturalHeritage\n\n[Baisakhi CulturalHeritage KhalsaPanth WorkIsDevotion StudentLife SrinagarSchools]",
+        "img": "https://scontent-lhr6-1.cdninstagram.com/v/t51.71878-15/670381792_963152689600256_7263662347918700202_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=103&ig_cache_key=Mzg3NTE3ODY2MDc0NzcxNDcyNDE4MDg2NzU2NzQxNTkzMTMz.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=JnXBBTzpW7wQ7kNvwHh3lFH&_nc_oc=Ado13-T9IkJfJsTbOzYipJttTwMGsWK3KlEiZhjjPA4jkQaUc9ezBZYDKQcPWqpaCyA&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-lhr6-1.cdninstagram.com&_nc_gid=QbGXudLWRdY3HuVWnaNSUw&_nc_ss=7a22e&oh=00_AQKxEdmpD8Hn_GIHPNnSIrIwuNuXZXrue7wZoEfK37NM8g&oe=6AA6D4E6",
+        "video": "https://scontent-lhr6-1.cdninstagram.com/o1/v/t2/f2/m86/AQOmj_CeYQPGo-L_dnc58XCZ7-2isuGaZofUMX4z9AnMgggP0WUFHlSveDj1_OznBcge3kSi_285jFeFw8CQ3ZRWqq6do94AxYh9cOA.mp4?_nc_cat=108&_nc_sid=5e9851&_nc_ht=scontent-lhr6-1.cdninstagram.com&_nc_ohc=n97BkZ2Pb-EQ7kNvwE2ZqhP&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTgwODY3NTI1NDQ1OTMxMzMsImFzc2V0X2FnZV9kYXlzIjoxNDcsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjo1NCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=6e0f6f8490eac923&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC85NDRBNDRDMzVCOUQzREIyMDJBRUY1RjE2NkJCNjY4Rl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0NFNDdGMTk4NDk4QjlCNUFGNkQ4NjJBRjM1OTEwNjlFX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACba0_zIx_OgQBUCKAJDMywXQEsqn752yLQYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=QbGXudLWRdY3HuVWnaNSUw&_nc_zt=28&_nc_ss=7a22e&oh=00_AQJTvoopoQCtB9VzvAVES048rRXwlc1Vwwl6ipsS6c54XA&oe=6AA2DBBD",
+        "date": "2026-04-14",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Honoring a Visionary Leader \ud83d\udd4a\ufe0f\n\n\u200bToday, the Woodlands House School (WHS) family came together in a solemn moment of reverence to pay tribute to our beloved Founder and Principal, Mrs. Rup S.P. Singh.\n\n\u200bHer vision transcended time, and her unwavering dedication continues to inspire and guide us every day. As we reflect on her profound impact, we are reminded that her legacy is not merely confined to memories or words\u2014it lives on in the actions, values, and bright futures of every student who walks through our doors.\n\n\u200bGuided by our motto, \u201cWork is Devotion,\u201d we pledge to carry her extraordinary light forward.\n\n\u200bMay her noble soul rest in eternal peace. \ud83e\udd0d\n\n\u200b#WoodlandsHouseSchool #WHS #Tribute #Legacy\n\n [Education Leader In Memoriam Work Devotion Inspiring Generations School Community]",
+        "img": "https://instagram.fmad18-1.fna.fbcdn.net/v/t51.71878-15/695899232_1771550297543920_4831027455289758904_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=110&ig_cache_key=Mzg5MjU1MDI5MDQxNDg3NTcxOTk4MTAxNjQxMTUyNjc5OQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=hgzR1FyueMIQ7kNvwEQdcQ6&_nc_oc=AdqU8KtxPvxL4l_UXly3Q3wropcIeOzGPzu0AITNPRLCDuMTZuyeSTNBZ8T8XWK78NU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fmad18-1.fna&_nc_gid=QMdOSImHOyEJtE6mTmWb4w&_nc_ss=7a22e&oh=00_AQJNklOpIqBBwBkm2ra_8mXUbXSvlYUx3WfQP4YFmE7lRQ&oe=6AA6AAC0",
+        "video": "https://instagram.fmad18-1.fna.fbcdn.net/o1/v/t2/f2/m367/AQPtRrrRGDfVfiueOyJ9RN5Tby581Idyo-LKxh7zuLKCnpFgkxvpATBTJJRzonBf0ZcrJvOpvDyfQPGY6lDGBssXEAzLfFhYeOlm3b5SGmQcjQ.mp4?_nc_cat=103&_nc_oc=AdrZl77GSPYl6XtB1U_BjjASqt5Mp71XaLZShPrhhyIZuGZVT7EN8slWxrR4EmnSp_c&_nc_sid=9ca052&_nc_ht=instagram.fmad18-1.fna.fbcdn.net&_nc_ohc=s03yrnt8aB4Q7kNvwF4NhRV&efg=eyJ2ZW5jb2RlX3RhZyI6ImlnLXhwdmRzLmNsaXBzLmMyLUMzLmRhc2hfdnA5LWJhc2ljLWdlbjJfMTA4MHAiLCJ2aWRlb19pZCI6bnVsbCwib2lsX3VybGdlbl9hcHBfaWQiOjkzNjYxOTc0MzM5MjQ1OSwiY2xpZW50X25hbWUiOiJpZyIsInhwdl9hc3NldF9pZCI6OTgxMDAxODA4MTk0OTI2LCJhc3NldF9hZ2VfZGF5cyI6MTIzLCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6NzcsImJpdHJhdGUiOjExNTIzOTQsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&_nc_gid=QMdOSImHOyEJtE6mTmWb4w&_nc_ss=7a22e&_nc_zt=28&oh=00_AQIWtEI0UOozHokYWvk6clxmI6iwFkaaQXsGarnFDtuWeA&oe=6AA6AEF5",
+        "date": "2026-05-08",
+        "type": "Story"
+    },
+    {
+        "title": "Post Archive",
+        "desc": "\u201cMy School Days, Penned in Print.\u201d @whssportshub @whssgr @news_kashmir_ @farzanasalib  https://www.newskashmir.in/",
+        "img": "https://scontent-yyz1-1.cdninstagram.com/v/t51.82787-15/715323563_18597229129002608_1058549084900024548_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=109&ig_cache_key=MzkxMDU2MDQ0MDc0MDA3NDk1Ng%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuNzgwLnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=g6geVhPg3swQ7kNvwHOXreZ&_nc_oc=Ado3p4ROeNRFESpFS_ptbW9FEitTQrdQLEnXndzHVjbn1bDbaYnnwcH_nBMVN39LFXM&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-yyz1-1.cdninstagram.com&_nc_gid=W6xRyVvjaMU1uwxI16ekJQ&_nc_ss=7a22e&oh=00_AQKwR4bGQdLGKS_Y9h2GmKIHRP-sdn8X9VVfjK8hOuOcag&oe=6AA6CF7D",
+        "video": "",
+        "date": "2026-06-02",
+        "type": "Post"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Schools are back in session and the hallways are buzzing again. New notebooks, fresh goals, and a whole year of learning ahead.\n\nHere\u2019s to early mornings, big dreams, and students stepping back into the classroom ready to grow and achieve more this year. \ud83d\udcda\u2728\n\n#BackToSchool #SchoolDays #StudentLife\n\n[back to school 2026, schools reopened, students back to school, new school year, school reopening updates, student classroom learning, education season start, school routine begins, school life moments, academic year start]",
+        "img": "https://scontent-cdg4-1.cdninstagram.com/v/t51.71878-15/650230087_2179813249440623_3593699743877979173_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=108&ig_cache_key=Mzg1MTk4MTY3MzI2MTY0NTcwNDE4MDgyNjA3NjA5NTkzMTMz.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=7bGvH4Nv1XMQ7kNvwEQp5zN&_nc_oc=AdqtERP6bpiNFxI-Zi05cFEiGjhVCsDcS0VEPa_vHfqIM46EpMEs6UhDlAGEW4LyTKZ5J4Od7572O-mdAlCzKZwj&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-cdg4-1.cdninstagram.com&_nc_gid=oYrmolIQtmTqpcUwEL2TxQ&_nc_ss=7a22e&oh=00_AQK_jznYPPJh_5d79pZvlhQzcgsDpAASckJvoHSUyXtLwA&oe=6AA6BBB9",
+        "video": "https://scontent-cdg4-2.cdninstagram.com/o1/v/t16/f2/m69/AQPChEa5lg0fWr1N5-H9fam2dQQNZmdzgX0fXPQRcuRxPMGikO0fC_VI9nQOuMBnRTKicI8x7_Urfnh_Gz1h7jqY.mp4?strext=1&_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-cdg4-2.cdninstagram.com&_nc_ohc=gvL0RSHECrwQ7kNvwG3MsAd&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTgwODI2MDc1NDY1OTMxMzMsImFzc2V0X2FnZV9kYXlzIjoxNzksInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjo2NCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=501efd6e34f7e577&_nc_vs=HBksFQIYOnBhc3N0aHJvdWdoX2V2ZXJzdG9yZS9HSzBuc2lhWWRJeFB3cEVOQUlncjJmMmRjTW9rYnNwVEFRQUYVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0IyNDNDQjkxRkQxNTQyODA1QTA2MTk1MzFDNUYzMTlDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbavev2pIKfQBUCKAJDMywXQFA1T987ZFoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=oYrmolIQtmTqpcUwEL2TxQ&_nc_zt=28&_nc_ss=7a22e&oh=00_AQJjmXVsKdBy05PuvcLoW0kgNeevCEcEuR3GcxlKKJbxEA&oe=6AA6DCAB",
+        "date": "2026-03-13",
+        "type": "Story"
+    },
+    {
+        "title": "Post Archive",
+        "desc": "In loving memory of a visionary who built more than a school. She built a legacy that continues to guide every student who walks these halls.\n\nHer values live on in every lesson, every achievement, every dream.\n\nForever remembered. Forever respected. Forever part of Woodlands House School.\n\n#LegacyLivesOn #InRemembrance #WoodlandsHouseSchool #Srinagar #Founder EducationWithValues NeverForgotten",
+        "img": "https://instagram.fmxp5-1.fna.fbcdn.net/v/t51.82787-15/688382123_18089334473593133_5356276766229567160_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=107&ig_cache_key=Mzg5MDE5MDcxMTIwNzEyMDgxOQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=KDh5eBkuu4kQ7kNvwGiK6od&_nc_oc=AdohGzl4Kk6iAVQLeO0DaYGZLxdWiN8kpm95H7gzU4G6Xmauh7ZZpk00tjCz1ydxIG73n6jwMU-nS8Lxe0ZRit_8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fmxp5-1.fna&_nc_gid=v6AzXqgaJFeXlVKnLSHPQA&_nc_ss=7a22e&oh=00_AQLF7_wK9Bsfn1ef60JkliWuMaWYVaJ8hnGhIXLzYuM-Pg&oe=6AA6ABF2",
+        "video": "",
+        "date": "2026-05-05",
+        "type": "Post"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Eid celebrations at school filled with smiles, joy, and festive cheer \ud83c\udf19\u2728 Wishing everyone a blessed and happy Eid!\n\n#EidCelebration #SchoolEid #EidMubarak\n\n[Eid celebration in school, Eid al Fitr school event, students celebrating Eid, school Eid activities, Eid Mubarak celebration, Eid festival at school, cultural school celebration, Eid event photos, school festive program, Eid celebration students]",
+        "img": "https://scontent-mel1-1.cdninstagram.com/v/t51.71878-15/655674597_925994566966841_7278941809252907330_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=103&ig_cache_key=Mzg1ODUwNDQ1NTUyOTE1OTIwMDE4MDgzODQ5NTQwNTkzMTMz.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=g-taBXeY6-EQ7kNvwGrBVNC&_nc_oc=Adry2ttc4ByuuH7GhBj771hkzBfoJ4p8iTHtUt6YBDOmX74TpW8y4qGyNUJ4-IDpa5A&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-mel1-1.cdninstagram.com&_nc_gid=gR6ZKtDhwn4DRlYsYcCW3A&_nc_ss=7a22e&oh=00_AQLTFHZId-CvIzKL6JnvMX09LG4pKibGFt_7gasAbPXHuw&oe=6AA6D4F7",
+        "video": "https://scontent-mel1-1.cdninstagram.com/o1/v/t16/f2/m69/AQPY_gEJE50-G8Hbd_O4WHG2pGnpuf_b224t_4M5ryVjUstNUezSF97lAUt_Zeoph8eDkiBlouNqtK3TejWmb0Uq.mp4?strext=1&_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-mel1-1.cdninstagram.com&_nc_ohc=grSZBOo9oh4Q7kNvwEXKtFb&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTgwODM4NDk0NDE1OTMxMzMsImFzc2V0X2FnZV9kYXlzIjoxNzAsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjo3NCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=a39db3fd298df65f&_nc_vs=HBksFQIYOnBhc3N0aHJvdWdoX2V2ZXJzdG9yZS9HRVNUMFNiYlVrbDZuRzhFQUFSY2U5OERyUVFrYnNwVEFRQUYVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0Q0NDc4OUVCRjQ1REI5RTI0OUY1Q0UzQkE1NzUxMjk3X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbanJriycqfQBUCKAJDMywXQFK5mZmZmZoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=gR6ZKtDhwn4DRlYsYcCW3A&_nc_zt=28&_nc_ss=7a22e&oh=00_AQIu8D11qUGp_7BLJybGykJti1Xz16UJApUP4BLWxrp7Rw&oe=6AA6D62D",
+        "date": "2026-03-22",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Eid Mubarak from all of us at WHS School! \u2728\n\nMay this Eid bring peace, happiness, success, and countless blessings to every student, parent, and teacher. May your homes be filled with joy, gratitude, and togetherness as you celebrate this special occasion with your loved ones.\n\nWishing everyone a beautiful and blessed Eid filled with love, laughter, and memorable moments. \ud83c\udf19\ud83d\udcab\n\n#EidMubarak #WHSSchool #EidWishes #",
+        "img": "https://instagram.fcxh2-1.fna.fbcdn.net/v/t51.71878-15/708312384_2491431187955718_3653649216384587575_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=102&ig_cache_key=MzkwNjM5ODQ2ODU0OTM5ODg4NjIxNzg1Mzc3MjkzNTQyOTM%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMyIn0%3D&_nc_ohc=Q5kFHZ33y8AQ7kNvwFHuKVt&_nc_oc=AdoEI0TncqWFcdXWhEpvQj8B8PZ-F6cB3ytFcZ2u78h9S4wzBJX9OrXpB_JaIdNmzV_eFmYljsUMEcL0Vcfb_i7j&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fcxh2-1.fna&_nc_gid=WUbYKVpEkznKsmfci2Gk_g&_nc_ss=7a22e&oh=00_AQJtPaicbW1eyIfgxap5VX7XH_DjSWS8dKpZ7_UI3pr2Zw&oe=6AA6D174",
+        "video": "https://instagram.fcxh3-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQPjaQ5gzmrvN01iM_GRjxV_C-FiXVkWwOExChP11wHgBEcArqiBLovDThcjzay4NjY6cMmsJIhTDVa8i6SyQiNP_grdCOdnQj6Y5zk.mp4?_nc_cat=110&_nc_oc=AdrXdyO4iOQ0VKUitH0GQf2eZb9bFwVqBfssKBEj0DjZ2zSMJXFQ2o6IGUM-qSNXNV9CEEiUGIUzfrlt0boB7eBJ&_nc_sid=5e9851&_nc_ht=instagram.fcxh3-1.fna.fbcdn.net&_nc_ohc=dwF2Bb1qRbkQ7kNvwGCCHM6&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzIuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MjE3ODUzMjMxMjY4ODE2OCwiYXNzZXRfYWdlX2RheXMiOjEwNCwidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjYwLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=ef6767cb6184133&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC81MzQ2RTZDQjk2RjQ1MkJGQTI2RTYxNEQwOEM1Q0U5Ql92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzAzNENGNUQyNjE5OERGREZCQjFFNDBBMTM4N0EwNUJFX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbQmInKotfeBxUCKAJDMiwXQE41P3ztkWgYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=WUbYKVpEkznKsmfci2Gk_g&_nc_zt=28&_nc_ss=7a22e&oh=00_AQL34dz-LV5i80axqXmhc62lzP9plZjkj-vO_XQUxxU5xw&oe=6AA2E9D7",
+        "date": "2026-05-27",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "\ud83c\udf19 Smiles, sweets, and celebrations! Our Eid-ul-Fitr celebration at school was full of joy and beautiful memories. Eid Mubarak to all! \ud83c\udf89\n\n#EidUlFitrCelebration #SchoolCelebration #EidMubarak \n\n[Eid ul Fitr celebration in school, Eid celebration at school, school Eid activities, Eid festival celebration in school, Eid Mubarak school event, students celebrating Eid, Eid cultural celebration in school, school festival celebrations, Eid event in school campus, Eid ul Fitr school program]",
+        "img": "https://instagram.fyka2-1.fna.fbcdn.net/v/t51.71878-15/653581066_749721384738210_453696803260058406_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=103&ig_cache_key=Mzg1Nzg0NzkyNDI2OTc1OTU1MjE4MDgzNzI3MTMxNTkzMTMz.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=TJhtgXk5PQsQ7kNvwHFYOY7&_nc_oc=Adpjj92f2vNzfqd7cCICrqrdA7VKx17Q7JiSIJDFu4qpGkeghC68O-jbNeGa4BkevIQ&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fyka2-1.fna&_nc_gid=9Pf37aaa5ITWbMz5cPfsNg&_nc_ss=7a22e&oh=00_AQIyrt4rl4iNiSpIilkMMIyO0BLVTHGWHF_eHImQSu6RoA&oe=6AA6B0CF",
+        "video": "https://instagram.fyka2-1.fna.fbcdn.net/o1/v/t16/f2/m69/AQOm2ny1VcQxXxsUJTRGVPQR6tRw7ym8ugNfzOxY87biJVpbkjCOxYQLZnvFI0bLKEQHtQ4edP2J218W5ftbxEix.mp4?strext=1&_nc_cat=108&_nc_oc=Adr-pD7Ex9GS2Tv234-YmKGqaO1JuyiCcQlQ4EE96UnoiinT_tM_8QBI40M0-fDdT0k&_nc_sid=5e9851&_nc_ht=instagram.fyka2-1.fna.fbcdn.net&_nc_ohc=JE-GvsI6GUIQ7kNvwFmTB5p&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTgwODM3MjcwODM1OTMxMzMsImFzc2V0X2FnZV9kYXlzIjoxNzEsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjo3OSwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=864459be08fb7dd7&_nc_vs=HBksFQIYOnBhc3N0aHJvdWdoX2V2ZXJzdG9yZS9HSTZHLWliTTcyaUcxcmhkQUtyYS13dV82STR1YnNwVEFRQUYVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzM1NEQ2MDgwNkY4M0Q1MkFFQUFGNENENTM2REI5QUEzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACba9sKQusOfQBUCKAJDMywXQFPdT987ZFoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=9Pf37aaa5ITWbMz5cPfsNg&_nc_zt=28&_nc_ss=7a22e&oh=00_AQI3YIOSSszuR3QCTMwhZNeBFGPh0VyylJb1O4OxoxsXhg&oe=6AA6DC98",
+        "date": "2026-03-21",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "No boring lectures. \u274c\nToday, students at Woodlands House School explored the fascinating world of Electronics through hands-on learning! \ud83d\udd0c\u26a1\n\nBecause the future belongs to those who build it. \ud83e\udd16\ud83d\ude80\n\n#RoboticsAndAI #Electronics #STEM #WoodlandsHouseSchool #KATIndia FutureEngineers",
+        "img": "https://instagram.fmad7-1.fna.fbcdn.net/v/t51.82787-15/722974257_18161862934456165_714109347976367966_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=101&ig_cache_key=MzkxNzIxMzAwNzQxOTgzMjg4MzE4MTYxODYyOTI4NDU2MTY1.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjExNzkuc2RyLnZpZGVvX2RlZmF1bHRfY292ZXJfZnJhbWUuQzMifQ%3D%3D&_nc_ohc=xQB1vpm4Vj4Q7kNvwEx0FgI&_nc_oc=AdpJyk2jkcI1ATCI8ABR98IE7kdIWh1tp8o1JCeApZS6FkrUE480VuknVzOX3b79AtE&_nc_ad=z-m&_nc_cid=1006&_nc_zt=23&_nc_ht=instagram.fmad7-1.fna&_nc_gid=yf6WE8RSmeETU5vHyXgzQg&_nc_ss=7a22e&oh=00_AQIOHoRV0B3JnIJITk_bG65UGM1sJxzRaUF9AUg9-pIpmw&oe=6AA6DCBE",
+        "video": "https://instagram.fmad7-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQPSobx1UKcx-6zdmcw0Bt0aVNahjQMw-1APMN-CMYcL0aYeBoFdx1y70u_ehNuRTlf_wCVMDkE1DJi9F0m6l5ZJGMuduIDJMiemfOw.mp4?_nc_cat=107&_nc_oc=Adp3M9GqEdlC4GjoywruNyYDYc7uHr9AOBd7b3qSfsYKFX-CekKd213ScMq-VyUzRYE&_nc_sid=5e9851&_nc_ht=instagram.fmad7-1.fna.fbcdn.net&_nc_ohc=xUh3JfKhhOIQ7kNvwHQHYPz&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTI4MTEyMjEzMDQ3MTg5NiwiYXNzZXRfYWdlX2RheXMiOjg5LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MzIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=1d11ef05e87df120&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9BRTREMzEyODhBOUY3REIwQUI4RjVDRjY3RTNDQjVCQl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzg3NDhENkEzQTFEMzI1QUI1RjVEODgwRkI4Q0M1MEIxX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACawr4HYj8vGBBUCKAJDMywXQEAEOVgQYk4YEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=yf6WE8RSmeETU5vHyXgzQg&_nc_zt=28&_nc_ss=7a22e&oh=00_AQIb0jjNLUvVQVFDu-xtl8CUIeh7yq9DM_qaKYXKeXorNA&oe=6AA2BEE8",
+        "date": "2026-06-11",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "At Woodlands House School, students got hands-on with Robotics & AI, exploring Arduino coding, electronics, sensors and more.\n\nBecause the future belongs to kids who build, code & innovate. \ud83d\udd27\ud83d\udcbb\n\n#KATIndia #Robotics #ArtificialIntelligence #Arduino #STEMEducation WoodlandsHouseSchool FutureReady KidsWhoCode Innovation LearningByDoing",
+        "img": "https://instagram.fpoz3-1.fna.fbcdn.net/v/t51.82787-15/776020673_18168807361456165_808273200125040968_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=104&ig_cache_key=Mzk2NDI2NDM0MzAwOTIyMTU3MTE4MTY4ODA3MzU4NDU2MTY1.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjcyMC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=xXLCakgTUawQ7kNvwGNxyMd&_nc_oc=Ado2Rrrm5gQbL2Zo2s8ab9Mu8pEMfV_jkIDtSSNgq2AOHjFX-u5fWxEBFgHk-6l3RX8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fpoz3-1.fna&_nc_gid=QzyQoUZglNTDqu5cYbKukg&_nc_ss=7a22e&oh=00_AQKTs1fmI5XoFYxjNfRB3jJBdrSOWHi7Ofkl1ajc-7nEFw&oe=6AA6D67D",
+        "video": "https://instagram.fpoz3-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQNQMOEL8co1gRizETo06vCyQ7C6JSVbf_Ou35aKB8J-fWuMIOpj0rPJlEMRky7oWnRVd3X89dLkz1lOYpwMLn4X-XDurMxYGlyQFuI.mp4?_nc_cat=105&_nc_oc=AdporsAVGCX0_6xTP2yuDFHgfQ0s34XNrvCkdIqcVPYEhJcHWZwk578LyYTYlMq9W6U&_nc_sid=5e9851&_nc_ht=instagram.fpoz3-1.fna.fbcdn.net&_nc_ohc=DQAdUA5ZkaQQ7kNvwFgrNhu&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc1NTEyOTc5ODg0NTEwMSwiYXNzZXRfYWdlX2RheXMiOjI0LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MTMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=7ae659802eda5808&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8xMDRBRkIyQTk2QzAzMDY3RDMwNTQ1MEZDNjJCRjRBMl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0YwNDJDMjE4QUREREJCMDlGQzVDNkEzMkFBNDg2Qjk3X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbaio-DgJKeBhUCKAJDMywXQCuIMSbpeNUYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=QzyQoUZglNTDqu5cYbKukg&_nc_ss=7a22e&_nc_zt=28&oh=00_AQKPDdeTJBGOEq4iP5BIok8Te_zA6i9VNAy7wyLIdjL3ZQ&oe=6AA2D32A",
+        "date": "2026-08-15",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Our students beautifully brought the story of Lord Ram to life, sharing the values of courage, truth, and devotion that Ram Navami teaches us. Through their storytelling, they reminded us how timeless traditions continue to inspire young minds and shape strong character.\n\n#RamNavami #SchoolCelebration  #ValueBasedLearning\n\n[Ram Navami celebration in school, students telling Ram Navami story, Ram Navami school activity, Lord Ram story by students, Ram Navami storytelling event, Ram Navami celebration with students, school Ram Navami program, Ramayana storytelling in school, cultural celebration Ram Navami, Ram Navami activities for students]",
+        "img": "https://instagram.fngo5-2.fna.fbcdn.net/v/t51.71878-15/657259746_1428335405119764_6563600938317650304_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=106&ig_cache_key=Mzg2MTE5NDQ0OTcxNjEzNzg3Nw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=LAjFzmvQyz4Q7kNvwHBottL&_nc_oc=AdpcTWxoqye-AQC7ye5ZB8AdTvW78A9Bpu6pS0_Z1VFY21FDT_cBq5Y4aDEXusK66vc&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fngo5-2.fna&_nc_gid=JuVTLdb4rYeQePlf860GzA&_nc_ss=7a22e&oh=00_AQIRN31rGSbYf0mRVE4T4ryUGhlFKg_64A9cpGoqA2n2Wg&oe=6AA6D890",
+        "video": "https://instagram.fngo5-2.fna.fbcdn.net/o1/v/t2/f2/m86/AQNMpxgKYdWxzLzHgAlMrW9cBPXAQWMyz9zKDY6hd0Y-UEF41OL3Ep_4guKQV7IPijHe3xW8PmDMlytvwSjSjj590X7-FGje2qW_GCo.mp4?_nc_cat=109&_nc_oc=AdoDQMnPqlV1wywtWg-8EIBMnei1K-4H5wXM9U9yRY6tGCuw-jZ1TVClg2APe06uQZU&_nc_sid=5e9851&_nc_ht=instagram.fngo5-2.fna.fbcdn.net&_nc_ohc=JzsaESD8ktwQ7kNvwGzKwzh&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTgwODQzNzYyMTQ1OTMxMzMsImFzc2V0X2FnZV9kYXlzIjoxNjYsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjo0OCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=50d68d910ec45d5d&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8xNDQ4RjIxQUZFRDcxMkFFNDg1ODc2RjdEOUY4RDE4RV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0RFNDMxMUI5NDEyMzlDNDFBMEExNjFEMzVDOTlDRDk2X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACba-YrEnumfQBUCKAJDMywXQEhFP3ztkWgYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=JuVTLdb4rYeQePlf860GzA&_nc_zt=28&_nc_ss=7a22e&oh=00_AQLIqChw8yhGpUaa2j8hW5KUcW1_7sT73a9-sjTB4SIv8A&oe=6AA2E5D2",
+        "date": "2026-03-26",
+        "type": "Story"
+    },
+    {
+        "title": "Post Archive",
+        "desc": "Remembering Late Mr. Surindar Pal Singh \u2014 a visionary leader whose legacy continues to guide and inspire Woodlands House School. Forever respected. Forever remembered.\n\n#WoodlandsHouseSchool #InLovingMemory #LegacyLivesOn #EducationLeader",
+        "img": "https://scontent-fra5-1.cdninstagram.com/v/t51.82787-15/640336481_18080254328593133_1506187123420083142_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=110&ig_cache_key=MzgzNzM3MTY0MjY3MTIxNjY2Ng%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTM1MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=H8OZQGlM93gQ7kNvwGaL8Lm&_nc_oc=Adq18_w-0srVLeL-skpwCYUkStsb896qPgWL8L-uzUKSmGimq6RQdobc59iHk-CLI7iQATsyDHxSyN7ie5ell7us&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-fra5-1.cdninstagram.com&_nc_gid=MEuQprv8DZtghQsuts-7TA&_nc_ss=7a22e&oh=00_AQK-l-QIwsly4GhTobXn-CUOMw9nUbX8icQ2caJhEoIEUg&oe=6AA6B1EE",
+        "video": "",
+        "date": "2026-02-21",
+        "type": "Post"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Woodlands house school sonwar srinagar celebrates  it's 60th foundation day",
+        "img": "https://instagram.fbcn13-1.fna.fbcdn.net/v/t51.71878-15/799503833_28456947347324240_679249750780920931_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=103&ig_cache_key=Mzk4MTA0MzU1MjQxNjQ0ODg2MQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=Wri620r2e98Q7kNvwFeSUr9&_nc_oc=Adr_-O02BDHv8M6K1xd62K_eP0EU3xuquRNzyY1U1nqNn7xMEQa5C-VKDG0g3B_WX6M&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fbcn13-1.fna&_nc_gid=Y_cgm9rnS8FzItmLeSeYJA&_nc_ss=7a22e&oh=00_AQIZgv5QVMWOk5WWdRe_IBxbh2i-pLkWHgpQ_6k6ww-7UA&oe=6AA6BE58",
+        "video": "https://instagram.fbcn13-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQPJffctLas-uSWo5HEyMIhLF-sZkoqUXR2z2k5XlvS63bcamXYXIPqjANO2eo8UzlftQQuEwf9Gyb346ekxQkqowovJtp0N9y9adl4.mp4?_nc_cat=106&_nc_oc=AdoW5AIPj1yoKRhuxGWoMI3AfHh21gyPDH1ZGV_6S77cr47tds9Vpnwjy8VZG9t2QdY&_nc_sid=5e9851&_nc_ht=instagram.fbcn13-1.fna.fbcdn.net&_nc_ohc=zGWcVeSHmucQ7kNvwE9SiGG&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6Mjg1NDg0OTUzODgxMTM3MjUsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MTMxLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=bda8232fef78d1b8&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8wMDQ5Rjk1NkVDRTI1NjY5OUUyQTI3RTk2MTg1MTg5RF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzc5NDJGRjczRjM5QkJGRURBNDk3Mjc2NTNDNzFEQUIxX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACb67Nfnka22ZRUCKAJDMywXQGBgAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=Y_cgm9rnS8FzItmLeSeYJA&_nc_zt=28&_nc_ss=7a22e&oh=00_AQK4luh5vz2DL2PDud5gNfa5KNnrqEexlbmyY83rkLulUQ&oe=6AA2E13B",
+        "date": "2026-09-07",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Tiny hands, innocent smiles and hearts full of love \u2014 our little learners at Woodlands House School made Mother\u2019s Day truly unforgettable. \ud83c\udf38\n\nThrough simple words written on colorful placards, every child expressed the purest emotions a mother could ever hear \u2014 \u201cYou make me happy,\u201d \u201cYou are my heart,\u201d \u201cI feel happy,\u201d and so much more. Each moment beautifully reflected the warmth, comfort and unconditional love that mothers bring into their children\u2019s lives every single day.\n\nThis celebration was not just about an occasion. It was about gratitude, connection and the irreplaceable bond between a mother and her child \u2014 a bond built with endless care, sacrifices, encouragement and love that shapes every young dream.\n\nTo all the incredible mothers, thank you for being the strength behind every smile, every achievement and every little step forward. \ud83d\udc96\n\n#MothersDay #WoodlandsHouseSchool #WHS #Motherhood \n\n[SchoolCelebration HappyMothersDay LittleHearts SchoolLife CelebratingMothers LoveAndCare StudentLife MomAndMe]",
+        "img": "https://scontent-ssn1-1.cdninstagram.com/v/t51.71878-15/692602850_2151372872313881_5758259739167441062_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=103&ig_cache_key=Mzg5NjE3NzQ4MzQxODM0NzcyNjkwNjExNDEwOTExOTUxMw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=Y041-_mIWoYQ7kNvwHHmU60&_nc_oc=Ado1-__mFAn_P2nMr9vcB03CE-Hmaqp3zyN9KaQPpW_anE1sgp_oTL5PjR1PYDu63O0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ssn1-1.cdninstagram.com&_nc_gid=SLjxIklOkAET1ctnID2sIw&_nc_ss=7a22e&oh=00_AQKDwGpsYl-LwCByKYR6jFplQP6fzJG8rd0Di5WYcrrSPw&oe=6AA6C615",
+        "video": "https://scontent-ssn1-1.cdninstagram.com/o1/v/t2/f2/m86/AQPKRrh7b7L-JrBA3ypo5etmhifIgS5yRXS5GqFA8t5SSG_te9wYc85teGKktj3O1MjBp28-Gj3tE7X8bGgeTB_wjKbRCM30xKplaIE.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-ssn1-1.cdninstagram.com&_nc_ohc=FQ38gVo0eI4Q7kNvwEvDKW-&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6OTA2MTA3MDE5MTIwMjIyLCJhc3NldF9hZ2VfZGF5cyI6MTE4LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MzAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=6ba48815f06d3522&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC83NjQxQ0Y5NDhBOUFBODZEOTkzMUIyRkRFMjNBRTRCM192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzEyNERGOTVDNjFEMjU5NzUzQzRGMzM2NTEwRkU4NTlDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACa8uYawr4acAxUCKAJDMywXQD6AAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=SLjxIklOkAET1ctnID2sIw&_nc_zt=28&_nc_ss=7a22e&oh=00_AQKrRknekPRW0OexHacyWUaIucBh_xcPBrLq3pUqYBNnNw&oe=6AA2C6EB",
+        "date": "2026-05-13",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "The classrooms are quiet, the timetables are paused, and the school bags are finally on vacation. A time to rest, recharge, and make beautiful holiday memories \ud83c\udf92\u2728\n\n#schoolvacation #holidaybreak #studentlife #makingmemories",
+        "img": "https://scontent-lga3-2.cdninstagram.com/v/t51.71878-15/600597946_1397580615259321_3751414794695556999_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=101&ig_cache_key=Mzc4ODcxMjEwODkzOTc5MjUyNjE4MDg3MjcxMDEwMDQ5MTEz.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=88x_skB4H6sQ7kNvwHIeFLy&_nc_oc=AdpejV8WXFMPbsNlglXl32xd8QtuCMm2ClftKH8eZtEWVjLzINmr8-ANuIyX7fRqjUiYZwjapG3fCzvom9Far3d2&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-lga3-2.cdninstagram.com&_nc_gid=8fG8ObW2yCWMnYjC09esZg&_nc_ss=7a22e&oh=00_AQJJTqgg2spqC6sGq-u5z7WLTNynAX0ojM-rHJJYZVtFNg&oe=6AA6B0F3",
+        "video": "https://scontent-lga3-1.cdninstagram.com/o1/v/t2/f2/m367/AQPBcgiN4KwqfHowAy7FbDqo1PW_PH-8DqRqIw4PHg2TzZ8RK4rRDUdOvfyx7T8h53v6yfMQbHvXoFo8P5Ykl6Sn-UHtDxSeneSZ_ZE.mp4?_nc_cat=103&_nc_sid=9ca052&_nc_ht=scontent-lga3-1.cdninstagram.com&_nc_ohc=_wIsHb15BzkQ7kNvwFbPzAS&efg=eyJ2ZW5jb2RlX3RhZyI6ImlnLXhwdmRzLmNsaXBzLmMyLUMzLmRhc2hfcjJldmV2cDktcjFnZW4ydnA5X3E5MCIsInZpZGVvX2lkIjpudWxsLCJvaWxfdXJsZ2VuX2FwcF9pZCI6OTM2NjE5NzQzMzkyNDU5LCJjbGllbnRfbmFtZSI6ImlnIiwieHB2X2Fzc2V0X2lkIjoxODA4NzI3MDk1MDA0OTExMywiYXNzZXRfYWdlX2RheXMiOjI2NiwidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjE1LCJiaXRyYXRlIjoyNzM1NTA3LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&_nc_gid=8fG8ObW2yCWMnYjC09esZg&_nc_ss=7a22e&_nc_zt=28&oh=00_AQLDe2ivEh7sT_porNPlPKkWHnEbAKwqOScYDZeYzyrV6g&oe=6AA6D350",
+        "date": "2025-12-16",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "The Christmas celebration at school brought warmth, excitement, and bright smiles all around. Our students enjoyed every moment of this joyful and festive day. \ud83c\udf84\u2764\ufe0f\n\n#SchoolCelebration #ChristmasVibes #FestiveDays",
+        "img": "https://instagram.fcgh71-1.fna.fbcdn.net/v/t51.71878-15/605335224_852318921032334_6122290220039067527_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=105&ig_cache_key=Mzc5NTMyNjkxNDY4MTU5MzY5NjE4MTA3NjU3NzQzNjU0NDU1.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=DQnZJsRdrh4Q7kNvwGEt7-s&_nc_oc=AdruOBsf6wwAmVrDVn4n7n23V8Dh5cK937impSKsI0dQY1WdfEBRwjdoTf-vDf6Zpjg&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fcgh71-1.fna&_nc_gid=4kCbCrcKzJol-TO1M3mzgg&_nc_ss=7a22e&oh=00_AQJUbSqzxIUdaoNsDqZNfNbqmZSZdYsH9-mVv90h6Eu_1A&oe=6AA6CBE6",
+        "video": "https://instagram.fcgh71-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQPDA-BRv4KCISWlWrDq30LOx2bIIRD6zRL7lTJL4JNZEPbGg_S9-lsAtKyC6lkmqNKhgIummgMA-MzzDH2svWnd2Abgwli_siRDQKg.mp4?_nc_cat=110&_nc_oc=AdoeoY6sZc4OgJ6Unk_JN8se_3vgquu8h_MsxZrttq31HaqMnf2oqLO9vCNMs9G81kc&_nc_sid=5e9851&_nc_ht=instagram.fcgh71-1.fna.fbcdn.net&_nc_ohc=xlz0eYbmWc0Q7kNvwFklByT&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTgxMDc2NTcyNTQ2NTQ0NTUsImFzc2V0X2FnZV9kYXlzIjoyNTcsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjo0NywidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=18fdd032d5cbb221&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9CRDRERTIyMjdDQzEzQ0Q2NkY2QzQyNkVCNDMyMUNBQV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYRmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8xMjI2NDkyNDMyOTIxMjMwXzc1NzczNzU4OTE5MTIwMDUyNy5tcDQVAgLIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAm7seG5q-0qkAVAigCQzMsF0BHup--dsi0GBJkYXNoX2Jhc2VsaW5lXzFfdjERAHX-B2XmnQEA&_nc_gid=4kCbCrcKzJol-TO1M3mzgg&_nc_ss=7a22e&_nc_zt=28&oh=00_AQITXZtv3rrvjJmUFftp0c6Crk9UqGwdIoBeUtcc_Sw9Xg&oe=6AA2DF9B",
+        "date": "2025-12-25",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Friendly competition, great sportsmanship, and even better energy on court \ud83c\udfbe\n\nOur Teacher vs Student Pickleball Match at Woodlands House School was a perfect mix of learning, teamwork, and fun beyond the classroom. Moments like these build confidence, connection, and a lifelong love for sport.\n\n#WoodlandsHouseSchool #PickleballInSchools #LearningBeyondClassrooms",
+        "img": "https://scontent-mxp2-1.cdninstagram.com/v/t51.71878-15/625085278_1413927387087225_5302248217020126328_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=105&ig_cache_key=MzgyMDY3MjExOTMyNDQ5Mjg3NDE4MDc3ODMwNTQ0NTkzMTMz.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=s2ThHBweiXMQ7kNvwFJdg3A&_nc_oc=AdrXKp-y1RrnmmOKBldMdqotMDyV-jK1vipOusYbXYWsp8-e3AgvxwoeKZPZ0wCYC-8Qi6H032H1Xx0-oopQZAZc&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-mxp2-1.cdninstagram.com&_nc_gid=3nl9Voh24wNsvGaJlwxEdA&_nc_ss=7a22e&oh=00_AQLPCMkfwKkmd38ec27srnzGO5rdVYS-9qkZrLI6vWGUHg&oe=6AA6B0D2",
+        "video": "https://scontent-mxp2-1.cdninstagram.com/o1/v/t2/f2/m86/AQP6vXYN_EguwbZt39qJCNhw34l-OcKsulqCSGd8ZRE6e8VwYYmw2f1zLiWrA7RGYA3PLgyAajocdq2kzHFTu_KO9qhf_zcf4mvgskI.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-mxp2-1.cdninstagram.com&_nc_ohc=XRmsg2UF-qcQ7kNvwHlR_zm&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTgwNzc4MzA0NzI1OTMxMzMsImFzc2V0X2FnZV9kYXlzIjoyMjIsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjo0OCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=22078f32d30ed6a5&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC84NzQ3MUVFOTQwQzA1MTU0NTQxRjk4MzFEQzQ4MUJBNV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzhGNDA0NkRDNkYwRDk3QTMzNDQ3NTk1MjVCNzU3NEFCX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbau4f6nOycQBUCKAJDMywXQEhmZmZmZmYYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=3nl9Voh24wNsvGaJlwxEdA&_nc_zt=28&_nc_ss=7a22e&oh=00_AQK9zmV7XJnOofxa54E2BmLLy6PapI0zAX61O6HKIdnPtw&oe=6AA2DDF2",
+        "date": "2026-01-29",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "When a student drops a riddle during school hours \ud83e\udde0\ud83d\ude04\n\nTeacher + students = thinking hard, guessing wild, laughing louder.\n\nFun follows wherever the riddle goes! \ud83d\udcda\u2728\n\n#SchoolFun #RiddleTime #StudentLife \n\n[School Fun, Riddle Time, Student Life, School Moments, Brain Teasers, Campus Vibes, Fun Learning, School Memories, Student Engagement, Joyful Learning]",
+        "img": "https://scontent-mxp1-1.cdninstagram.com/v/t51.71878-15/631541086_1448056926996015_5280737149582982216_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=107&ig_cache_key=MzgzMjkzNTE1ODkwMzk2NDEwNDE4MDc5NjE1NTE3NTkzMTMz.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=oaMBYU2kUxIQ7kNvwFJZqua&_nc_oc=AdpvgdZkeSKVbPAPgfS5suz_3IntWZKk3nqVhQtX9cT6QrrQonedY--XlFudvZ2DYUQ&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-mxp1-1.cdninstagram.com&_nc_gid=cpse7MhNWt5a1vjz7uCexQ&_nc_ss=7a22e&oh=00_AQKbJNqO2L9m6WUvjZXN7Dj6-5uF2mrF3-5fmFb1JkQ-jQ&oe=6AA6C99A",
+        "video": "https://scontent-mxp2-1.cdninstagram.com/o1/v/t2/f2/m367/AQNa6h5BPuT7aKfsRgrl-g-EBM4S7UVLMttTVwnEFusRs9w6OGwqd9dpb9iOZVAN0F8ciWVUFImbUv4EUa2eOzU_37cyfeKxeRAr1FlKHBzt9w.mp4?_nc_cat=104&_nc_sid=9ca052&_nc_ht=scontent-mxp2-1.cdninstagram.com&_nc_ohc=Wa8Eakdu2yIQ7kNvwFFF3zw&efg=eyJ2ZW5jb2RlX3RhZyI6ImlnLXhwdmRzLmNsaXBzLmMyLUMzLmRhc2hfdnA5LWJhc2ljLWdlbjJfMTA4MHAiLCJ2aWRlb19pZCI6bnVsbCwib2lsX3VybGdlbl9hcHBfaWQiOjkzNjYxOTc0MzM5MjQ1OSwiY2xpZW50X25hbWUiOiJpZyIsInhwdl9hc3NldF9pZCI6MTgwNzk2MTUzNDM1OTMxMzMsImFzc2V0X2FnZV9kYXlzIjoyMDUsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjo4NCwiYml0cmF0ZSI6ODg3MDc4LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&_nc_gid=cpse7MhNWt5a1vjz7uCexQ&_nc_ss=7a22e&_nc_zt=28&oh=00_AQK_F2fWwQzHXzyojiWJHx3p13p6nUCtbv94HSgx60ASew&oe=6AA6A838",
+        "date": "2026-02-15",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "On International Pheran Day, our students proudly wear the Pheran as a symbol of culture and togetherness.\n\nThrough this celebration, students learn to value tradition, respect diversity, and take pride in who they are. Wearing the Pheran today is a reminder that culture is not just taught in books, but lived, shared, and celebrated every day at school.\n\n#InternationalPheranDay #PheranAtSchool #CulturalPride #StudentsInTradition #CelebratingIdentity",
+        "img": "https://scontent-ams2-1.cdninstagram.com/v/t51.71878-15/587010212_1358187215422373_2138774176607747265_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=106&ig_cache_key=Mzc5MjQ3NjM0MzI1MTQ1MTM5NDE3ODU1MDYyMzQ0NTk0ODgw.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=VekNc29uu68Q7kNvwFBtUFz&_nc_oc=AdoHg32MKCMMRME73PbaIZV9hxv84Vl3JMaJQgOrt4jSnwp-CbmI5u3Dy76boVg4Y1Y&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ams2-1.cdninstagram.com&_nc_gid=q0Bh2HHQNLS_OXLgiJr7pg&_nc_ss=7a22e&oh=00_AQJAD1Zn-1j6-AjedtqjTbEz9H_cT8Bg70d4BsfMGuPjyA&oe=6AA6C871",
+        "video": "https://scontent-ams2-1.cdninstagram.com/o1/v/t2/f2/m86/AQNqZYP3NXIyGjJtyrcmz36SGjFDumABTvUiejCl3HlUcPGJGkcAAsCk4soUqwPp0okWnF2N33GXy1U_lZ_KEFl50FUD_yF6Q2mCbt4.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-ams2-1.cdninstagram.com&_nc_ohc=-n1Z3b5yeuMQ7kNvwHZvjFt&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc4NTUwNjIyMDM1OTQ4ODAsImFzc2V0X2FnZV9kYXlzIjoyNjEsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoxMjgsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=c630373697426ff&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC80QzQzMkQzMzczRjgzMUIyOUEyMEI0MzMwNTgxMzA5QV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYR2lnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8xMzYzMzQ2NjIxNTc5MDYzXzQyMzU1NjA4NjQ0NTUxNzQ2NTAubXA0FQICyAESACgAGAAbAogHdXNlX29pbAExEnByb2dyZXNzaXZlX3JlY2lwZQExFQAAJoDis4G0xbc_FQIoAkMzLBdAYAmZmZmZmhgSZGFzaF9iYXNlbGluZV8xX3YxEQB1_gdl5p0BAA&_nc_gid=q0Bh2HHQNLS_OXLgiJr7pg&_nc_zt=28&_nc_ss=7a22e&oh=00_AQIjkxf-rgHfCi6Qc320RKeSysLZk0FYlbohGlx4DokX8w&oe=6AA2D861",
+        "date": "2025-12-21",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "A day filled with tradition, unity, and pride. Celebrating Heritage Day with our amazing students. \ud83c\udf3c\n\n#HeritageDay #SchoolCulture #CulturalUnity #StudentCelebration #TraditionMatters #srinagar",
+        "img": "https://instagram.fthe1-1.fna.fbcdn.net/v/t51.71878-15/588636950_850390754237085_2252504397367306306_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=108&ig_cache_key=Mzc3NTA4MzYzODIyOTgyMzMwMjEyMTIzODYyNTQyMDAxNTg%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=TMHIBxxJ0qgQ7kNvwGbBdJq&_nc_oc=AdpIaeNtIGfNMF63nKN4tBWHEdT_ZQt4J0CjrCdOrnyZkNFkfvLXtaFAp0I8VHO-Crc&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fthe1-1.fna&_nc_gid=rip4y2OrM4ziMg3gohySjA&_nc_ss=7a22e&oh=00_AQKa6qC9slmpa97GCqG0lXZamhTV3aOZTrBRuMBoFVAB8w&oe=6AA6B835",
+        "video": "https://instagram.fthe1-1.fna.fbcdn.net/o1/v/t16/f2/m69/AQP_6yT7R4ballGRZ2nddWj4aaRD1fdB16AyaeAO9KzoWZr87by4i3yHK1TXjhQ01eYj3jhoPQbTH5HZiSjAeyvO.mp4?strext=1&_nc_cat=108&_nc_oc=AdpAT3P-5w6Y4RD5qirOUwbd2a1otMsPOD8KBtFEPuvbNL6UuFK1hkji8KoNtrw14sg&_nc_sid=5e9851&_nc_ht=instagram.fthe1-1.fna.fbcdn.net&_nc_ohc=_WJOz2-B8UwQ7kNvwGmVR2d&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTIxMjM3MTcxNDIwMTYxMiwiYXNzZXRfYWdlX2RheXMiOjI4NSwidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjEzOCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=2caaad89db75b988&_nc_vs=HBksFQIYOnBhc3N0aHJvdWdoX2V2ZXJzdG9yZS9HRGRLSFNOVndxZGFtam9IQUxhS0EybG9vNTB3YnNwVEFRQUYVAALIARIAFQIYRWlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC84NjU0NzM2MjkyMTEyNTVfNzM5NzAzMzk4NjA2MDcyNjM3Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaY4OKVqamnBBUCKAJDMywXQGFVT987ZFoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=rip4y2OrM4ziMg3gohySjA&_nc_zt=28&_nc_ss=7a22e&oh=00_AQJ37QTv_gw_XvtCY8JL2EjfibextnUrvnLQU1h973YiaA&oe=6AA6DC90",
+        "date": "2025-11-27",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Today\u2019s Hindi class was all about confidence, clarity, and cute voices! \ud83d\udcab\nOur students recited the Hindi alphabets beautifully. \ud83d\udc95\n\n#HindiVarnmala #LittleLearners #SchoolReel #HindiClass #FunLearning #ProudMoment #LearningWithJoy #KidsInAction #ClassroomVibes #SchoolDays #HindiLearning #InnocentVoices #EducationThroughFun #StudentSpotlight #CuteReel",
+        "img": "https://instagram.fmad8-1.fna.fbcdn.net/v/t51.71878-15/572626074_1520314835726017_7777113317226153913_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=103&ig_cache_key=Mzc1NTMzMzIwOTQxNzc5NTU3NTE0ODAzMzg0MzMxOTY1OTg%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=AvBUD97SqeYQ7kNvwGCWxjG&_nc_oc=Adpt7M35ioSeS3_uZMjWLTu5o-eMFV1rFY8wOqXiYT4Hot9pGqbX-B-jrBuEQebDJUo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fmad8-1.fna&_nc_gid=znK9escmKfZl-Pe3AJGZqw&_nc_ss=7a22e&oh=00_AQIvIf7JXvWebRjSPWpmxApZmR06H439e0Nl-9rVfucuZA&oe=6AA6C86B",
+        "video": "https://instagram.fmad7-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQNlfzdVwVGj0f9Qp7FoItgvPCF3--TyNk9uMJbK_XtgNK8roBoFkBcD3qNmnTtngqRgQ_jsCzJJSCkRNQAXa8CqhqrgNbrMVgG2T7I.mp4?_nc_cat=106&_nc_oc=Adpj-OkrRgQdbNth1ytNcVw67UapBNhtaxj0_87VjjSyJEMIMeq1Lxmi-k7TGn__R5Q&_nc_sid=5e9851&_nc_ht=instagram.fmad7-1.fna.fbcdn.net&_nc_ohc=OW2uNcYFpz0Q7kNvwGS8Aaf&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTQ4MDMzNzEwNjUzMDA2NCwiYXNzZXRfYWdlX2RheXMiOjMxMiwidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjY0LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=35643babced825ff&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9BNzRFOTE5RkNDNjUxQkIyMDdBQzQyRjI5NTMxMkU4NF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYR2lnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8xMDg0NjU3ODY2OTEwMjg5XzUzNTgxMzc3NzgxMDQ2MjQwODQubXA0FQICyAESACgAGAAbAogHdXNlX29pbAExEnByb2dyZXNzaXZlX3JlY2lwZQExFQAAJqC8j_b6lqEFFQIoAkMzLBdAUDu2RaHKwRgSZGFzaF9iYXNlbGluZV8xX3YxEQB1_gdl5p0BAA&_nc_gid=znK9escmKfZl-Pe3AJGZqw&_nc_zt=28&_nc_ss=7a22e&oh=00_AQLucaRdbU2TCxOkHn3OmMk28ETpvl2_Jej5KbNW_pQT6A&oe=6AA2BE83",
+        "date": "2025-10-31",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "From classroom energy to moments of growth, Woodlands House School students are sharing their real experiences of learning, friendship, and daily school life. Their voices reflect curiosity, confidence, and the supportive environment that shapes every child\u2019s journey.\n\n#WoodlandsHouseSchool #StudentVoices #SchoolCommunity\n\n{student experience, school life, active learning, student stories, child development, classroom culture, modern education, student growth, school environment, Woodlands House School}",
+        "img": "https://scontent-fco2-1.cdninstagram.com/v/t51.71878-15/612603867_1205374967805550_409272859071736577_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=103&ig_cache_key=MzgwODQ4MTA0NzkzNjcxMzk5MTY0MTQyMjAwNTY5NjQxMw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=31Gea3hdw_sQ7kNvwEv3ds2&_nc_oc=AdoIQ2D_Kpy3UXX7sKhD6fttaLwCZIOUgCzgoTXlV7__Ob8kIXtCeHQWUXRn_QkD0I0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-fco2-1.cdninstagram.com&_nc_gid=nuB8zn0OfuCiUIba0t9SRQ&_nc_ss=7a22e&oh=00_AQKzP1_w9sC9sKSjxsoN4uQ1VeYUbZzYEyH0jhzGXPGixg&oe=6AA6B940",
+        "video": "https://scontent-fco2-1.cdninstagram.com/o1/v/t16/f2/m69/AQPIjU04XY_-XgeTEpHS9XM9L_L5OaINd1alkSyMKQ8GnhonOBWkuzYgObhhv3yKoQJQVIpX0rbBsAbN4d_DGZ9b.mp4?strext=1&_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-fco2-1.cdninstagram.com&_nc_ohc=WnU7UKV4eFIQ7kNvwHB8c1v&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6NjQxNDA4MjE5MDMxMTI1LCJhc3NldF9hZ2VfZGF5cyI6MjM5LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6NjYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=66374367fe75046e&_nc_vs=HBksFQIYOnBhc3N0aHJvdWdoX2V2ZXJzdG9yZS9HQ0FKc3lUWl94RmFSclVGQUtwRXY0RXA2REVWYnNwVEFRQUYVAALIARIAFQIYRmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC84NzA1NjgzMTg5MTg0NjJfODY3OTU0NTc2ODA0MzE4MzY1OC5tcDQVAgLIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAmqpnp0O_WowIVAigCQzMsF0BQqAAAAAAAGBJkYXNoX2Jhc2VsaW5lXzFfdjERAHX-B2XmnQEA&_nc_gid=nuB8zn0OfuCiUIba0t9SRQ&_nc_ss=7a22e&_nc_zt=28&oh=00_AQLWCYKdqZsCP9aKD79Omg20KpkZFBCR6IcthpWyW9mY-Q&oe=6AA6C769",
+        "date": "2026-01-12",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "\ud83c\udf3f Our school celebrated Environment Day with enthusiasm and a commitment to a greener future.\n\n Plant a tree, save the Earth, and protect our environment for generations to come! \ud83c\udf0d\ud83d\udc9a\n \n#EnvironmentDay #GoGreen #SaveNature",
+        "img": "https://scontent-waw2-1.cdninstagram.com/v/t51.71878-15/719770752_4486302874948649_2104446499767461485_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=104&ig_cache_key=MzkxNTAxNzU4MDA5MjA1MzY0NzE1Nzc0ODA1NjA1NjMyNTQ%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=SfA-Di-345kQ7kNvwGmkSH7&_nc_oc=AdqfzQHL16x_BnVwdnafF3SEYbv0udLv4FLt8DQXnLs0bvKOS6kj1gRcJGYKz33EkqFJTsXjF16tghLQwvFYrwU2&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-waw2-1.cdninstagram.com&_nc_gid=0l31p4ne_0XliyCuPWBhVA&_nc_ss=7a22e&oh=00_AQJ5f9bi7aMP4RHkktjkze1oORxvqJp4o5K67vyhXD85bg&oe=6AA6DE98",
+        "video": "https://scontent-waw2-1.cdninstagram.com/o1/v/t2/f2/m86/AQPYOC3tXiBE_kywm-bra9aKagPL0Ib0Li_Za6Phuqf2jlYLvwqVpqiEzwS1NPfwzEo1ePTCp8PytfVIHYKiGcqgRygImR4lh48XpQs.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-waw2-1.cdninstagram.com&_nc_ohc=fFKlwmSXHKkQ7kNvwGFT68W&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTU3NzQ3NjY0MDU2MzY0NiwiYXNzZXRfYWdlX2RheXMiOjkyLCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6NjEsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=13682cfedd9c826f&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8xMzQ3QzU3QTIwODBEQkJENEYwMEQ4NTM1QzcyMzc4Ml92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0I2NDY0OTIyMUU2OTJCNzRGNTREOTY3QjQ3OTgzMEEwX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACb8huvsnK3NBRUCKAJDMywXQE6mZmZmZmYYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=0l31p4ne_0XliyCuPWBhVA&_nc_zt=28&_nc_ss=7a22e&oh=00_AQI4dsUmArryqaXT50Srw6WvE7-dwKSNY7jGAnEEaccEsA&oe=6AA2E8CE",
+        "date": "2026-06-08",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Learning is always better when it\u2019s fun! \ud83d\udde3\ufe0f\ud83c\udf89 \n\nOur students and teachers came together for a lively session of Kashmiri tongue twisters and tricky riddles \u2014 full of laughter, quick thinking, and language love. Moments like these keep our culture alive while making classrooms more engaging and interactive. \n\n#StudentsAndTeachers #KashmiriLanguage #ClassroomFun\n\n[Kashmiri tongue twisters, Kashmiri riddles for students, Kashmiri language activities, classroom language games, interactive learning in schools, Kashmiri culture education]",
+        "img": "https://scontent-icn2-1.cdninstagram.com/v/t51.71878-15/641084717_1302188801740434_4900337865860007674_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=104&ig_cache_key=Mzg0MzI2MzAwNTMyOTY2ODkwMjE4MDgxMTM2OTg1NTkzMTMz.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=W8CN6AjJ4Z0Q7kNvwGkk5VM&_nc_oc=Adq7KFLnrOY5-y0SYIU0I6Ex4rRUWTjSdzxH7cqfqf7-M8teHdZ_iy_tGaFzDgp7Lf0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-icn2-1.cdninstagram.com&_nc_gid=VuG5XQxrlLQSdirSH4Wu7A&_nc_ss=7a22e&oh=00_AQK-Oxu4eQegfoLcE_nD8bU0NEOfmIkXKeXf19EhreiJHA&oe=6AA6CA61",
+        "video": "https://scontent-icn2-1.cdninstagram.com/o1/v/t16/f2/m69/AQNF40dgwNC_lF7uxFDxiaerPLX-Qj4E_-_jmFCCmfBm4eqzJHgpE41-Fr_SRuDUL15SGixT3lZTXBoVYwC4G-_y.mp4?strext=1&_nc_cat=111&_nc_sid=5e9851&_nc_ht=scontent-icn2-1.cdninstagram.com&_nc_ohc=jg-NaHubtdwQ7kNvwGhuWoE&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTgwODExMjk0MTY1OTMxMzMsImFzc2V0X2FnZV9kYXlzIjoxOTEsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoxNTIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=ea7d103abdb3c36d&_nc_vs=HBksFQIYOnBhc3N0aHJvdWdoX2V2ZXJzdG9yZS9HQjktY2lZekJXTHlGVTBEQUNSSWh6MmNES1ZRYnNwVEFRQUYVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzBDNDczRTcxOUZDQ0YzN0E5OEI4NkUzODdCRUQzMDhDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbau5yAoKyeQBUCKAJDMywXQGMdT987ZFoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=VuG5XQxrlLQSdirSH4Wu7A&_nc_zt=28&_nc_ss=7a22e&oh=00_AQJNwOZI4Il0DHxTxgrq-j048vE23wimwhAdFT4RKxS9TA&oe=6AA6BBBD",
+        "date": "2026-03-01",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "New beginnings, new faces, and endless possibilities!\nOur students kicked off the new academic year with an exciting Orientation Program \u2014 a day filled with laughter, learning, and lots of energy. \u2728\n\nHere\u2019s to friendships, memories, and a journey that\u2019s just getting started! \ud83d\udcab\n\n#OrientationDay #StudentLife #CampusVibes #NewBeginnings #CollegeLife #FreshStart #StudentCommunity",
+        "img": "https://instagram.fyhz1-1.fna.fbcdn.net/v/t51.71878-15/572844050_1364732208357466_1115013798939080550_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=105&_nc_map=urlgen_bucketless&ig_cache_key=Mzc1ODQ4Mzc5MDkyMzc4NTM5MTE0ODU4Nzc5ODkzNjcwMzM%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=9gmXdS5duQgQ7kNvwFiekWu&_nc_oc=AdoFzFpCtwZefRVVwcICr3d_AJOUEbQaxqQAz3duqjFrQPhyefoFgx9H6OjLkmCUraM&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fyhz1-1.fna&_nc_gid=8-qo9SRo1RzQgvB5Mnr1Bg&_nc_ss=7a22e&oh=00_AQJMybLzl1yhz5XuORH70WPQQSEdXaQ-i0siwdxGJkER-w&oe=6AA6C614",
+        "video": "https://instagram.fyaw1-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQNoxvmTRp3qIHsu-ecFTn_zBe8eQ6tRMDGdBowqdmGgvrN_ToiXttIeBUWbec-Rjg8Pbc4vCWvEC5DKXW38-SkLJInGNLr45cW9Wpo.mp4?_nc_cat=101&_nc_oc=AdqeE_TalXDhjbWDNOAC-oJlvkRZf_u_8BZmQtFP4FHRrCQMrFt8jaVgBdSoku7kAHo&_nc_sid=5e9851&_nc_ht=instagram.fyaw1-1.fna.fbcdn.net&_nc_ohc=ae9roLbx8UwQ7kNvwFz-YLK&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTQ4NTg3NTQ2OTM2NzI4NSwiYXNzZXRfYWdlX2RheXMiOjMwOCwidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjQzLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=f852298e1ac0530b&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC85NTRGQThCMDgyOUUyNkM0MUEwQUM5N0ZCQzAzOTA5QV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYRmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC84NDEyMzUwNDUxMjY3NjBfMTkxNDMyNTcyNjY5MTE2ODAxMS5tcDQVAgLIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAm6t_B-KrZowUVAigCQzMsF0BFoAAAAAAAGBJkYXNoX2Jhc2VsaW5lXzFfdjERAHX-B2XmnQEA&_nc_gid=8-qo9SRo1RzQgvB5Mnr1Bg&_nc_ss=7a22e&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQLPFUOAC6tg_MgavERP7sWHr_Uun-gXzZFkYIjeHk6RJQ&oe=6AA2B6BA",
+        "date": "2025-11-04",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Golden leaves, warm smiles, and joyful moments. Autumn at Woodlands House School looks magical. \ud83c\udf41\u2728\n\n#WoodlandsHouseSchool #AutumnVibes #SrinagarSchools #WHSSrinagar #AutumnInKashmir #KashmirDiaries #SchoolReels #CampusLife #FallSeason #AutumnColours #KidsOfInstagram #LearningInNature #SrinagarMoments",
+        "img": "https://scontent-ams2-1.cdninstagram.com/v/t51.71878-15/589232604_830317459912732_7390343935755737215_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=105&ig_cache_key=Mzc3ODA2OTI4Mjk5MjQwMDY1ODg3ODQ5MzI1NDYwODQ5Mg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=WVR07RDjY-oQ7kNvwEWZhnQ&_nc_oc=Adr4rof6RPV-KjLRzLOocE96NPgptG8256v2rbB9cWGbdEsBVvNYpXTznLhicnh9bY4&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ams2-1.cdninstagram.com&_nc_gid=LvrhRP5a3HMvYOOgeSStHQ&_nc_ss=7a22e&oh=00_AQJBr4mAo-NUrw7GItOVrwjL_DBxLzAVjWGRRHqAn9Ccww&oe=6AA6A7C5",
+        "video": "https://scontent-ams2-1.cdninstagram.com/o1/v/t16/f2/m69/AQO3_d1XXWZYN8-hFa6Lw0mQ6hVaRi_NO0B5FVIqg_AfVV3AR0c3RvR9eqODBOVRtRnJ_JPgrTi3VpnGGqTS7FNQ.mp4?strext=1&_nc_cat=110&_nc_sid=5e9851&_nc_ht=scontent-ams2-1.cdninstagram.com&_nc_ohc=k8X_pJfhdjcQ7kNvwF7sybq&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6ODc4Mzk5NjAxMjg0NTI0LCJhc3NldF9hZ2VfZGF5cyI6MjgxLCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MzgsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=65bc85c3414cec29&_nc_vs=HBksFQIYOnBhc3N0aHJvdWdoX2V2ZXJzdG9yZS9HTVJ3SXlPTzNWMTRsUkFGQUV4S19rSG1WeVZqYnNwVEFRQUYVAALIARIAFQIYRmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8xMTk1NjUyNjc1ODc0Mjk4Xzk3MTIxOTA1MjY4MTg0MTE5OS5tcDQVAgLIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAm2Nakg8u5jwMVAigCQzMsF0BDWp--dsi0GBJkYXNoX2Jhc2VsaW5lXzFfdjERAHX-B2XmnQEA&_nc_gid=LvrhRP5a3HMvYOOgeSStHQ&_nc_zt=28&_nc_ss=7a22e&oh=00_AQIeAOPPmnvR7orm93TZ6ZpNJ4FCXGjvt1Ni9MsG8F60FQ&oe=6AA6DE6A",
+        "date": "2025-12-01",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Students welcoming the New Year together with positivity, equality, and happiness, proving that diversity makes every moment brighter.\n\n#NewYearCelebration #DiversityAndInclusion #StudentLife",
+        "img": "https://scontent-cdg4-3.cdninstagram.com/v/t51.71878-15/610531888_2309347072894497_697422172102413856_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=110&ig_cache_key=MzgwMDUzODI5ODI4NTUxNzAzNzE4MTkwMzQzNDEzMzM5OTU4.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=pU-Sz5eM4s8Q7kNvwHmbyqR&_nc_oc=Adp-C6Sbr7u6q6p_0SJe74bQkZdGi8OsaYkRtZhOzbCGpBGJEHjrF0pzL7j4K_hGn42pNd5hreTk1FAGze55lzwA&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-cdg4-3.cdninstagram.com&_nc_gid=PGeMyUvoW6hz8U_OMlK3lw&_nc_ss=7a22e&oh=00_AQJKWL07xZp_39uBZGNrB2KyWXy8mB4Q9gcpIuEl98D_UQ&oe=6AA6C1A0",
+        "video": "https://scontent-cdg4-1.cdninstagram.com/o1/v/t2/f2/m86/AQOfdRq8KSRdbDshVGdqj8ypDsUsw0VcI9nXsUEAaUeu_9oFqM8jk93MKN02iECyHmIgCR0HRCj5HUOWllmlw75IbGAXq9eYR5fx-Jc.mp4?_nc_cat=102&_nc_sid=5e9851&_nc_ht=scontent-cdg4-1.cdninstagram.com&_nc_ohc=_viBvvv-JTMQ7kNvwElSPo-&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTgxOTAzNDI3OTIzMzk5NTgsImFzc2V0X2FnZV9kYXlzIjoyNTAsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjo3OSwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=4866a4042d100b87&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC82NzQ2QjI2MUMzNkRBNUI2MDhBNTE5MDc3MjQ5MTI5MV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYRmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC85MTI3ODU2OTExMTg5ODFfMTM2NTEzNzMwNTk3MDM3OTI0OC5tcDQVAgLIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAm7IfXh6eB0EAVAigCQzMsF0BT_U_fO2RaGBJkYXNoX2Jhc2VsaW5lXzFfdjERAHX-B2XmnQEA&_nc_gid=PGeMyUvoW6hz8U_OMlK3lw&_nc_zt=28&_nc_ss=7a22e&oh=00_AQKMa_fURxB2oaVNpulcR4X7QzHvyvedYeGzKBYcQvT9lQ&oe=6AA2E01F",
+        "date": "2026-01-01",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Hi, good morning please check the caption\n\nWhat an incredible display of talent, teamwork, and true sportsmanship! \n\nCongratulations to all the teams who gave their best on the field \u2014 and a special shoutout to our champions who took home the trophy! \n\nUntil next time, keep the spirit of the game alive!\n\n#InterschoolCricket #CricketChampions #WHSsportsHub #GameSpirit #CricketInSrinagar #FutureStars #CricketFever",
+        "img": "https://instagram.flap2-1.fna.fbcdn.net/v/t51.71878-15/572226093_840966305066336_7917080828062454808_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=100&ig_cache_key=Mzc1MjY1NTY2ODc0NzkyNDAyODE5MjYzNDQwNjE1OTU5NDY%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=MTYaai0PixcQ7kNvwHdr7_J&_nc_oc=AdokDzIu3ba8kImryhjjA08c42p_TyzVFd0RQbFcwe8gGyGL-ZNU7-h14p89svmGHSgT-VE8qJSGU8SEk0GS1Pn5&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.flap2-1.fna&_nc_gid=DkN80UEYSMk69ZBjT71U-A&_nc_ss=7a22e&oh=00_AQIEl-Z9Nhfo3j4rke_FWZjn9BwbAX_MJFT_8Mg8WHYDZg&oe=6AA6D474",
+        "video": "https://instagram.flap2-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQNTk28tSfoJCVVE3TGSu3SGPddiOgxhJ-u7SbLlYZBTndjF9A5AGG_wn4Ao4eJMSrYrinAnRAe7Q9JdUTzlB2ZVVxtC3m4MqYS63hM.mp4?_nc_cat=107&_nc_oc=AdpTdsbF1l6Qkepo4nOHwCv6wH020wlmg1r5jZYanW_IyjsWrf6GkNtKDgm923hvyilvk1EHXjYp92ROZCXLBO3O&_nc_sid=5e9851&_nc_ht=instagram.flap2-1.fna.fbcdn.net&_nc_ohc=f5pUEPm3wekQ7kNvwEpP7up&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTkyNjM0MTkzMTU5NjE1OSwiYXNzZXRfYWdlX2RheXMiOjMxNiwidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjY3LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=83ba6273c1450b95&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC82NjRFNEQ5QjdGRjczMzk3QjBCMzY0ODYyQjIyNDk5N192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYR2lnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8yMjgzMTQxNjI4ODEzMzQ5XzMyMTY0MTIzOTk4ODMzMjY4NTIubXA0FQICyAESACgAGAAbAogHdXNlX29pbAExEnByb2dyZXNzaXZlX3JlY2lwZQExFQAAJv7l4-jt_-sGFQIoAkMzLBdAUOzMzMzMzRgSZGFzaF9iYXNlbGluZV8xX3YxEQB1_gdl5p0BAA&_nc_gid=DkN80UEYSMk69ZBjT71U-A&_nc_ss=7a22e&_nc_zt=28&oh=00_AQIV5BCmaoxxBx51UgxntbL8piwVmXxy-jOcRUCQ-e82ZQ&oe=6AA2C518",
+        "date": "2025-10-27",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "From textbooks to tombs\u2014learning comes alive for our merit scholars",
+        "img": "https://instagram.fmex47-1.fna.fbcdn.net/v/t51.71878-15/590411478_1418700689972547_7569703004948645737_n.jpg?stp=dst-jpegr_e15_tt6&_nc_cat=106&ig_cache_key=Mzc4MTMwMzkxMTg5OTY3OTg2NjI2OTU5MTM3OTA3NDg2MDQ%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5oZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=pl59PZGnxywQ7kNvwHUpesS&_nc_oc=AdqsIE_wHK1dfdVqBamRlIHnIU8xRhLhX_yaWd3tGqaFLt4KZl7fb90rVIQYoYKgdKc&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&se=-1&_nc_ht=instagram.fmex47-1.fna&_nc_gid=VswGYZD3Gaot2rqLT_a1iQ&_nc_ss=7a22e&oh=00_AQIvdqkq5_Z4xG3CZDCCpaiw2te4Qd76gtrSn-Rx7XPo_A&oe=6AA6B140",
+        "video": "https://instagram.fmex47-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQNmi9Cl-TP497hIO90AtnastCe0MrUyrEoS8xWWfL-hy2qvOPSx55xbodKrpkJv-xjH9j61SqWWVaRL60qqQcrHcGkNJwXtoyXu7MQ.mp4?_nc_cat=101&_nc_oc=AdrbVlM9aLuaACA1ArD6HnGSz6SwsC5zfR3c5D4pcGy6DHxp471gLSvyuJsrT21Ufjw&_nc_sid=5e9851&_nc_ht=instagram.fmex47-1.fna.fbcdn.net&_nc_ohc=xU_NYYiCqOUQ7kNvwHz1JM8&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MjY5NTg4MTQyMDc1MTg0MSwiYXNzZXRfYWdlX2RheXMiOjI3NywidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjI5LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=1ac3a5f8f21daa04&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC84QjQwOTdBRDg4MTkyMDE1NUYxRjBGNUE0MjMyMDlBMl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYR2lnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8xMzkwMDQyNzg2MTI5NDY1XzE2Mzg0MzA0MzAwOTYyMDA2OTQubXA0FQICyAESACgAGAAbAogHdXNlX29pbAExEnByb2dyZXNzaXZlX3JlY2lwZQExFQAAJsKPhuf5-MkJFQIoAkMzLBdAPfdLxqfvnhgSZGFzaF9iYXNlbGluZV8xX3YxEQB1_gdl5p0BAA&_nc_gid=VswGYZD3Gaot2rqLT_a1iQ&_nc_zt=28&_nc_ss=7a22e&oh=00_AQJddog_dueX_df505rtqdCumzZ38_80jnPdYLKVk0JFKg&oe=6AA2E4BA",
+        "date": "2025-12-06",
+        "type": "Story"
+    },
+    {
+        "title": "Video Archive",
+        "desc": "Coding Workshop at Woodlands House School #codingworkshops #stemeducation #learntocode #kashmirtech",
+        "img": "https://scontent-itm1-1.cdninstagram.com/v/t51.82787-15/565039934_18135879652456165_1227052188643891965_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=108&ig_cache_key=Mzc0NDAzMDExODQ1MDAwMzI1NzE4MTM1ODc5NjQ2NDU2MTY1.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjU0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=2uAzh2G6lVUQ7kNvwHYwR55&_nc_oc=AdpFaUEJ22_L4pcKM__YjgA496OgTATF6SbowoBk5Dxe3grv-_CrJJdrFVxpplhOew0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-itm1-1.cdninstagram.com&_nc_gid=jgZpVLKwvneZdx8NZvlzYg&_nc_ss=7a22e&oh=00_AQIH-BGRoU-GcsW5B65Hll-otl4qDJ4d20q3UHjaCm1uoA&oe=6AA6BC9C",
+        "video": "https://scontent-itm1-1.cdninstagram.com/o1/v/t2/f2/m86/AQMuvWotNih9sR7zYcYGLaBfn117neK45WfuzILm_TskbkQnLyUi5Yx9ArDMOjOas8AojmVOSo-lok3Pni35wmx9PLRFK13gWbkpi4E.mp4?_nc_cat=110&_nc_sid=5e9851&_nc_ht=scontent-itm1-1.cdninstagram.com&_nc_ohc=5gmpKMQ23AwQ7kNvwFyWgVL&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MzI2ODMzMjc1NjY0OTc0NiwiYXNzZXRfYWdlX2RheXMiOjMyOCwidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjI4LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=65d600bdeaac253c&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC82OTREMDg3Qzk5QjE2M0JFOUE5QjE1MkJGMDNBMzE4RV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYR2lnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8xODc0NTIxNTg2NDg2NjU5XzU1Mzg1OTcwOTI0NzYwOTc1MTAubXA0FQICyAESACgAGAAbAogHdXNlX29pbAExEnByb2dyZXNzaXZlX3JlY2lwZQExFQAAJqScvs-Aos4LFQIoAkMzLBdAPI9cKPXCjxgSZGFzaF9iYXNlbGluZV8xX3YxEQB1_gdl5p0BAA&_nc_gid=jgZpVLKwvneZdx8NZvlzYg&_nc_zt=28&_nc_ss=7a22e&oh=00_AQK5fOohjYyLxSK409HWgBdeyp8juwgA5ZDOFelgTnPZtQ&oe=6AA2C1AB",
+        "date": "2025-10-15",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "\ud83c\udf1f Celebrating Our Distinguished Alumni \u2013 Mr. Rohit Khattar\n\nOne of the earliest students of Woodlands House School, Mr. Rohit Khattar has gone on to become a pioneering entrepreneur and a leading name in Indian hospitality.\n\nAs the Founder-Chairman of Old World Hospitality and the visionary behind acclaimed brands including Indian Accent and Chor Bizarre, his journey from the early days of Woodlands House to the heights of the hospitality industry is truly remarkable.\n\nHis achievements continue to be a source of immense pride for the entire Woodlands House community.\n\nAs we celebrate 60 years of Woodlands House School, we honour the alumni who have carried the spirit of our school into the world. \ud83d\udc99\n\n#WoodlandsHouseSchool #60YearsOfWoodlandsHouse #DistinguishedAlumni #RohitKhattar #indianaccent",
+        "img": "https://scontent-atl3-2.cdninstagram.com/v/t51.82787-15/795471687_18106162448593133_8114736413883172072_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=104&ig_cache_key=Mzk3ODg2ODM4Nzk1NjIyNzgwMjE4MTA2MTYyNDQ1NTkzMTMz.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjEyNjAuc2RyLnZpZGVvX2RlZmF1bHRfY292ZXJfZnJhbWUuQzMifQ%3D%3D&_nc_ohc=24ZNcrHr9jIQ7kNvwHY8u69&_nc_oc=Adq579oT9IqwWtR1fyQFE13NvLnvdLRSrz7w7pANblw5QhzeSXs03zFeyvo8c1QW_krP2sy4JQfQCCEVDq5WBgYE&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-2.cdninstagram.com&_nc_gid=ySi6yz7EuOS9qDcK_SMbXA&_nc_ss=7a22e&oh=00_AQKNCeoipSAXgh5Rpxfzzg8nR8tZULX3OneP1LnY_lrHNQ&oe=6AA6ACE2",
+        "video": "https://scontent-atl3-3.cdninstagram.com/o1/v/t2/f2/m86/AQPX2ZqU3qiRb-LejFQa6EEcxyNJJ2eIlXq877ui_wb-svQiE42M_KtaHZJbctsRFnffDlSjkEgLXyeqNAGH6V3kAOlZFzBokLhMArw.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-atl3-3.cdninstagram.com&_nc_ohc=IOw6CvVPIgUQ7kNvwH1DceO&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTYyMzExNjc5NjEwMTE1MywiYXNzZXRfYWdlX2RheXMiOjQsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoxNiwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=8e17c35c00b7a2c5&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC80QjQ2RTM2REIxNUNCNkQ0MEJCOTExRTNFRkE1RjdCQ192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdGNEZCQ0EyNzFCMjM1MTRCNDYyQzI4ODc0Q0Q2MEE1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbCiPzA6o3iBRUCKAJDMywXQDCqfvnbItEYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=ySi6yz7EuOS9qDcK_SMbXA&_nc_zt=28&_nc_ss=7a22e&oh=00_AQImfyjXmurm0XAr0TZV39DP7RCGOf8RvFo9lD4dkzmyqQ&oe=6AA2EA30",
+        "date": "2026-09-04",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "60 Years of Memories. 60 Years of Inspiration. \ud83d\udc99\ud83d\udc9b\n\nAs we celebrate 60 glorious years of Woodlands House School, Srinagar, we are delighted to share the journey of one of our proud alumni, Dr. Raies Khan, Batch of 1994.\n\nFrom the classrooms of WHS to a career spanning over two decades in healthcare, Dr. Raies Khan\u2019s journey has taken him across India and into international and overseas healthcare initiatives, with organisations including GVK EMRI, Shalby Hospitals, ASG Hospitals, and Paras Health, among others.\n\nReflecting on his journey, Dr. Raies shares how WHS gave him more than an education\u2014it gave him a strong foundation of values, friendships, confidence, and memories that have remained with him throughout the years.\n\nFrom Kashmir to different parts of India and beyond, every chapter of his professional journey has been shaped by the experiences and values he carries with him from his school years.\n\nProud to be a Woodlandite, Dr. Raies remains grateful to the school that helped shape the person and professional he is today.\n\nAs we celebrate six remarkable decades of learning, friendships, growth, and cherished memories, stories like his remind us of the lasting impact of Woodlands House School and the remarkable journeys of its alumni.\n\nHere\u2019s to 60 years of WHS, 60 years of memories, and 60 years of inspiring generations.\n\nHappy 60th Anniversary, Woodlands House School, Srinagar! \ud83d\udc99\ud83d\udc9b\n\n#60YearsOfWoodlands #WoodlandsHouseSchool #WoodlandsSrinagar #WHS60 #60YearsOfInspiringMinds \n\n(AlumniVoices, WoodlandsFamily, LegacyOfLearning, 60YearsOfMemories, Srinagar)",
+        "img": "https://scontent-ham3-1.cdninstagram.com/v/t51.71878-15/798688218_2199027827625227_3307225752503996115_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=103&ig_cache_key=Mzk4MDI3MzQxMDIzNzgxMTQ0Mg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=YkF-dIBM6voQ7kNvwH7Hrpw&_nc_oc=AdpeJWBWFTlEoE6mqTYUr1_5AsRknwA7UAAX8de1nnhdXGZVwg6fJqxR3tp9j2DFHaKGaDB6TzJ_JC4a5_3h4fAU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ham3-1.cdninstagram.com&_nc_gid=kZTRbf5PWMq46MATxzvJNQ&_nc_ss=7a22e&oh=00_AQJgVQ9EfjpliRzgXvcQ6fNDAyWVdIbJMaLgWf2eHAkmyA&oe=6AA6AE91",
+        "video": "https://scontent-ham3-1.cdninstagram.com/o1/v/t2/f2/m86/AQM2tcgRI4VMcQFOdWIoqOEBLGcJtjUDnLnmCB8xQp-M1MztrqGrX5mW_AYS0_jU46uWCHk_GrvLkPbQOxzhNY2v1VzXnCzkSOgRWUg.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-ham3-1.cdninstagram.com&_nc_ohc=h1Y0rksS-EUQ7kNvwHXpmPR&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTM3MjQyOTMzMTU5Mzk3NywiYXNzZXRfYWdlX2RheXMiOjIsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoyMiwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=87bc1804bb8ef24f&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9EOTQzQ0UzNDI2RjU3MUEwMEMwQzI3NjM5QjI3NDY5M192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0I4NDg1NjFGRjVDMUY2REVERjE1N0E0QjREOTJFQzk1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACby68-s843wBBUCKAJDMywXQDbVP3ztkWgYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=kZTRbf5PWMq46MATxzvJNQ&_nc_ss=7a22e&_nc_zt=28&oh=00_AQLphHabShcf8VCYN5NjOAD8sQZAlIdDDeci7voFiWG8iQ&oe=6AA2B5F4",
+        "date": "2026-09-06",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "#60YearsOfWoodlands | #WoodlandersForever \ud83c\udf93\ud83d\udc99\n\n60 years of shaping minds, nurturing dreams, and creating journeys that last a lifetime.\n\nMr. Ahtesham Farhat, Batch of 2016\n\n\u2728 Once a Woodlander, Always a Woodlander.\n\n#WoodlandsHouseSchool #60YearsOfExcellence #WoodlandersForever \n\n(WoodlandsAlumni, 60YearsOfWoodlands, ProudWoodlander, AlumniStories, MemoriesThatLast)",
+        "img": "https://scontent-ams2-1.cdninstagram.com/v/t51.71878-15/775147657_1069908232066658_4887997966797194667_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=101&ig_cache_key=Mzk2NjkwNjIzMDcxNjkzMDExMA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=yDTxD2BaT3kQ7kNvwEl_AyB&_nc_oc=AdrCKgaJghAVDro4I7dHz7XVZVicdFykVcyEN6Xzd2jTpUyR6bLtQWZ-3lqZ6HJ0mdYAKLTU1BOdd-RsM9e7xIIW&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ams2-1.cdninstagram.com&_nc_gid=cugUBjBOQd2L5ttvzM6FYg&_nc_ss=7a22e&oh=00_AQKAVyKhp2oiaUxpEfNKP_PRBYvAoE-kifmDJc3O9A2zAw&oe=6AA6BC93",
+        "video": "https://scontent-ams2-1.cdninstagram.com/o1/v/t2/f2/m367/AQPrR9_vq_2dPsWD8wEK6hnAnxEm8bE2Km0MPOT4cCHGg9SNLHFdWMZBZy5mn87dWeNsc-tuFtMfzNizsi1ZrMJ0v82l7FHrMM_MdsjbUGdz5g.mp4?_nc_cat=101&_nc_sid=9ca052&_nc_ht=scontent-ams2-1.cdninstagram.com&_nc_ohc=Rig4xiTn4PcQ7kNvwH6W4r8&efg=eyJ2ZW5jb2RlX3RhZyI6ImlnLXhwdmRzLmNsaXBzLmMyLUMzLmRhc2hfdnA5LWJhc2ljLWdlbjJfNzIwcCIsInZpZGVvX2lkIjpudWxsLCJvaWxfdXJsZ2VuX2FwcF9pZCI6OTM2NjE5NzQzMzkyNDU5LCJjbGllbnRfbmFtZSI6ImlnIiwieHB2X2Fzc2V0X2lkIjoyODMwNjY1MTAzODk0NjM4MCwiYXNzZXRfYWdlX2RheXMiOjIxLCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MjcsImJpdHJhdGUiOjczMjk4NSwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&_nc_gid=cugUBjBOQd2L5ttvzM6FYg&_nc_zt=28&_nc_ss=7a22e&oh=00_AQInZxrxbgimo_mk785wDRH3fyPDgJForpRXF7Z8jRsiRQ&oe=6AA6BBE3",
+        "date": "2026-08-19",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "#60YearsOfWoodlands | #WoodlandersForever \ud83c\udf93\ud83d\udc99\n\n13 years at Woodlands. A lifetime of memories. A legacy that stays forever.\n\nFor Nahida Bhasu, Batch of 1991\u201392, Woodlands House School was more than a place of education. It was where her journey began, from nursery through Grade 10, shaping the person she would become.\n\nNow, as Woodlands celebrates 60 Years of Excellence, her message is simple and powerful:\n\nLet\u2019s reunite. Let\u2019s reconnect. Let\u2019s relive the memories. And let\u2019s celebrate the school that shaped our future.\n\nBecause no matter how many years pass, once a Woodlander, always a Woodlander. \ud83d\udc99\n\nHere\u2019s to 60 years of memories, friendships, learning, and a legacy that continues to bring generations together.\n\nCome back. Reconnect. Celebrate 60 Years of Woodlands. \u2728\n\n#60YearsOfWoodlands #WoodlandsHouseSchool #WoodlandersForever 60YearsOfExcellence Celebrating60Years WHSAlumni AlumniReunion ReconnectReliveReunite ProudWoodlander WoodlandsLegacy",
+        "img": "https://scontent-ams2-1.cdninstagram.com/v/t51.71878-15/779996527_1580398730491707_7855795288490356585_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=111&ig_cache_key=Mzk2OTE4OTA1ODI0NjcyNDExMzI1NzQzMzc2Mzk2ODQ0Mjg%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=UBFS5I1CKacQ7kNvwHOl-nv&_nc_oc=AdrW4n-Nlasfwq7_bG4HB18SKP_vb35iBAHBLtlqFN35QGIiWa07le8OkZW3BxwfqyXx9otloXlZk_J6rCw1X6jU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ams2-1.cdninstagram.com&_nc_gid=8i6GRzHXOoAJK1mMW4HtaQ&_nc_ss=7a22e&oh=00_AQIZB9PYw3wILCGi_AXdWyTbCqeJfc3PHCfVtBhho9s-rg&oe=6AA6D07D",
+        "video": "https://scontent-ams2-1.cdninstagram.com/o1/v/t2/f2/m86/AQNHTw0zCxN0y1nWjkZP0TiONMd4qXNM8sGJp3D75fSxOaZAP_wZNJgw4QNyGG_yHL5MmMsTSIRtCw8qDJbM-TpzAdBBIxOHUp5JZQo.mp4?_nc_cat=108&_nc_sid=5e9851&_nc_ht=scontent-ams2-1.cdninstagram.com&_nc_ohc=fpTn5HagcbEQ7kNvwH70U4t&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MjU3NDMzNzA2NjM1MTE1MiwiYXNzZXRfYWdlX2RheXMiOjE3LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MjcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=1872964aec263d21&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9DRDQ3MzlGQjQzMjE4NEM4MzY4QkI1REYxNjFDOTc4MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzg1NDA3RDAzNENCOEZDMjY4QkZEQzUyMEYwNDBGQThGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbg6PnlkdaSCRUCKAJDMywXQDtqfvnbItEYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=8i6GRzHXOoAJK1mMW4HtaQ&_nc_zt=28&_nc_ss=7a22e&oh=00_AQKNfklmVve-YUe5vWxL_KqYi2mSg_Pf0DGIeDBOCUuQfA&oe=6AA2C7D5",
+        "date": "2026-08-22",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "Happy 60th to our school, WHS! Here\u2019s to many more!\n.\n.\n.\n.\n.\n#mirsarwar #whssgr #60years",
+        "img": "https://instagram.fbri7-1.fna.fbcdn.net/v/t51.71878-15/777328281_1424816156235139_4811042290958014797_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=103&ig_cache_key=Mzk2ODUwMTcxODkzNTk3NDU3MjE3NjUyMTQ2MDQ2MTIzODY%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=i1_vX9r1YDoQ7kNvwGOtIih&_nc_oc=Adrc0-MF4wod94oUPy2v5WH-0e61aCU7S9QfoRO15ycXTgDtKD6EeQGUB7j6dWJGsZI&_nc_ad=z-m&_nc_cid=1093&_nc_zt=23&_nc_ht=instagram.fbri7-1.fna&_nc_gid=SP8vVIDayOGQGWaEBnXQWg&_nc_ss=7a22e&oh=00_AQIg5sMzuG8i4LQWJ2-j-KY2plgjReBFuEvjUcy5uI8GYQ&oe=6AA6CA18",
+        "video": "https://instagram.fbri7-1.fna.fbcdn.net/o1/v/t2/f2/m367/AQNqq2acslGKDOtjIAAoMd8UbkWsclANkw2toc7mN7_1jmjDz2lgAMlNnwGJU0bJtRw1h_5f8a3UynA5IrNZnXwqzCC2yvsAY2f4QGQE-SFyeg.mp4?_nc_cat=111&_nc_oc=AdrVkN0ExmEdZn0R5h9axTvizsSm6Ici9URiz6FtLMVaDOD4VvlLk83lUG3l5gf-RU4&_nc_sid=9ca052&_nc_ht=instagram.fbri7-1.fna.fbcdn.net&_nc_ohc=0gIxOaa-Z3kQ7kNvwEOqsfN&efg=eyJ2ZW5jb2RlX3RhZyI6ImlnLXhwdmRzLmNsaXBzLmMyLUMzLmRhc2hfdnA5LWJhc2ljLWdlbjJfMTA4MHAiLCJ2aWRlb19pZCI6bnVsbCwib2lsX3VybGdlbl9hcHBfaWQiOjkzNjYxOTc0MzM5MjQ1OSwiY2xpZW50X25hbWUiOiJpZyIsInhwdl9hc3NldF9pZCI6MTc2NTIxMzE2NDYxMjUzMCwiYXNzZXRfYWdlX2RheXMiOjE4LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MzQsImJpdHJhdGUiOjYzMjk4NywidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&_nc_gid=SP8vVIDayOGQGWaEBnXQWg&_nc_zt=28&_nc_ss=7a22e&oh=00_AQJDgcZEDikIb9g0m0Q1qmzlI8aPLLXMxo-919uj_S8oxQ&oe=6AA6B9A1",
+        "date": "2026-08-21",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "Woodlands house school sonwar srinagar celebrates  it's 60th foundation day",
+        "img": "https://instagram.ffln6-1.fna.fbcdn.net/v/t51.71878-15/799503833_28456947347324240_679249750780920931_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=103&ig_cache_key=Mzk4MTA0MzU1MjQxNjQ0ODg2MQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=Wri620r2e98Q7kNvwEJnXUA&_nc_oc=Ado_f-0JNBJIz6slgBAlQO62Jqgm2SGiFWnFVugxt9VPoyrLevtv6pZn9OyK19M6lXs&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ffln6-1.fna&_nc_gid=yD5JZ3J4HuQDikAm6Qa7JA&_nc_ss=7a22e&oh=00_AQKqAQeKekEGXHZSFhxtjeEh2tfAma9qK03uD1X6UY_mWw&oe=6AA6BE58",
+        "video": "https://instagram.ffln17-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQPJffctLas-uSWo5HEyMIhLF-sZkoqUXR2z2k5XlvS63bcamXYXIPqjANO2eo8UzlftQQuEwf9Gyb346ekxQkqowovJtp0N9y9adl4.mp4?_nc_cat=106&_nc_oc=Adq0uVvUR7-cwB8sWca8OhWF0Vk433K2LpUYbGxvJaGWGCN6R1VEc3ib6mUod_zubSc&_nc_sid=5e9851&_nc_ht=instagram.ffln17-1.fna.fbcdn.net&_nc_ohc=zGWcVeSHmucQ7kNvwHAIE5B&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6Mjg1NDg0OTUzODgxMTM3MjUsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MTMxLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=bda8232fef78d1b8&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8wMDQ5Rjk1NkVDRTI1NjY5OUUyQTI3RTk2MTg1MTg5RF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzc5NDJGRjczRjM5QkJGRURBNDk3Mjc2NTNDNzFEQUIxX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACb67Nfnka22ZRUCKAJDMywXQGBgAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=yD5JZ3J4HuQDikAm6Qa7JA&_nc_zt=28&_nc_ss=7a22e&oh=00_AQIpOL-5L-SPEkolI4cLuZFxj-Cc0BsDwFA04oNpvUtAZg&oe=6AA2E13B",
+        "date": "2026-09-07",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "60 Years of Memories. 60 Years of Inspiring Generations. \ud83d\udc99\n\nAs we celebrate 60 remarkable years of Woodlands House School, Srinagar, we are reminded that a school\u2019s true legacy lives on through the generations it shapes, the dreams it nurtures, the friendships it creates, and the memories that stay with us forever.\n\nIn this special anniversary message, alumnus Adnan Shah, Batch of 2005, looks back with pride and gratitude at his journey as a part of the Woodlands family.\n\nFrom classrooms to lifelong connections, Woodlands has continued to inspire young minds and create a legacy that extends far beyond school years.\n\nHere\u2019s to 60 glorious years of learning, growth, friendship, and memories, and to many more years of inspiring generations to come.\n\n#60YearsOfWoodlands #WoodlandsHouseSchool #WoodlandsSrinagar #WHAS60 #60YearsOfInspiringMinds\n\n(AlumniVoices, WoodlandsFamily, LegacyOfLearning, Srinagar)",
+        "img": "https://instagram.fbcn13-1.fna.fbcdn.net/v/t51.71878-15/786755288_27863100516704127_8394270582667543088_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=110&ig_cache_key=Mzk3MTUwODQ3NjkwMTM3Mjk2ODQzMTExODUyMzU4MTMyMzM%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=nAlPVo1POScQ7kNvwGeZrrI&_nc_oc=AdovZ-nXmCFxP22DXmV8GJblxEP806Rc7z91S3iZf6OQgNPJku3_LtZqmF7MFH9qzeo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fbcn13-1.fna&_nc_gid=sx4J5iSm4BN1G0fPq2E7ug&_nc_ss=7a22e&oh=00_AQKctw5OP0-ddNH_9K869kETuimRoF-8mVe794zhcRdUjQ&oe=6AA6D64B",
+        "video": "https://instagram.fbcn13-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQMg1jh-bvswqNoAgvoejS-bKE2_COawG8MDoCxzdRfBhMKdWRVURwW8_VjvTz8oncwJj4fB_O7eSOZGJvBho8ngShi_pQw2T-BiWII.mp4?_nc_cat=106&_nc_oc=Adqyk8TCJDBRK_rW-rte1_hodWuYuCuO0gB0X7OXYVMpO36UcNHVn2PXxm5OMxBVoS4&_nc_sid=5e9851&_nc_ht=instagram.fbcn13-1.fna.fbcdn.net&_nc_ohc=8yXbj4bhcdMQ7kNvwFrHxmk&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6NDMxMTE4NDI2OTE0NjY2MywiYXNzZXRfYWdlX2RheXMiOjE0LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MzEsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=5bfed98f6dfe1152&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC80MjQ2RTFBQjBDMzY0RjQ0QzNCN0U5MEY5MDRGQUFBM192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0ZCNDMxOUFFQkI2NDY0RjU2OEY1REFGNTcyRDMwMjlFX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbO6OPu-b-oDxUCKAJDMywXQD9qfvnbItEYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=sx4J5iSm4BN1G0fPq2E7ug&_nc_zt=28&_nc_ss=7a22e&oh=00_AQJVnPF8kEY0ORHdw6spSQHZq7l83M7rR7lHls4Uiltlag&oe=6AA2DB9F",
+        "date": "2026-08-25",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "60 Years. One Legacy. A Thousand Journeys. \u2764\ufe0f\n\nFor six decades, Woodlands House School, Srinagar has been more than a place of learning. It has been a place where curiosity is encouraged, character is shaped, talent is nurtured, and dreams take flight.\n\nFrom the classroom to the playing field, from the laboratory to the chessboard, Woodlands has always believed that true education is about developing minds that think, hearts that care, and individuals who lead.\n\nToday, we celebrate six decades of learning, values, friendships, achievements and memories \u2014 carried forward by generations of Woodlandites across the world.\n\n60 years of shaping minds.\n60 years of building character.\n60 years of inspiring futures.\n\nThe legacy continues.\n\nThis is Woodlands. \u2764\ufe0f\n\nHappy 60th Anniversary, Woodlands House School! \ud83c\udf89\n\n#60Years #WoodlandsHouseSchool #WHS #Srinagar #60yearsofexcellence",
+        "img": "https://instagram.fpoz5-1.fna.fbcdn.net/v/t51.71878-15/798825667_1577130586959501_4657230381669899643_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=105&ig_cache_key=Mzk4MDk5ODk1MDUwNzc4OTYwNTEwODU0NzE3MTc1MTI1NDU%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=9YgJ7h_UTKQQ7kNvwHRtj8C&_nc_oc=AdoRAB-iGfGwXNK7TRW5Y0515QWPYB35j3h0opnqQa40qn1yCgNOYaREmDAYAtH7Spc&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fpoz5-1.fna&_nc_gid=S8GroP6vBPLE6p9Ost7iqQ&_nc_ss=7a22e&oh=00_AQLqtzDqtHjB7XWsaPCIeUWvT_IkGRWrEcBYYoWKdiCamA&oe=6AA6D6C5",
+        "video": "https://instagram.fpoz5-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQMTYIiDzlXX6U9lvnPMwizeHudzEQWQLDHhvP5S47FfdvZ2gUbiXePdrCBIfsI7lDA0FKqKOW26ki6d7_Uen4iubbvQTp5aIfoJGBg.mp4?_nc_cat=105&_nc_oc=Adpha_sps8_UWyd6tl8vHU7ySPNKgWwqPM5mX2HgQxai7p4peP-dcjc40-NOjjCw-Lk&_nc_sid=5e9851&_nc_ht=instagram.fpoz5-1.fna.fbcdn.net&_nc_ohc=akz6PTvkFJsQ7kNvwFKCKgZ&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuMTI4MC5kYXNoX2Jhc2VsaW5lXzFfdjEiLCJ4cHZfYXNzZXRfaWQiOjEwODU0MzkwNDQxODI0NzksImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6Mjk0LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=e38e774f7dc841d9&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9GRDQ1MDkyNTZFM0RBNzQ4NjJGNjY5MDUwNUQxMzY5OV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzhCNEYwQUFCOUZFRDEzMzk3QjNEMUMxM0QwNzJGNDk4X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaeh7uK78ztAxUCKAJDMywXQHJszMzMzM0YEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=S8GroP6vBPLE6p9Ost7iqQ&_nc_zt=28&_nc_ss=7a22e&oh=00_AQJvD2b9EhDxdFhwD3e5J9h_Gva5EuR63hB6uKsRRJioIQ&oe=6AA2B54A",
+        "date": "2026-09-07",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "No boring lectures. \u274c\nToday, students at Woodlands House School explored the fascinating world of Electronics through hands-on learning! \ud83d\udd0c\u26a1\n\nBecause the future belongs to those who build it. \ud83e\udd16\ud83d\ude80\n\n#RoboticsAndAI #Electronics #STEM #WoodlandsHouseSchool #KATIndia FutureEngineers",
+        "img": "https://instagram.fpoz6-1.fna.fbcdn.net/v/t51.82787-15/722974257_18161862934456165_714109347976367966_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=101&ig_cache_key=MzkxNzIxMzAwNzQxOTgzMjg4MzE4MTYxODYyOTI4NDU2MTY1.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjExNzkuc2RyLnZpZGVvX2RlZmF1bHRfY292ZXJfZnJhbWUuQzMifQ%3D%3D&_nc_ohc=xQB1vpm4Vj4Q7kNvwEx6P1_&_nc_oc=Adp4uz2J--CY_6P2stxjOFP3STx6ujymEXUPdvSLYsOTaOmLg-vTAnbcpsN77IA4q38&_nc_ad=z-m&_nc_cid=1249&_nc_zt=23&_nc_ht=instagram.fpoz6-1.fna&_nc_gid=zyUqkP3s0PFGgg0bdaHHMQ&_nc_ss=7a22e&oh=00_AQLIKuIiUfXfY1eo-CRAbajZFmUjmZYo-bqc88hYumFmPA&oe=6AA6DCBE",
+        "video": "https://instagram.fpoz6-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQPSobx1UKcx-6zdmcw0Bt0aVNahjQMw-1APMN-CMYcL0aYeBoFdx1y70u_ehNuRTlf_wCVMDkE1DJi9F0m6l5ZJGMuduIDJMiemfOw.mp4?_nc_cat=107&_nc_oc=AdrnVjutavVy5OVF1qtGDkhmg0Nokz39cV64YMHScLvqDDsSSDlyPedN4aSmxj3Hlg4&_nc_sid=5e9851&_nc_ht=instagram.fpoz6-1.fna.fbcdn.net&_nc_ohc=xUh3JfKhhOIQ7kNvwH0Dw7I&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTI4MTEyMjEzMDQ3MTg5NiwiYXNzZXRfYWdlX2RheXMiOjg5LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MzIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=1d11ef05e87df120&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9BRTREMzEyODhBOUY3REIwQUI4RjVDRjY3RTNDQjVCQl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzg3NDhENkEzQTFEMzI1QUI1RjVEODgwRkI4Q0M1MEIxX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACawr4HYj8vGBBUCKAJDMywXQEAEOVgQYk4YEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=zyUqkP3s0PFGgg0bdaHHMQ&_nc_zt=28&_nc_ss=7a22e&oh=00_AQJixqMDGYPbax-igJdrPHNo4n-8EQ-XpWj3ru9XHDW9Rw&oe=6AA2BEE8",
+        "date": "2026-06-11",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "A father\u2019s love is a lesson that stays with us forever. \ud83d\udc99\n\nToday, our students celebrate the superheroes who guide, support, and inspire them every step of the way. Thank you, Dad, for your endless encouragement, sacrifices, and unconditional love.\n\nHappy Father\u2019s Day to all the amazing fathers who help shape bright futures! \ud83d\udc68\u200d\ud83d\udc67\u200d\ud83d\udc66\u2728\n\n#FathersDay #HappyFathersDay #DearDad \n\n[StudentTribute SchoolLife FathersLove Gratitude FutureStartsAtHome]",
+        "img": "https://scontent-ams2-1.cdninstagram.com/v/t51.71878-15/727243012_1333463101539377_844305284999971629_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=111&ig_cache_key=MzkyNDE2MTUzODg0MzYwMDUzODg4MDgwMTI4ODQwMzg3Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=TmWLW0GP74sQ7kNvwHyQMmy&_nc_oc=AdqGbnfDqD7Padv4rjbSOOwHDc3PI3vmAQT11H8WkogXa8sIMM9rvIKnscUHuED4nG-a9hISUDcBCqzTTNMXY03W&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ams2-1.cdninstagram.com&_nc_gid=pnhxZVk_vZVmQl3vm03wVQ&_nc_ss=7a22e&oh=00_AQKaN27pdXn7_5hqGxb5r2ktrWSHlG7tNh_qIUmMtqVpFA&oe=6AA6C8C9",
+        "video": "https://scontent-ams2-1.cdninstagram.com/o1/v/t2/f2/m86/AQO96D7FFqxUB7cK1X869wM_QyE5tRoT1jLlAOsOoWY0hgpM-eLBNhaz4o93xAzBD0S6dLGusfn3SuBCRAjtjTbEhLUq6UH1kJc5Ghk.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-ams2-1.cdninstagram.com&_nc_ohc=6NFGtroxPpQQ7kNvwFCROlN&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6ODgwODAwNjQxNzM3MjcxLCJhc3NldF9hZ2VfZGF5cyI6ODAsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjo4NywidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=f3f7b0fd5f8049b9&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC80ODQ4MjZDMjAxQ0U0RDE1N0Q2OUQ5NUY3NDQ5OTE4NV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzM5NDA0NTcxM0I0RUE3NURBQzMxODBGREVFNkFEQTg5X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbuiPOVrMWQAxUCKAJDMywXQFXMzMzMzM0YEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=pnhxZVk_vZVmQl3vm03wVQ&_nc_zt=28&_nc_ss=7a22e&oh=00_AQLVQxweGdLNAe2Ijtm3tUqbo4jFp3fS0xOzXuKs1gB-iQ&oe=6AA2E9E6",
+        "date": "2026-06-21",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "60 Years of Nurturing Dreams. Inspiring Generations.\n\nAs part of the #WHS60Years celebrations, we were honoured to welcome back our alumna Asma Latif (Batch of 2019), who recently completed her Honours in Psychology and published her book The Land of Dreams and Nightlife.\n\nStanding once again in the corridors where her passion for writing first took shape, Asma shared a heartfelt message about creativity, courage, and the importance of believing in the gifts that each student carries within. She spoke of the teachers who encouraged her, the friends who supported her, and the memories that continue to inspire her journey.\n\nHer story is a powerful reminder that the true legacy of Woodlands House School is not only measured in years, but in the lives it shapes, the voices it empowers, and the dreams it helps bring to life.\n\nAs we celebrate six decades of excellence, we celebrate every student who walked these halls and every dream that began here.\n\n60 Years. Countless Stories. One Legacy Woodlands House School\n\n#WHS60Years #WoodlandsHouseSchool #Srinagar #WoodlandsLegacy",
+        "img": "https://scontent-cdg4-3.cdninstagram.com/v/t51.71878-15/769168341_1398927335676883_127250475374029066_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=111&ig_cache_key=Mzk2MzYxMjMzNDM3MzA4MTkxOQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=jrE1hMjtkNgQ7kNvwGnIVyp&_nc_oc=AdpRnWrPCXPoHDkfvFKIIITr7ERLPMp5rg5PrmVBnd7E_nEfwUjpEKjT-qAugOiQDtU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-cdg4-3.cdninstagram.com&_nc_gid=NY8oIpqJ0Og7aK5_x7IF-Q&_nc_ss=7a22e&oh=00_AQLvJg58KPETAv9Np49LEGRl3bsOoz3WJ7l60SOBePTyEA&oe=6AA6CB05",
+        "video": "https://scontent-cdg6-1.cdninstagram.com/o1/v/t2/f2/m86/AQPM0e0klTAMoEdW_JYN3xjGzcFuN2xvK-wved0ni0wVrK8EaC2iE0RttBxBzJP-8S0jmyQmehmBOb2mlqq-DbFovvWhdJHR2fxPIPU.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-cdg6-1.cdninstagram.com&_nc_ohc=Yu5ieJ6z574Q7kNvwH_rzh8&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTkwMTA5ODYwNDYzMTUyNywiYXNzZXRfYWdlX2RheXMiOjI1LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6ODQsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=78ed721046eb5d06&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9DNTQwN0JCRDhGQzBGN0FCNzcwRkYwOUQwQ0I0OTVBNF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzU0NDFDNDU3Mjk1ODJBREYyRUU4QUFGNDlFMUNDMzlEX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbO15iwwMLgBhUCKAJDMywXQFUCn752yLQYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=NY8oIpqJ0Og7aK5_x7IF-Q&_nc_zt=28&_nc_ss=7a22e&oh=00_AQLJ15ToX-dSdy8zv5A-CJsDmV-9IIG_Kaovs0QTcoEmtA&oe=6AA2B5B0",
+        "date": "2026-08-14",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "\ud83c\udf4e\ud83e\udd55 Fruits & Vegetables Day at Woodland House School\n\nLearning becomes even more exciting when creativity meets education!\n\nOur young learners brought the world of fruits and vegetables to life through colorful costumes, cheerful participation, and enthusiastic performances. This engaging activity helped children understand the importance of healthy eating while building confidence, imagination, and teamwork.\n\nA wonderful day filled with learning, laughter, and vibrant colors! \ud83c\udf31\u2728\n\n#WoodlandHouseSchool #FruitsAndVegetablesDay #HealthyHabits \n\n[EarlyLearning SchoolActivities CreativeLearning YoungLearners HealthyEating LearningThroughFun WoodlandsHouseSchool]",
+        "img": "https://instagram.fmex28-1.fna.fbcdn.net/v/t51.71878-15/723976957_1441381931366854_8685712153605684236_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=109&_nc_map=urlgen_bucketless&ig_cache_key=MzkxNzk2ODMzMTM2OTc4NDgxNjE3MTQ3MDA5Njk2ODM1MTE%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=G7TktEo7tFEQ7kNvwHLF1Hn&_nc_oc=Adrn7q86CViCMgf870PPdz5HeT8to3iiGkT93HCJZnG8rk0rqQogB3DV0OwkuGG720s&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fmex28-1.fna&_nc_gid=9msPm-X4R3dJI36bu2rEmw&_nc_ss=7a22e&oh=00_AQIxepheCjeXSOcJ-6dUMbvCjgcN_e_zMrU_HAy3IxVB9g&oe=6AA6DCF5",
+        "video": "https://instagram.flov1-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQPJrapGQabYENDr0UvhEAU9_ENKXriHDPT7fljJvq8ua9v7g6IcAAkQlrklTkSC8PwGsJjvMcyZ2VBstMfrpFmyy9pylwLaigFg3xY.mp4?_nc_cat=101&_nc_oc=AdotltRK8qDIi2Bb6QR_2qgcLqlzisu8QShiolb2dkcbVaQgYwz-eK4eFH2IgljR42U&_nc_sid=5e9851&_nc_ht=instagram.flov1-1.fna.fbcdn.net&_nc_ohc=JDWcXSRNa3UQ7kNvwH-L32o&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTcxNDY5MDczNjM1MTIwMSwiYXNzZXRfYWdlX2RheXMiOjg4LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6NDUsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=1221ea52566f9094&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC82RjQ3Q0JDNzA4OTA0RjM1MUI5NTRDODA5OERBOTBCNl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzQ3NDIyOEFFQkNDNUMwMkJBMjVFQUJGNDA4NTk1MDg3X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbCn-vDkeCLBhUCKAJDMywXQEagAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=9msPm-X4R3dJI36bu2rEmw&_nc_zt=28&_nc_ss=7a22e&oh=00_AQK1BJwYiIlYLOIT-CjA9cXL3Lc385Fb2zUQZCcr37mPcQ&oe=6AA2C792",
+        "date": "2026-06-12",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "At Woodlands House School, Independence Day was celebrated with pride, passion, and the vibrant spirit of our students. \ud83c\uddee\ud83c\uddf3\u2728\n\nFrom energetic performances and patriotic songs to cultural presentations that reflected the beauty of our nation, every moment was a tribute to India\u2019s freedom and unity. Our students filled the campus with enthusiasm, creativity, and love for the country, making the celebration truly memorable.\n\nWe are proud of our young learners for embracing the values of patriotism, respect, and togetherness that define our nation.\n\nWoodlands House School wishes everyone a Happy Independence Day! \ud83c\uddee\ud83c\uddf3\n\n#WoodlandsHouseSchool #IndependenceDay #StudentCelebration #ProudToBeIndian #Patriotism",
+        "img": "https://scontent-fco2-1.cdninstagram.com/v/t51.71878-15/775027662_1365041855782321_3502018087286602765_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=107&ig_cache_key=Mzk2NDMxODA3NzkyOTg1ODUwMzMxMDYwMzU1ODMxMTY4NDU%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=KHJcrvYLr8YQ7kNvwEGr1IJ&_nc_oc=AdpSoSgsK5sMzb_LiwoL_tt6Sx2q8fAfhWgALqwEUQ55cOIHw4QGjRARZrWqHoO4x-70ff0-O8s4U5t4cTnAf3W5&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-fco2-1.cdninstagram.com&_nc_gid=xhBNYd-VyBICWWR4hwE66g&_nc_ss=7a22e&oh=00_AQJ9AD-HBUCjuvkwBCcXsJ4Glt4oGWHLo1fpirk3uGb8yg&oe=6AA6DA6D",
+        "video": "https://scontent-fco2-1.cdninstagram.com/o1/v/t2/f2/m86/AQNWsfyqaGUtPu6Rcq9bzPgzHxiiS48Q4Ltjzdo_M4LlJTxmJBNT8gM-Ufai0hvzA8pGq5YoLfuoaspPoohJ7GvcWYvCXKuMDOe4H1Q.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-fco2-1.cdninstagram.com&_nc_ohc=bXdCtYOpNiEQ7kNvwHC6dYS&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MzEwNjAzNDY5OTc4MzYwMCwiYXNzZXRfYWdlX2RheXMiOjI0LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6ODgsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=cc947ccec6395f41&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9FMTRENDg4MTdENzg2N0U5NENGNDA0MDhBNkQ0M0NCNl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0U2NEQ1NjA4MjM2NzI2OTZDMENDMkU0OThGM0NDNzhGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbgtobvgbuECxUCKAJDMywXQFYlT987ZFoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=xhBNYd-VyBICWWR4hwE66g&_nc_zt=28&_nc_ss=7a22e&oh=00_AQKvJXuCZXar4FGiuVG04qLSDIA-gMHkkwNWsK_sUgBHgg&oe=6AA2B913",
+        "date": "2026-08-15",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "\ud83d\udcda Every great journey begins with a single page.\n\nAt the Woodlands House School Library, curiosity finds its home, questions lead to discovery, and every book opens the door to new possibilities. From quiet moments of reflection to exciting adventures through words, our library inspires young minds to think, imagine, and grow every single day.\n\nBecause every reader has a story to begin, and every story has the power to shape a brighter future. \u2728\n\n#WoodlandsHouseSchool #WHS #SchoolLibrary #ReadersTodayLeadersTomorrow #LoveForReading \n\n(LearningBeyondClassrooms, CuriousMinds, FutureReady, EducationExcellence, InspiringYoungMinds)",
+        "img": "https://scontent-cdg4-2.cdninstagram.com/v/t51.71878-15/728861358_2324467601290390_5709488634491411848_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=109&ig_cache_key=MzkzMjk0ODE0NjA2MTQ3Mjk1OTEwNzgyNTAwODQ4NzgxMDY%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=L_ooXvQzviIQ7kNvwFm9oNR&_nc_oc=AdqaCm-Z0NdIvqnIoBJtF_xRjoNElhA__iE7L6JIXc6ByRAJaEXjDeTbDRhhVWcS2nHqUuPW40LDCsaPQErOr9Sp&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-cdg4-2.cdninstagram.com&_nc_gid=zeuJtlxxT50fOI52CAGVGA&_nc_ss=7a22e&oh=00_AQLv0PIWU-H18usUMA2_0ixmAs2jFm_O09uJSrvBowrwbw&oe=6AA6D858",
+        "video": "https://scontent-cdg4-2.cdninstagram.com/o1/v/t2/f2/m86/AQOyMT3cKwh4e-mFM0UmECIpZpnKhCH2ujn7EjK_tIBGyWQC1wk5Lvap0HyjRxvWeKMybwG0Tcj7m-4eOebl5EfbHcNmIDnwoneA-JI.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-cdg4-2.cdninstagram.com&_nc_ohc=KmMoLVnz2lIQ7kNvwEZQFD4&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTA3ODI0MjEwMTU0NTU3MSwiYXNzZXRfYWdlX2RheXMiOjY3LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6OTAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=cae986fe2a0c2aab&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC83NDRGNzQyMEQyRDhGRjFERjJBQ0ZFOUE4QzQ4ODY4MV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzNBNDA2ODcxODBDNkFGODk0NEFBQTZDRDM0RkUwMzhBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbGqY7X-anqAxUCKAJDMywXQFaIgxJul40YEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=zeuJtlxxT50fOI52CAGVGA&_nc_ss=7a22e&_nc_zt=28&oh=00_AQK_DHI_MrC-2UZinAYkNWNW2iDw8EPNqVsxKjhlSI1txw&oe=6AA2B250",
+        "date": "2026-07-03",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "\ud83d\udd2c\ud83c\udfa8 SCIENCE & ART EXHIBITION 2026\n\nWhere curiosity meets creativity! \u2728\n\nWoodlands House School proudly hosted the Science & Art Exhibition 2026, bringing together the imagination, creativity and scientific curiosity of our students.\n\nFrom innovative science models and engaging experiments to thoughtful artwork and creative expressions, our students turned their ideas into something truly inspiring. \ud83c\udf31\ud83d\udd2c\ud83c\udfa8\n\nThe exhibition was a wonderful reflection of learning beyond the classroom, encouraging our students to explore, experiment, create and confidently present their ideas.\n\nA celebration of young minds, big ideas and endless possibilities! \ud83d\udc99\n\n60 Years of Excellence. A legacy of learning, creativity and discovery.\n\n#Srinagar #Kashmir #JammuAndKashmir #Students #School \n\n(Education, SchoolLife, StudentLife, Science Art, ScienceExhibition, ArtExhibition, Learning, Creativity, Innovation, YoungMinds, KashmirSchools, SrinagarSchools,  WoodlandsHouseSchool)",
+        "img": "https://scontent-icn2-1.cdninstagram.com/v/t51.82787-15/789488935_18105583874593133_4206608933485017855_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=109&ig_cache_key=Mzk3NTg1NzIzMTUyNDExMzM1MzE4MTA1NTgzODcxNTkzMTMz.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjcyMC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=cmMo1VrYRWgQ7kNvwGOTy4C&_nc_oc=Adq7FbBJUMZTco0Fb3dMVYd6BwiDJf0tNrvwhicUnXqdMwjn3fT2sMxve7Qcpg5x4XU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-icn2-1.cdninstagram.com&_nc_gid=8p8OdpbhsYbGQNOjjchqCg&_nc_ss=7a22e&oh=00_AQLlkuI5JyQP4uXv--HxkCrfugeoFlMiApvc_rA5ulPmfA&oe=6AA6AA17",
+        "video": "https://scontent-icn2-1.cdninstagram.com/o1/v/t2/f2/m86/AQPSm_gRPYuOa4iuSXx7Mve6mHZtBN95y3deA2InHetX13D59-AY7W6r4E5u3Ji5LsJ_kX_VRjTwNkx_G1r51ProxCdOZCkU_3dTexg.mp4?_nc_cat=111&_nc_sid=5e9851&_nc_ht=scontent-icn2-1.cdninstagram.com&_nc_ohc=SbPEp0F63xEQ7kNvwERROSd&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTA4NDczODUyMDY5ODE5MCwiYXNzZXRfYWdlX2RheXMiOjgsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjo1NSwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=90e69003628da4ea&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8wNzRDNDM2NzdCMjBCN0NENkU2QjI5QkJEMEVDOTBCQl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzhFNDU0Rjg2NTY0NDVBOURERDExM0U5QkFGMERENUJGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACactZrji6TtAxUCKAJDMywXQEu6n752yLQYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=8p8OdpbhsYbGQNOjjchqCg&_nc_zt=28&_nc_ss=7a22e&oh=00_AQLtwcjl9XFu4DKWq9xkwcd4xFhDrqe46bsGgkKe3z2zRQ&oe=6AA2DCD4",
+        "date": "2026-08-31",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "At Woodlands House School, students got hands-on with Robotics & AI, exploring Arduino coding, electronics, sensors and more.\n\nBecause the future belongs to kids who build, code & innovate. \ud83d\udd27\ud83d\udcbb\n\n#KATIndia #Robotics #ArtificialIntelligence #Arduino #STEMEducation WoodlandsHouseSchool FutureReady KidsWhoCode Innovation LearningByDoing",
+        "img": "https://instagram.fhnd10-1.fna.fbcdn.net/v/t51.82787-15/776020673_18168807361456165_808273200125040968_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=104&ig_cache_key=Mzk2NDI2NDM0MzAwOTIyMTU3MTE4MTY4ODA3MzU4NDU2MTY1.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjcyMC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=xXLCakgTUawQ7kNvwFy4P9C&_nc_oc=AdofFE5m6SXATRiUf1PpW-JDirkROU_JIW44byCUqWW70rllW5-717OBsZYr9PuoqDA&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fhnd10-1.fna&_nc_gid=5WUN4s9hJZ_eE7IIrm8y5g&_nc_ss=7a22e&oh=00_AQLDLHqLJ6qsbhmMgB5nrvGxaAp5Zwph873V3wwz5BND4w&oe=6AA6D67D",
+        "video": "https://instagram.fhnd10-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQNQMOEL8co1gRizETo06vCyQ7C6JSVbf_Ou35aKB8J-fWuMIOpj0rPJlEMRky7oWnRVd3X89dLkz1lOYpwMLn4X-XDurMxYGlyQFuI.mp4?_nc_cat=105&_nc_oc=Adp3eLxaehdxPxXYCniTR-dYPnQB0P8IMtd6W9j1LQ64o2seqj6gn_xAbfrPq6c5Y5g&_nc_sid=5e9851&_nc_ht=instagram.fhnd10-1.fna.fbcdn.net&_nc_ohc=DQAdUA5ZkaQQ7kNvwHWZnIg&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc1NTEyOTc5ODg0NTEwMSwiYXNzZXRfYWdlX2RheXMiOjI0LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MTMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=7ae659802eda5808&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8xMDRBRkIyQTk2QzAzMDY3RDMwNTQ1MEZDNjJCRjRBMl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0YwNDJDMjE4QUREREJCMDlGQzVDNkEzMkFBNDg2Qjk3X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbaio-DgJKeBhUCKAJDMywXQCuIMSbpeNUYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=5WUN4s9hJZ_eE7IIrm8y5g&_nc_zt=28&_nc_ss=7a22e&oh=00_AQKod_Y--6kcAJxErfROhhUiQS5Hv55CtP34z-3rDo2ZGg&oe=6AA2D32A",
+        "date": "2026-08-15",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "Today, we bid farewell to an incredible group of students who have filled our school with memories, laughter, and pride. As you begin a new journey, carry our values and lessons with you.\n\nYou will always remain a cherished part of our school family. Wishing you success and happiness in everything ahead. Farewell, Class of 2026! \u2764\ufe0f\ud83c\udf93\n\n#SchoolFarewell #Farewell #SchoolLife #schoolfriends",
+        "img": "https://instagram.fsyd14-1.fna.fbcdn.net/v/t51.71878-15/755868119_4646328262256023_1681218337300140649_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=111&ig_cache_key=Mzk1MDIyNjQ2MDE5OTExMDU3OTI4MTU3ODY2ODIxMzg0MzU%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=-HxD86T7eLMQ7kNvwErZS1E&_nc_oc=AdqNglp8AVR10OK8HriyYOd_mzT8DTjFH0lRFdwY6201jESCfAx-hz9LzrQH24QrgJ8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fsyd14-1.fna&_nc_gid=p3xpbDUCWLucSfi_sUFcVA&_nc_ss=7a22e&oh=00_AQKyKS4IemCdVCtVxokuh_Au4OPu7mpNQ_izkHZogZYDbg&oe=6AA6D1EE",
+        "video": "https://instagram.fsyd14-1.fna.fbcdn.net/o1/v/t2/f2/m86/AQMwu-lOCr2uBFhYVMvU0Awbh8kwYXE9cuaMZg3rYK1dr6w1nEg8vwJS8FtPy_6qRMPnWS3HZps4hg9KZN5Mp2JPU-2TYvNXHA0DeXs.mp4?_nc_cat=100&_nc_oc=AdqzPhbFugZMCpi2yeaMFaz9cEv8wA67eq1JoVCACE8GKHuFRWdEzu5ewCFuQItXR4o&_nc_sid=5e9851&_nc_ht=instagram.fsyd14-1.fna.fbcdn.net&_nc_ohc=FyTtc--GRP8Q7kNvwF0paif&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MjgxNTc4NTc1MjEzODUyOCwiYXNzZXRfYWdlX2RheXMiOjQ0LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6NjcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=8197d8ac05f2812b&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9EODQzM0JDMTc0RjlFNkYyQzA1OENCMTQ4MDU1RDA4NF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0IzNDgwRDVBMjFGM0RENjU5N0U4NjhFOUFGOTZDRkI0X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbAzKjYpryAChUCKAJDMywXQFDqn752yLQYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=p3xpbDUCWLucSfi_sUFcVA&_nc_zt=28&_nc_ss=7a22e&oh=00_AQKig6ZObbE5YR9aWETLIDGAUVa3y0P-UV9aULHlGL4OOQ&oe=6AA2BB01",
+        "date": "2026-07-27",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "Eid Mubarak from all of us at WHS School! \u2728\n\nMay this Eid bring peace, happiness, success, and countless blessings to every student, parent, and teacher. May your homes be filled with joy, gratitude, and togetherness as you celebrate this special occasion with your loved ones.\n\nWishing everyone a beautiful and blessed Eid filled with love, laughter, and memorable moments. \ud83c\udf19\ud83d\udcab\n\n#EidMubarak #WHSSchool #EidWishes #",
+        "img": "https://scontent-mad1-1.cdninstagram.com/v/t51.71878-15/708312384_2491431187955718_3653649216384587575_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=102&ig_cache_key=MzkwNjM5ODQ2ODU0OTM5ODg4NjIxNzg1Mzc3MjkzNTQyOTM%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=Q5kFHZ33y8AQ7kNvwGFBo9V&_nc_oc=Adq82x55Xikvx5u-qOrMzU0MR1OHBHrnPzVNDav_vmHWKXfHDkJkN5d5IHZWNykSMyo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-mad1-1.cdninstagram.com&_nc_gid=ekmZq9nVywqP1QEk-pOW6w&_nc_ss=7a22e&oh=00_AQLIFPxqt8bm5YDj50P-G3w8toagqW_yht940geQGWPTQA&oe=6AA6D174",
+        "video": "https://scontent-mad2-1.cdninstagram.com/o1/v/t2/f2/m86/AQPjaQ5gzmrvN01iM_GRjxV_C-FiXVkWwOExChP11wHgBEcArqiBLovDThcjzay4NjY6cMmsJIhTDVa8i6SyQiNP_grdCOdnQj6Y5zk.mp4?_nc_cat=110&_nc_sid=5e9851&_nc_ht=scontent-mad2-1.cdninstagram.com&_nc_ohc=dwF2Bb1qRbkQ7kNvwE5W_gN&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MjE3ODUzMjMxMjY4ODE2OCwiYXNzZXRfYWdlX2RheXMiOjEwNCwidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjYwLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=ef6767cb6184133&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC81MzQ2RTZDQjk2RjQ1MkJGQTI2RTYxNEQwOEM1Q0U5Ql92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzAzNENGNUQyNjE5OERGREZCQjFFNDBBMTM4N0EwNUJFX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbQmInKotfeBxUCKAJDMywXQE41P3ztkWgYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=ekmZq9nVywqP1QEk-pOW6w&_nc_zt=28&_nc_ss=7a22e&oh=00_AQJXa9FZKIruSUaGR_gtra9TG_jruTivX5sZYsErMKRzzg&oe=6AA2E9D7",
+        "date": "2026-05-27",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "#60YearsOfWoodlands | #WoodlandersForever \ud83c\udf93\ud83d\udc99\n\n60 years of shaping minds, nurturing dreams, and creating journeys that last a lifetime.\n\nFrom the classrooms and corridors of Woodlands House School to inspiring the next generation, our alumni carry a piece of their school journey wherever they go.\n\nIn this special alumni story, Ahtesham Farhat, Batch of 2016, takes us back to the moments that shaped him, the teacher who made a lasting impact, and the journey that eventually led him to become a JEE educator.\n\nHis story is a beautiful reminder that sometimes, a teacher\u2019s expectations can become a turning point in a child\u2019s life.\n\nAs we celebrate 60 Years of Woodlands House School, we celebrate not just our legacy, but the countless stories of our students who continue to learn, lead, inspire and make us proud.\n\n60 years. Countless journeys. One Woodlands. \ud83d\udc99\n\n#60YearsOfWoodlands #WoodlandsHouseSchool #WoodlandersForever \n\n(WHSAlumni, 60YearsOfExcellence, Celebrating60Years, AlumniStories, EducationBeyondBooks, TeacherImpact, ProudWoodlander)",
+        "img": "https://scontent-nrt6-1.cdninstagram.com/v/t51.71878-15/775799324_2366633547476425_2614606676397782666_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=105&ig_cache_key=Mzk2NTczODI3OTgwODU3MDk4MDIyMzA1MzY2NzQ1NjQ0MjQ%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=SZ6T4Lbcn98Q7kNvwGK1wqy&_nc_oc=AdpAwwtNRsD-ZBzKN-zch7xIY6YCGjN6xdTgY6elV93bHtIMJEbemd823zOH0HF61sTpYyQCyzf2ufXHuXy8sYqB&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-nrt6-1.cdninstagram.com&_nc_gid=jNm7EpzXz1A9RUEthdnhoQ&_nc_ss=7a22e&oh=00_AQIzY9ssnmOrMVRZF6Ah0vwoon5F5kJmz6SgTVeBYAuGqg&oe=6AA6AE1A",
+        "video": "https://scontent-nrt1-1.cdninstagram.com/o1/v/t2/f2/m86/AQNWsZ32GDvilpoG56oic__IlO1e0Jti-3SjO9FgjPKGOtZZN3HwhbM1BOHfzox6mWLv-WGXPd0w0v8bxzD6Grf_DcZWW8Jf8LwZomc.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_ohc=PagG0FPQrgwQ7kNvwGbWYuI&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MjIzMDUzNTQ1NDU2NDU0NiwiYXNzZXRfYWdlX2RheXMiOjIyLCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MjE3LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=8626b3c087aa7f08&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC82ODRENTFBN0U3NTZFNjYxNEY1NDgyMUQ0OUY0MkRBMF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0Y2NDFBQUVDRTI5MzA3ODJEOEQ1NzNBN0FBRDUyMUJEX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaEg-2WoKr2BxUCKAJDMywXQGslT987ZFoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=jNm7EpzXz1A9RUEthdnhoQ&_nc_zt=28&_nc_ss=7a22e&oh=00_AQKXa03QzEWLVDNNuAh0ifWL1vgIPL5qw3Uq0JBKE4bgJg&oe=6AA2C520",
+        "date": "2026-08-17",
+        "type": "Story"
+    },
+    {
+        "title": "Story Archive",
+        "desc": "\ud83c\udf3f Our school celebrated Environment Day with enthusiasm and a commitment to a greener future.\n\n Plant a tree, save the Earth, and protect our environment for generations to come! \ud83c\udf0d\ud83d\udc9a\n \n#EnvironmentDay #GoGreen #SaveNature",
+        "img": "https://scontent-fra3-2.cdninstagram.com/v/t51.71878-15/719770752_4486302874948649_2104446499767461485_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=104&ig_cache_key=MzkxNTAxNzU4MDA5MjA1MzY0NzE1Nzc0ODA1NjA1NjMyNTQ%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=SfA-Di-345kQ7kNvwENgz6f&_nc_oc=AdoYH45usOdy_eV4FL2YkYGI4Q_conWNb3AHnJrIEuRLKxNyZ_WfZGhHg8Jen5jiF8c&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-fra3-2.cdninstagram.com&_nc_gid=44WpBW3FYJsa8QGpBK6qpg&_nc_ss=7a22e&oh=00_AQLBM_G7KtexYjigLv47tk7vLUkWRYh86a_POyzUS4tH3Q&oe=6AA6DE98",
+        "video": "https://scontent-fra5-2.cdninstagram.com/o1/v/t2/f2/m86/AQPYOC3tXiBE_kywm-bra9aKagPL0Ib0Li_Za6Phuqf2jlYLvwqVpqiEzwS1NPfwzEo1ePTCp8PytfVIHYKiGcqgRygImR4lh48XpQs.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-fra5-2.cdninstagram.com&_nc_ohc=fFKlwmSXHKkQ7kNvwGJTj-M&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTU3NzQ3NjY0MDU2MzY0NiwiYXNzZXRfYWdlX2RheXMiOjkyLCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6NjEsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=13682cfedd9c826f&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8xMzQ3QzU3QTIwODBEQkJENEYwMEQ4NTM1QzcyMzc4Ml92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0I2NDY0OTIyMUU2OTJCNzRGNTREOTY3QjQ3OTgzMEEwX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACb8huvsnK3NBRUCKAJDMywXQE6mZmZmZmYYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=44WpBW3FYJsa8QGpBK6qpg&_nc_zt=28&_nc_ss=7a22e&oh=00_AQJojhHRLBFo7J7IdJs8SHAGbj5hnp9Zh9Hdow0iOMQyfg&oe=6AA2E8CE",
+        "date": "2026-06-08",
+        "type": "Story"
+    }
+]
+;
+const RAW_EVENTS = {"upcoming": [{"name": "Winter Carnival 2026", "date": "2026-12-15", "desc": "Get ready for the biggest winter festival of the year!"}], "past": [{"name": "60th Foundation Day", "date": "2026-09-07", "desc": "Woodlands House School celebrates its 60th year of existence."}, {"name": "Alumni Sports Day", "date": "2026-09-05", "desc": "A sports day event for alumni to reconnect and compete."}, {"name": "Alumni Fun Day", "date": "2026-09-04", "desc": "A day for alumni to reconnect, relive memories, and celebrate the WHS spirit."}, {"name": "Science & Art Exhibition 2026", "date": "2026-08-31", "desc": "Showcasing students' scientific curiosity and creative expressions through models and artwork."}, {"name": "Independence Day Celebration", "date": "2026-08-15", "desc": "Patriotic celebration featuring performances and cultural presentations."}, {"name": "Farewell, Class of 2026", "date": "2026-07-27", "desc": "A farewell event for the graduating students to mark the end of their school journey."}, {"name": "Father's Day", "date": "2026-06-21", "desc": "A tribute to the fathers who support and inspire students."}, {"name": "Fruits & Vegetables Day", "date": "2026-06-12", "desc": "An engaging activity for young learners to understand the importance of healthy eating."}, {"name": "Art Day", "date": "2026-05-03", "desc": "Celebrating creativity, imagination, and the beauty of expression."}, {"name": "WHS Sports Hub Golf Cup 2026", "date": "2026-05-07", "desc": "An official partnership event for the Golf Cup."}, {"name": "Earth Day", "date": "2026-04-23", "desc": "Students acting as eco-warriors and pledging to protect the planet."}, {"name": "Vaisakhi", "date": "2026-04-14", "desc": "A cultural and historical celebration presented by 7th-grade students."}, {"name": "Tribute to Mrs. Rup S.P. Singh", "date": "2026-05-08", "desc": "A solemn moment to honor the school's Founder and Principal."}, {"name": "Back to School", "date": "2026-03-13", "desc": "The start of the new academic year and students returning to classrooms."}, {"name": "Eid Celebrations", "date": "2026-03-22", "desc": "School celebrations filled with joy, smiles, and festive cheer."}, {"name": "Ram Navami", "date": "2026-03-26", "desc": "Students bringing the story of Lord Ram to life through storytelling."}, {"name": "Tribute to Mr. Surindar Pal Singh", "date": "2026-02-21", "desc": "Remembering the visionary leader and his legacy."}, {"name": "Mother's Day", "date": "2026-05-10", "desc": "Students celebrating and expressing gratitude to their mothers."}, {"name": "Teacher vs Student Pickleball Match", "date": "2026-01-29", "desc": "A friendly competition promoting teamwork and sportsmanship."}, {"name": "Christmas Celebration", "date": "2025-12-25", "desc": "A joyful and festive celebration for the students."}, {"name": "International Pheran Day", "date": "2025-12-21", "desc": "Celebrating cultural identity and tradition by wearing the Pheran."}, {"name": "Heritage Day", "date": "2025-11-27", "desc": "A day dedicated to celebrating tradition, unity, and pride."}]};
+
+const TEACHERS = [
+  { name: "Sana Ma'am", role: "Educator" }, 
+  { name: "Naveed Sir", role: "Educator" },
+  { name: "Farooq Sir", role: "Educator" }, 
+  { name: "Shafi Sir", role: "Secretary" },
+  { name: "Sharifa Ma'am", role: "Supervisor" }, 
+  { name: "Shaista Shah", role: "Admin" },
+  { name: "Arqee Singh", role: "Director" }, 
+  { name: "Shaista Rishi", role: "Educator" },
+  { name: "Ifra", role: "Staff" }, 
+  { name: "Insha", role: "Staff" },
+  { name: "Ruhi", role: "Staff" }, 
+  { name: "Fiza", role: "Staff" },
+  { name: "Yusuf Sir", role: "Sports" }
+];
+
+function build() {
+    const upHtml = (RAW_EVENTS.upcoming || []).map(e => `
+        <div class="event-item anim-up">
+            <div class="e-date">${e.date}</div>
+            <div class="e-title">${e.name}</div>
+            <div class="e-desc">${e.desc}</div>
+            <button class="notify-btn hover-target" onclick="triggerNotify(this)">+ Notify Me</button>
+        </div>
+    `).join('') || '<div class="event-item">No upcoming events scheduled.</div>';
+    document.getElementById('up-list').innerHTML = upHtml;
+
+    const pastHtml = (RAW_EVENTS.past || []).map(e => `
+        <div class="event-item anim-up">
+            <div class="e-date">${e.date}</div>
+            <div class="e-title">${e.name}</div>
+            <div class="e-desc">${e.desc}</div>
+        </div>
+    `).join('') || '<div class="event-item">Processing...</div>';
+    document.getElementById('past-list').innerHTML = pastHtml;
+
+    let galHtml = '';
+    let storyHtml = '';
+    let hasStories = false;
+
+    RAW_MEMORIES.forEach((m, idx) => {
+        const hasVideo = m.video && m.video.trim() !== "";
+        let tClass = "type-post";
+        let filterType = "post";
+        
+        if(m.type.toLowerCase().includes("story") || m.title.toLowerCase().includes("story") || m.title.toLowerCase().includes("highlight")) {
+            tClass = "type-story";
+            hasStories = true;
+            const media = `<img src="${m.img}" loading="lazy">`;
+            storyHtml += `
+                <div class="story-item hover-target" data-index="${idx}">
+                    ${media}
+                    <div class="story-play-btn">VIEW</div>
+                </div>
+            `;
+            return; 
+        } else if(hasVideo || m.type.toLowerCase().includes("video")) {
+            tClass = "type-video";
+            filterType = "video";
+        }
+
+        const media = hasVideo ? 
+            `<video src="${m.video}" muted loop playsinline></video><div class="play-btn">PLAY VIDEO</div>` : 
+            `<img src="${m.img}" loading="lazy"><div class="play-btn">VIEW POST</div>`;
+
+        galHtml += `
+            <div class="memory-card hover-target anim-grid" data-filter="${filterType}" data-index="${idx}">
+                <div class="memory-media">${media}</div>
+                <div class="memory-info">
+                    <div class="m-type ${tClass}">${m.type}</div>
+                    <div class="m-title">${m.title}</div>
+                    <div class="m-desc">${m.desc}</div>
+                </div>
+            </div>
+        `;
+    });
+    
+    document.getElementById('gallery').innerHTML = galHtml;
+    
+    if(hasStories) {
+        document.getElementById('story-container').style.display = 'block';
+        document.getElementById('story-scroll').innerHTML = storyHtml;
+    }
+
+    document.getElementById('mentors-grid').innerHTML = TEACHERS.map(t => `
+        <div class="mentor-card hover-target anim-grid">
+            <div class="mentor-name">${t.name}</div><div class="mentor-role">${t.role}</div>
+        </div>
+    `).join('');
+}
+
+let isToasting = false;
+window.triggerNotify = function(btn) {
+    if (!("Notification" in window)) {
+        alert("This browser does not support desktop notifications.");
+        return;
+    }
+    
+    Notification.requestPermission().then(function (permission) {
+        if (permission === "granted") {
+            btn.innerText = "✓ Subscribed";
+            btn.style.background = "var(--accent)";
+            btn.style.color = "#fff";
+            btn.style.borderColor = "var(--accent)";
+            
+            if(isToasting) return;
+            isToasting = true;
+            const toast = document.getElementById('toast');
+            anime.timeline({ easing: 'easeOutElastic(1, .8)' })
+                 .add({ targets: toast, bottom: '40px', duration: 800 })
+                 .add({ targets: toast, bottom: '-100px', duration: 600, delay: 3000, easing: 'easeInBack', complete: () => isToasting = false });
+                 
+            new Notification("Woodland House School", {
+                body: "You will now receive notifications for upcoming events!"
+            });
+        } else {
+            alert("Permission denied for notifications.");
+        }
+    });
+};
+
+function initFilters() {
+    const btns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.memory-card');
+    
+    btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            btns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const filter = btn.getAttribute('data-filter');
+            
+            cards.forEach(card => {
+                if(filter === 'all' || card.getAttribute('data-filter') === filter) {
+                    card.style.display = 'block';
+                    anime({ targets: card, scale: [0.9, 1], opacity: [0, 1], duration: 400, easing: 'easeOutQuad' });
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+}
+
+function initAudio() {
+    const audio = document.getElementById('bg-audio');
+    const btn = document.getElementById('audio-toggle');
+    let isPlaying = false;
+    
+    btn.addEventListener('click', () => {
+        if(isPlaying) {
+            audio.pause();
+            btn.innerText = "[ PLAY AUDIO ]";
+            btn.style.background = "var(--bg)";
+            btn.style.color = "var(--text)";
+        } else {
+            let playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    btn.innerText = "[ PAUSE AUDIO ]";
+                    btn.style.background = "var(--text)";
+                    btn.style.color = "var(--bg)";
+                }).catch(error => {
+                    console.log("Audio play blocked by browser:", error);
+                    alert("Browser blocked audio. Please interact with the page first.");
+                });
+            }
+        }
+        isPlaying = !isPlaying;
+    });
+}
+
+function initCustomCursor() {
+    if(window.innerWidth <= 768) return; 
+    const dot = document.getElementById('cursor-dot');
+    const outline = document.getElementById('cursor-outline');
+    let mouseX = 0, mouseY = 0;
+    let outlineX = 0, outlineY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX; mouseY = e.clientY;
+        dot.style.left = mouseX + 'px'; dot.style.top = mouseY + 'px';
+    });
+
+    function animateCursor() {
+        outlineX += (mouseX - outlineX) * 0.15;
+        outlineY += (mouseY - outlineY) * 0.15;
+        outline.style.left = outlineX + 'px';
+        outline.style.top = outlineY + 'px';
+        requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    document.body.addEventListener('mouseover', (e) => {
+        if(e.target.closest('.hover-target') || e.target.closest('#modal-close') || e.target.closest('.notify-btn')) {
+            outline.style.width = '60px'; outline.style.height = '60px';
+            outline.style.background = 'rgba(217, 56, 30, 0.2)';
+            outline.style.borderColor = 'transparent';
+        }
+    });
+    document.body.addEventListener('mouseout', (e) => {
+        if(e.target.closest('.hover-target') || e.target.closest('#modal-close') || e.target.closest('.notify-btn')) {
+            outline.style.width = '40px'; outline.style.height = '40px';
+            outline.style.background = 'transparent';
+            outline.style.borderColor = 'var(--text)';
+        }
+    });
+}
+
+function initVideoModal() {
+    const modal = document.getElementById('video-modal');
+    const container = document.getElementById('modal-content-container');
+    const caption = document.getElementById('modal-caption');
+    const closeBtn = document.getElementById('modal-close');
+
+    document.querySelectorAll('.memory-card, .story-item').forEach(card => {
+        card.addEventListener('click', () => {
+            const idx = card.getAttribute('data-index');
+            const data = RAW_MEMORIES[idx];
+            const hasVideo = data.video && data.video.trim() !== "";
+            
+            if(hasVideo) {
+                container.innerHTML = `<video id="modal-media" src="${data.video}" controls autoplay playsinline></video>`;
+            } else {
+                container.innerHTML = `<img id="modal-media" src="${data.img}">`;
+            }
+            caption.innerHTML = `<strong>${data.title}</strong><br><br>${data.desc}`;
+
+            modal.style.display = 'flex';
+            anime({ targets: modal, opacity: [0, 1], duration: 400, easing: 'easeOutSine' });
+            anime({ targets: container, scale: [0.8, 1], translateY: [50, 0], duration: 600, easing: 'easeOutExpo' });
+            document.body.style.overflow = 'hidden'; 
+        });
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+    closeBtn.addEventListener('mouseenter', () => { if(window.innerWidth > 768) anime({ targets: closeBtn, scale: 1.2, duration: 200 }); });
+    closeBtn.addEventListener('mouseleave', () => { if(window.innerWidth > 768) anime({ targets: closeBtn, scale: 1, duration: 200 }); });
+
+    function closeModal() {
+        anime({
+            targets: modal, opacity: 0, duration: 300, easing: 'easeInSine',
+            complete: () => {
+                modal.style.display = 'none';
+                container.innerHTML = ''; 
+                document.body.style.overflow = 'auto'; 
+            }
+        });
+    }
+}
+
+function initAnimations() {
+    const tl = anime.timeline({ easing: 'easeOutExpo' });
+    tl.add({ targets: '.load-bar', width: ['0%', '100%'], duration: 1500, easing: 'easeInOutQuart' })
+      .add({ targets: '#preloader h1', translateY: -50, opacity: 0, duration: 600 }, '-=200')
+      .add({ targets: '.load-bar-container', opacity: 0, duration: 400 }, '-=600')
+      .add({ targets: '#preloader', translateY: '-100%', duration: 800, easing: 'easeInOutQuint' });
+
+    tl.add({ targets: '#nav', translateY: [-100, 0], duration: 800 }, '-=400')
+      .add({ targets: '.hero p', opacity: [0,1], translateX: [-20, 0], duration: 800 }, '-=600')
+      .add({ targets: '.hero-line', translateY: [100, 0], opacity: [0,1], duration: 1000, delay: anime.stagger(200) }, '-=800');
+
+    anime({ targets: '.marquee-content', translateX: ['0%', '-50%'], duration: 15000, easing: 'linear', loop: true });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                const el = entry.target;
+                if(el.classList.contains('section-header')) {
+                    anime({ targets: el, background: ['#F4F4F0', '#111111'], color: ['#111111', '#F4F4F0'], duration: 800, easing: 'easeOutSine' });
+                    anime({ targets: el.querySelector('.section-title'), translateX: [-50, 0], opacity: [0, 1], duration: 800, delay: 200 });
+                }
+                else if(el.classList.contains('anim-up')) {
+                    anime({ targets: el, translateY: [50, 0], opacity: [0, 1], duration: 800, easing: 'easeOutQuart' });
+                }
+                else if(el.classList.contains('anim-grid')) {
+                    anime({ targets: el, scale: [0.95, 1], opacity: [0, 1], duration: 800, easing: 'easeOutBack' });
+                }
+                observer.unobserve(el);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.section-header, .anim-up, .anim-grid').forEach(el => {
+        if(el.classList.contains('anim-up') || el.classList.contains('anim-grid')) el.style.opacity = '0';
+        observer.observe(el);
+    });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    build();
+    initFilters();
+    initAudio();
+    initCustomCursor();
+    initVideoModal();
+    initAnimations();
+});
+</script>
+</body>
+</html>
