@@ -44,14 +44,14 @@ def main():
         return
 
     print("Scraping 10 years of memories...")
-    posts = run_apify({"directUrls":["https://www.instagram.com/whssgr/"],"resultsType":"posts","resultsLimit":5000})
+    posts = run_apify({"directUrls":["https://www.instagram.com/whssgr/", "https://www.instagram.com/whs_official_alumni/"],"resultsType":"posts","resultsLimit":5000})
     for p in posts: p['is_post'] = True
     
-    stories = run_apify({"directUrls":["https://www.instagram.com/whssgr/"],"resultsType":"stories","resultsLimit":1000})
+    stories = run_apify({"directUrls":["https://www.instagram.com/whssgr/", "https://www.instagram.com/whs_official_alumni/"],"resultsType":"stories","resultsLimit":1000})
     for s in stories: s['is_story'] = True
     
     # Adding highlights specific call just in case Apify supports it via highlights/ URL
-    highlights = run_apify({"directUrls":["https://www.instagram.com/whssgr/highlights/"],"resultsType":"stories","resultsLimit":1000})
+    highlights = run_apify({"directUrls":["https://www.instagram.com/whssgr/highlights/", "https://www.instagram.com/whs_official_alumni/highlights/"],"resultsType":"stories","resultsLimit":1000})
     for h in highlights: h['is_story'] = True
 
     all_items = posts + stories + highlights
@@ -127,9 +127,25 @@ def main():
             "type": "Story"
         }
     ]
-    memories = permanent_highlights + memories
+
+    try:
+        with open('memories_data.json', 'r', encoding='utf-8') as f:
+            old_memories = json.load(f)
+    except:
+        old_memories = []
+
+    old_images = {m.get('img') for m in old_memories if m.get('img')}
+    new_memories = []
+    for m in memories:
+        if m.get('img') not in old_images:
+            new_memories.append(m)
+            old_images.add(m.get('img'))
+            
+    final_memories = old_memories + new_memories
+
     with open('memories_data.json', 'w', encoding='utf-8') as f:
-        json.dump(memories, f, indent=4)
+        json.dump(final_memories, f, indent=4)
+
         
     print("Extracting chronological events...")
     combined_captions = "\n".join(all_captions[:40])

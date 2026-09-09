@@ -365,7 +365,7 @@ function build() {{
     
     document.getElementById('gallery').innerHTML = galHtml;
     
-    if(hasStories) {{
+    if(false) {{
         document.getElementById('story-container').style.display = 'block';
         document.getElementById('story-scroll').innerHTML = storyHtml;
     }}
