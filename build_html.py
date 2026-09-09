@@ -244,7 +244,7 @@ footer h1 {{ font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 10px; line-height
     <div class="section-header"><h2 class="section-title">Timeline</h2></div>
     <div class="events-wrapper">
         <div class="event-col">
-            <div class="event-col-title">Upcoming</div>
+            <div class="event-col-title" style="display:flex; justify-content:space-between; align-items:center;">Upcoming <button class="notify-btn hover-target" onclick="triggerNotify(this)" style="font-size:0.5em; padding:5px 10px;">+ Subscribe to Updates</button></div>
             <div id="up-list"></div>
         </div>
         <div class="event-col">
