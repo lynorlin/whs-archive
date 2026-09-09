@@ -379,56 +379,35 @@ function build() {{
 
 let isToasting = false;
 window.triggerNotify = function(btn) {{
-    btn.innerText = "✓ Subscribed";
+    if(!("Notification" in window)) {{
+        alert("This browser does not support desktop notification");
+        showToast(btn);
+    }} else if(Notification.permission !== "granted") {{
+        Notification.requestPermission().then(perm => {{
+            if(perm === "granted") {{ showToast(btn); }}
+            else {{ alert("Notifications blocked by browser."); }}
+        }});
+    }} else {{
+        showToast(btn);
+    }}
+}}
+
+function showToast(btn) {{
+    btn.innerText = "Subscribed";
     btn.style.background = "var(--accent)";
     btn.style.color = "#fff";
     btn.style.borderColor = "var(--accent)";
     
-    if(!isToasting) {{
+    if(typeof isToasting !== 'undefined' && !isToasting) {{
         isToasting = true;
-        const toast = document.getElementById('toast');
-        anime.timeline({{ easing: 'easeOutElastic(1, .8)' }})
-             .add({{ targets: toast, bottom: '40px', duration: 800 }})
-             .add({{ targets: toast, bottom: '-100px', duration: 600, delay: 3000, easing: 'easeInBack', complete: () => isToasting = false }});
+        const toast = document.getElementById("toast");
+        if(toast && typeof anime !== 'undefined') {{
+            anime.timeline({{ easing: "easeOutElastic(1, .8)" }})
+                 .add({{ targets: toast, bottom: "40px", duration: 800 }})
+                 .add({{ targets: toast, bottom: "-100px", duration: 600, delay: 3000, easing: "easeInBack", complete: () => isToasting = false }});
+        }}
     }}
-             
-    if ("Notification" in window && Notification.permission !== "denied") {{
-        Notification.requestPermission().then(function (permission) {{
-            if (permission === "granted") {{
-                new Notification("Woodland House School", {{
-                    body: "You will now receive notifications for upcoming events!"
-                }});
-            }}
-        }}).catch(err => {{
-            console.log("Notification request failed or unsupported", err);
-        }});
-    }} else {{
-        console.log("Desktop notifications not supported or denied. Visual toast shown instead.");
-    }}
-}};
-
-function initFilters() {{
-    const btns = document.querySelectorAll('.filter-btn');
-    const cards = document.querySelectorAll('.memory-card');
-    
-    btns.forEach(btn => {{
-        btn.addEventListener('click', () => {{
-            btns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const filter = btn.getAttribute('data-filter');
-            
-            cards.forEach(card => {{
-                if(filter === 'all' || card.getAttribute('data-filter') === filter) {{
-                    card.style.display = 'block';
-                    anime({{ targets: card, scale: [0.9, 1], opacity: [0, 1], duration: 400, easing: 'easeOutQuad' }});
-                }} else {{
-                    card.style.display = 'none';
-                }}
-            }});
-        }});
-    }});
 }}
-
 function initAudio() {{
     let bgAudio = null;
     const btn = document.getElementById('audio-toggle');
