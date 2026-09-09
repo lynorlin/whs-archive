@@ -22,7 +22,14 @@ def build():
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;700&family=JetBrains+Mono:wght@100;400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
 <script>
+    function triggerNotify(btn) {{
+        btn.innerText = "? Subscribed";
+        btn.style.background = "var(--text)";
+        btn.style.color = "var(--bg)";
+    }}
+
     function initFilters() {{
         const filterBtns = document.querySelectorAll('.filter-btn');
         const memoryCards = document.querySelectorAll('.memory-card');
@@ -211,7 +218,7 @@ footer h1 {{ font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 10px; line-height
 </head>
 <body>
 
-<audio id="bg-audio" loop src="https://ia800305.us.archive.org/30/items/ChopinNocturneOp9No2/Chopin_Nocturne_Op_9_No_2.mp3" crossorigin="anonymous"></audio>
+<audio id="bg-audio" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" crossorigin="anonymous"></audio>
 <div id="audio-controls">
     <button id="audio-toggle" class="hover-target">[ PLAY AUDIO ]</button>
 </div>
