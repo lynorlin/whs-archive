@@ -1,1 +1,120 @@
-{"upcoming": [{"name": "Winter Carnival 2026", "date": "2026-12-15", "desc": "Get ready for the biggest winter festival of the year!"}], "past": [{"name": "60th Foundation Day", "date": "2026-09-07", "desc": "Woodlands House School celebrates its 60th year of existence."}, {"name": "Alumni Sports Day", "date": "2026-09-05", "desc": "A sports day event for alumni to reconnect and compete."}, {"name": "Alumni Fun Day", "date": "2026-09-04", "desc": "A day for alumni to reconnect, relive memories, and celebrate the WHS spirit."}, {"name": "Science & Art Exhibition 2026", "date": "2026-08-31", "desc": "Showcasing students' scientific curiosity and creative expressions through models and artwork."}, {"name": "Independence Day Celebration", "date": "2026-08-15", "desc": "Patriotic celebration featuring performances and cultural presentations."}, {"name": "Farewell, Class of 2026", "date": "2026-07-27", "desc": "A farewell event for the graduating students to mark the end of their school journey."}, {"name": "Father's Day", "date": "2026-06-21", "desc": "A tribute to the fathers who support and inspire students."}, {"name": "Fruits & Vegetables Day", "date": "2026-06-12", "desc": "An engaging activity for young learners to understand the importance of healthy eating."}, {"name": "Art Day", "date": "2026-05-03", "desc": "Celebrating creativity, imagination, and the beauty of expression."}, {"name": "WHS Sports Hub Golf Cup 2026", "date": "2026-05-07", "desc": "An official partnership event for the Golf Cup."}, {"name": "Earth Day", "date": "2026-04-23", "desc": "Students acting as eco-warriors and pledging to protect the planet."}, {"name": "Vaisakhi", "date": "2026-04-14", "desc": "A cultural and historical celebration presented by 7th-grade students."}, {"name": "Tribute to Mrs. Rup S.P. Singh", "date": "2026-05-08", "desc": "A solemn moment to honor the school's Founder and Principal."}, {"name": "Back to School", "date": "2026-03-13", "desc": "The start of the new academic year and students returning to classrooms."}, {"name": "Eid Celebrations", "date": "2026-03-22", "desc": "School celebrations filled with joy, smiles, and festive cheer."}, {"name": "Ram Navami", "date": "2026-03-26", "desc": "Students bringing the story of Lord Ram to life through storytelling."}, {"name": "Tribute to Mr. Surindar Pal Singh", "date": "2026-02-21", "desc": "Remembering the visionary leader and his legacy."}, {"name": "Mother's Day", "date": "2026-05-10", "desc": "Students celebrating and expressing gratitude to their mothers."}, {"name": "Teacher vs Student Pickleball Match", "date": "2026-01-29", "desc": "A friendly competition promoting teamwork and sportsmanship."}, {"name": "Christmas Celebration", "date": "2025-12-25", "desc": "A joyful and festive celebration for the students."}, {"name": "International Pheran Day", "date": "2025-12-21", "desc": "Celebrating cultural identity and tradition by wearing the Pheran."}, {"name": "Heritage Day", "date": "2025-11-27", "desc": "A day dedicated to celebrating tradition, unity, and pride."}]}
+{
+    "upcoming": [],
+    "past": [
+        {
+            "name": "Alumni Fun Day",
+            "date": "2026-09-04",
+            "desc": "A day for alumni to reconnect, relive memories, and celebrate the WHS spirit."
+        },
+        {
+            "name": "Alumni Sports Day",
+            "date": "2026-09-05",
+            "desc": "A sports-focused day for the alumni community."
+        },
+        {
+            "name": "60th Foundation Day Celebration",
+            "date": "2026-09-07",
+            "desc": "Woodlands House School celebrates 60 years of educational excellence."
+        },
+        {
+            "name": "Science & Art Exhibition 2026",
+            "date": "2026-08-31",
+            "desc": "Showcasing student creativity through science models and thoughtful artwork."
+        },
+        {
+            "name": "Independence Day Celebration",
+            "date": "2026-08-15",
+            "desc": "A patriotic celebration featuring energetic performances and cultural presentations."
+        },
+        {
+            "name": "Robotics & AI Hands-on Learning",
+            "date": "2026-08-15",
+            "desc": "Students explored Arduino coding, electronics, and sensors."
+        },
+        {
+            "name": "Class of 2026 Farewell",
+            "date": "2026-07-27",
+            "desc": "A farewell ceremony for the graduating students."
+        },
+        {
+            "name": "Father's Day",
+            "date": "2026-06-21",
+            "desc": "A tribute to the fathers who support and inspire the students."
+        },
+        {
+            "name": "Fruits & Vegetables Day",
+            "date": "2026-06-12",
+            "desc": "An educational activity helping children understand healthy eating through costumes."
+        },
+        {
+            "name": "Electronics & STEM Exploration",
+            "date": "2026-06-11",
+            "desc": "Hands-on learning session exploring the world of electronics."
+        },
+        {
+            "name": "Environment Day",
+            "date": "2026-06-08",
+            "desc": "A celebration focused on environmental awareness and a greener future."
+        },
+        {
+            "name": "Mother's Day",
+            "date": "2026-05-13",
+            "desc": "Students expressed gratitude and love to mothers through heartfelt messages."
+        },
+        {
+            "name": "Art Day",
+            "date": "2026-05-03",
+            "desc": "A celebration of creativity and visual expression."
+        },
+        {
+            "name": "Vaisakhi Celebration",
+            "date": "2026-04-14",
+            "desc": "7th-grade students presented the cultural and historical significance of Vaisakhi."
+        },
+        {
+            "name": "Earth Day",
+            "date": "2026-04-23",
+            "desc": "Students acted as eco-warriors, pledging to protect the planet."
+        },
+        {
+            "name": "Ram Navami Celebration",
+            "date": "2026-03-26",
+            "desc": "Students brought the story of Lord Ram to life through storytelling."
+        },
+        {
+            "name": "Eid Celebrations",
+            "date": "2026-03-22",
+            "desc": "School festivities filled with joy and festive cheer."
+        },
+        {
+            "name": "Eid-ul-Fitr Celebration",
+            "date": "2026-03-21",
+            "desc": "A joyful celebration of Eid-ul-Fitr at school."
+        },
+        {
+            "name": "Kashmiri Language Activity",
+            "date": "2026-03-01",
+            "desc": "An interactive session of Kashmiri tongue twisters and riddles."
+        },
+        {
+            "name": "Teacher vs Student Pickleball Match",
+            "date": "2026-01-29",
+            "desc": "A friendly sports competition building connection and teamwork."
+        },
+        {
+            "name": "Christmas Celebration",
+            "date": "2025-12-25",
+            "desc": "A festive day filled with warmth and excitement for the students."
+        },
+        {
+            "name": "International Pheran Day",
+            "date": "2025-12-21",
+            "desc": "Students wore the Pheran to celebrate cultural identity and tradition."
+        },
+        {
+            "name": "Heritage Day",
+            "date": "2025-11-27",
+            "desc": "A day celebrating tradition, unity, and school culture."
+        }
+    ]
+}
