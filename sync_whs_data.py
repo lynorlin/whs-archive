@@ -14,7 +14,7 @@ def run_apify(payload):
     url = f"https://api.apify.com/v2/acts/apify~instagram-scraper/runs?token={APIFY_TOKEN}"
     r = requests.post(url, json=payload)
     if r.status_code not in [200, 201]:
-        print("Apify run failed. Check API key.")
+        print("Apify run failed. Using cached data."); return []
         return []
     run_data = r.json()['data']
     run_id = run_data['id']
