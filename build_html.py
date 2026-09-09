@@ -18,9 +18,27 @@ def build():
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Woodland House Archive</title>
+<title>WHS | The Vault</title>
+<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;700&family=JetBrains+Mono:wght@100;400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script>
+    function initFilters() {{
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const memoryCards = document.querySelectorAll('.memory-card');
+        filterBtns.forEach(btn => {{
+            btn.addEventListener('click', () => {{
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+                memoryCards.forEach(card => {{
+                    if(filter === 'all' || card.dataset.category === filter) card.classList.remove('hidden');
+                    else card.classList.add('hidden');
+                }});
+            }});
+        }});
+    }}
+</script>
 
 <style>
 /* EDITORIAL BRUTALISM AESTHETIC */
