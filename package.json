@@ -1,1 +1,5 @@
-{ "scripts": { "build": "pip install -r requirements.txt && python sync_whs_data.py && python build_html.py" } }
+{
+  "scripts": {
+    "build": "python sync_whs_data.py && python build_html.py"
+  }
+}
