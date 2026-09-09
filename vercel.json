@@ -1,3 +1,4 @@
 {
-  "buildCommand": "python build_html.py"
+  "buildCommand": "python build_html.py",
+  "outputDirectory": "."
 }
