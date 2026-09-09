@@ -12,22 +12,32 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'YOUR_OPENAI_API_KEY_HERE')
 OPENAI_BASE_URL = 'https://logfare.ai/v1'
 
 def run_apify(payload):
-    url = f"https://api.apify.com/v2/acts/apify~instagram-scraper/runs?token={APIFY_TOKEN}"
-    r = requests.post(url, json=payload)
-    if r.status_code not in [200, 201]:
-        print("Apify run failed. Using cached data."); sys.exit(0)
-        sys.exit(0)
-    run_data = r.json()['data']
-    run_id = run_data['id']
-    dataset_id = run_data['defaultDatasetId']
+    tokens_raw = os.getenv('APIFY_TOKEN', 'YOUR_APIFY_TOKEN_HERE')
+    tokens = [t.strip() for t in tokens_raw.split(',')]
     
-    while True:
-        status_r = requests.get(f"https://api.apify.com/v2/actor-runs/{run_id}?token={APIFY_TOKEN}").json()['data']
-        if status_r['status'] in ['SUCCEEDED', 'FAILED', 'ABORTED']: break
-        time.sleep(4)
+    for token in tokens:
+        url = f"https://api.apify.com/v2/acts/apify~instagram-scraper/runs?token={token}"
+        r = requests.post(url, json=payload)
         
-    ds_r = requests.get(f"https://api.apify.com/v2/datasets/{dataset_id}/items?token={APIFY_TOKEN}").json()
-    return ds_r
+        if r.status_code in [200, 201]:
+            # Success! Let's wait for this one
+            run_data = r.json()['data']
+            run_id = run_data['id']
+            dataset_id = run_data['defaultDatasetId']
+            
+            while True:
+                status_r = requests.get(f"https://api.apify.com/v2/actor-runs/{run_id}?token={token}").json()['data']
+                if status_r['status'] in ['SUCCEEDED', 'FAILED', 'ABORTED']: break
+                time.sleep(4)
+                
+            ds_r = requests.get(f"https://api.apify.com/v2/datasets/{dataset_id}/items?token={token}").json()
+            return ds_r
+        else:
+            print(f"Apify run failed with token {token[:10]}... Status: {r.status_code}")
+            continue
+            
+    print("All Apify tokens failed. Using cached data.")
+    sys.exit(0)
 
 def extract_media(item):
     video_url = item.get('videoUrl', '')
