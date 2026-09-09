@@ -39,6 +39,8 @@ def extract_media(item):
     return video_url, img_url
 
 def main():
+    from datetime import datetime
+    today = datetime.now().strftime("%Y-%m-%d")
     if APIFY_TOKEN == 'YOUR_APIFY_TOKEN_HERE':
         print("SECURE MODE: Please set APIFY_TOKEN and OPENAI_API_KEY environment variables.")
         return
