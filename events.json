@@ -4,87 +4,102 @@
         {
             "name": "Alumni Fun Day",
             "date": "2026-09-04",
-            "desc": "Generations of alumni reconnecting and reliving memories."
+            "desc": "A day for alumni to reconnect, relive memories, and celebrate the WHS spirit."
         },
         {
             "name": "Alumni Sports Day",
             "date": "2026-09-05",
-            "desc": "A day for alumni to celebrate through sports."
-        },
-        {
-            "name": "60th Foundation Day",
-            "date": "2026-09-07",
-            "desc": "Celebrating six decades of Woodlands House School."
+            "desc": "A sports event bringing generations of alumni back to Woodlands House School."
         },
         {
             "name": "Science & Art Exhibition 2026",
             "date": "2026-08-31",
-            "desc": "Students showcased science models, experiments, and creative artwork."
+            "desc": "An exhibition showcasing students' scientific curiosity and creative artwork."
         },
         {
             "name": "Independence Day Celebration",
             "date": "2026-08-15",
-            "desc": "Patriotic songs and cultural presentations by students."
+            "desc": "Patriotic performances, songs, and cultural presentations celebrating India's freedom."
         },
         {
-            "name": "Robotics & AI Workshop",
-            "date": "2026-08-15",
-            "desc": "Hands-on learning with Arduino coding, electronics, and sensors."
-        },
-        {
-            "name": "Farewell Class of 2026",
+            "name": "Farewell, Class of 2026",
             "date": "2026-07-27",
-            "desc": "A farewell ceremony for the graduating class of 2026."
+            "desc": "A farewell event for the graduating students to celebrate their journey."
+        },
+        {
+            "name": "Father's Day Celebration",
+            "date": "2026-06-21",
+            "desc": "A tribute to students' fathers for their guidance and support."
         },
         {
             "name": "Fruits & Vegetables Day",
             "date": "2026-06-12",
-            "desc": "Engaging activity helping children understand healthy eating through costumes."
+            "desc": "An engaging activity for young learners to understand healthy eating through costumes and performances."
         },
         {
-            "name": "Father's Day",
-            "date": "2026-06-21",
-            "desc": "Celebrating the fathers who guide and inspire students."
-        },
-        {
-            "name": "Environment Day",
+            "name": "Environment Day Celebration",
             "date": "2026-06-08",
-            "desc": "Celebrating with a commitment to a greener future."
+            "desc": "An enthusiastic celebration focused on commitment to a greener future."
         },
         {
-            "name": "Mother's Day",
+            "name": "Eid Mubarak Celebration",
+            "date": "2026-05-27",
+            "desc": "Celebrating the special occasion of Eid with peace and togetherness."
+        },
+        {
+            "name": "Mother's Day Celebration",
             "date": "2026-05-13",
-            "desc": "Students expressed gratitude and love to their mothers."
+            "desc": "A heartfelt celebration of mothers by the little learners of WHS."
+        },
+        {
+            "name": "Art Day",
+            "date": "2026-05-03",
+            "desc": "A day dedicated to celebrating creativity, imagination, and artistic expression."
+        },
+        {
+            "name": "Earth Day Celebration",
+            "date": "2026-04-23",
+            "desc": "Little eco-warriors pledging to protect the planet for a greener tomorrow."
         },
         {
             "name": "Vaisakhi Celebration",
             "date": "2026-04-14",
-            "desc": "A cultural and historical presentation by 7th-grade students."
+            "desc": "A cultural and historical celebration of the harvest season and the Khalsa Panth."
         },
         {
-            "name": "Eid-ul-Fitr Celebration",
-            "date": "2026-03-21",
-            "desc": "School celebration filled with joy, sweets, and festive cheer."
+            "name": "Ram Navami Celebration",
+            "date": "2026-03-26",
+            "desc": "Students brought the story of Lord Ram to life through storytelling."
         },
         {
-            "name": "New Year Celebration",
-            "date": "2026-01-01",
-            "desc": "Students welcoming the new year with positivity and equality."
+            "name": "Eid Celebrations",
+            "date": "2026-03-22",
+            "desc": "Festive school celebrations filled with smiles and joy."
         },
         {
-            "name": "Team Red Drug-Free Kashmir Inter-Team Box Cricket Tournament",
+            "name": "Back to School",
+            "date": "2026-03-13",
+            "desc": "The start of a new academic year and students returning to classrooms."
+        },
+        {
+            "name": "Teacher vs Student Pickleball Match",
+            "date": "2026-01-29",
+            "desc": "A friendly competition building teamwork and connection through sport."
+        },
+        {
+            "name": "Orientation Program",
+            "date": "2025-11-04",
+            "desc": "A day of energy and new beginnings for students kicking off the academic year."
+        },
+        {
+            "name": "Team Red Box Cricket Tournament",
             "date": "2025-05-25",
-            "desc": "A sports tournament aimed at promoting a drug-free lifestyle."
+            "desc": "An inter-team tournament promoting a drug-free lifestyle through sport."
         },
         {
             "name": "WHS Investiture Ceremony 2025",
             "date": "2025-04-25",
-            "desc": "Marking a proud moment for young student leaders."
-        },
-        {
-            "name": "Woodlands House School Orientation",
-            "date": "2025-04-03",
-            "desc": "A day of joy, laughter, and activities for students."
+            "desc": "A ceremony marking the appointment of young student leaders."
         }
     ]
 }
