@@ -1,0 +1,3 @@
+{
+  "buildCommand": "python sync_whs_data.py && python build_html.py"
+}
