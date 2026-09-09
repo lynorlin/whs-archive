@@ -83,6 +83,51 @@ def main():
             "type": type_str
         })
 
+    
+    # Permanent Highlights
+    permanent_highlights = [
+        {
+            "title": "Story Archive",
+            "desc": "Celebrating six decades of educational excellence, nurturing dreams, and building a legacy at Woodland House School. A milestone etched in history. #60Years",
+            "img": "https://scontent-ams2-1.cdninstagram.com/v/t51.71878-15/769168341_1398927335676883_127250475374029066_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=111&ig_cache_key=Mzk2MzYxMjMzNDM3MzA4MTkxOQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=VNiSkE58AB8Q7kNvwEBIhKf&_nc_oc=Adq48N7Ly3zQ-rc3BdBfbg3JoP4e0j3HwcADGUEzKLQXSsU7tlCGn_CwLmk-vnOMdpCin-MDgM7N5FpkB6YGPPO9&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ams2-1.cdninstagram.com&_nc_gid=XNrGLB_3AlSP3DZqodPEWA&_nc_ss=7a22e&oh=00_AQJcaaT1ZZivHWOD4i8HzrO0piqmhD5IHr9nHd3ONrZJIQ&oe=6AA6CB05",
+            "video": "",
+            "date": today,
+            "type": "Story"
+        },
+        {
+            "title": "Story Archive",
+            "desc": "Reconnecting the past with the present. Reliving cherished memories and celebrating the incredible journeys of our Woodlanders at the Alumni Meet.",
+            "img": "https://instagram.fbne6-1.fna.fbcdn.net/v/t51.71878-15/775799324_2366633547476425_2614606676397782666_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=105&ig_cache_key=Mzk2NTczODI3OTgwODU3MDk4MDIyMzA1MzY2NzQ1NjQ0MjQ%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fbmZyYW1lX2NvdmVyX2ZyYW1lLkMzIn0%3D&_nc_ohc=SZ6T4Lbcn98Q7kNvwEGMF5v&_nc_oc=AdqVdAZz_BcEAEKGleVyrqFHCi-nQ_BzJDW33TXUQjVQgKaasmNE0HPSNpIVhn24K7I&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fbne6-1.fna&_nc_gid=SGbcfzy_SHrKP2HrvAS5Zw&_nc_ss=7a22e&oh=00_AQL-PfJEgNfAD-69v62RJvkiwvMqvqrs8SBrIF7w6eTl0w&oe=6AA6E65A",
+            "video": "",
+            "date": today,
+            "type": "Story"
+        },
+        {
+            "title": "Story Archive",
+            "desc": "The vibrant festivities of Dussehra 2024 at our campus. A joyous celebration of truth, courage, and cultural heritage.",
+            "img": "https://scontent-fco2-1.cdninstagram.com/v/t51.71878-15/775147657_1069908232066658_4887997966797194667_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=101&ig_cache_key=Mzk2NjkwNjIzMDcxNjkzMDExMA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=yDTxD2BaT3kQ7kNvwH8L1s6&_nc_oc=AdpH2ObwE3Ec0DWX4aNnTWn-ax2s15adqAFTZHnvXWrnWyCCJTapAW0fYv4-ayofdl8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-fco2-1.cdninstagram.com&_nc_gid=zSGsNLmW12XXYh4WcxdKHQ&_nc_ss=7a22e&oh=00_AQINJVPE4srpL04Kty2moRkS_GuLtKYhaFNF0QCgUSIa5A&oe=6AA6F4D3",
+            "video": "",
+            "date": today,
+            "type": "Story"
+        },
+        {
+            "title": "Story Archive",
+            "desc": "Founder's Day. Honoring the visionaries who built this institution. A day of reverence, reflection, and pride in our roots.",
+            "img": "https://via.placeholder.com/800x800/111111/F4F4F0?text=Founder%27s+Day",
+            "video": "",
+            "date": today,
+            "type": "Story"
+        },
+        {
+            "title": "Story Archive",
+            "desc": "Fun! Beyond the books! Capturing the joy, laughter, and spirited moments that make everyday life at Woodland unforgettable.",
+            "img": "https://via.placeholder.com/800x800/D9381E/F4F4F0?text=Fun",
+            "video": "",
+            "date": today,
+            "type": "Story"
+        }
+    ]
+    memories = permanent_highlights + memories
     with open('memories_data.json', 'w', encoding='utf-8') as f:
         json.dump(memories, f, indent=4)
         
@@ -124,3 +169,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

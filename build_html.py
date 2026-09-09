@@ -292,14 +292,14 @@ const TEACHERS = [
   {{ name: "Farooq Sir", role: "Educator" }}, 
   {{ name: "Shafi Sir", role: "Secretary" }},
   {{ name: "Sharifa Ma'am", role: "Supervisor" }}, 
-  {{ name: "Shaista Shah", role: "Admin" }},
-  {{ name: "Arqee Singh", role: "Director" }}, 
+  {{ name: "Shaista Shah", role: "Administrator" }},
+  {{ name: "Riki Singh", role: "Director" }}, 
   {{ name: "Shaista Rishi", role: "Educator" }},
   {{ name: "Ifra", role: "Staff" }}, 
   {{ name: "Insha", role: "Staff" }},
   {{ name: "Ruhi", role: "Staff" }}, 
   {{ name: "Fiza", role: "Staff" }},
-  {{ name: "Yusuf Sir", role: "Sports" }}
+  {{ name: "Younis Sir", role: "Sports" }}
 ];
 
 function build() {{
@@ -436,9 +436,9 @@ function initAudio() {{
     
     btn.addEventListener('click', () => {{
         if(!bgAudio) {{
-            bgAudio = new Audio("https://upload.wikimedia.org/wikipedia/commons/b/b3/Chopin_-_Nocturne_Op_9_No_2_E_Flat_Major.ogg");
-            bgAudio.loop = true;
-            bgAudio.crossOrigin = "anonymous";
+            bgAudio = document.getElementById('bg-audio');
+            
+            
         }}
         
         if(isPlaying) {{
@@ -599,3 +599,6 @@ window.addEventListener('DOMContentLoaded', () => {{
 
 if __name__ == "__main__":
     build()
+
+
+
