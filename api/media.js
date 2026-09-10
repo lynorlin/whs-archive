@@ -12,7 +12,17 @@ export default async function handler(req, res) {
 
     if (data.ok && data.result.file_path) {
       const fileUrl = "https://api.telegram.org/file/bot" + botToken + "/" + data.result.file_path;
-      res.redirect(302, fileUrl);
+      const fileRes = await fetch(fileUrl);
+      if (!fileRes.ok) {
+        return res.status(fileRes.status).send('Failed to fetch from Telegram');
+      }
+
+      const contentType = fileRes.headers.get('content-type') || (data.result.file_path.endsWith('.mp4') ? 'video/mp4' : 'image/jpeg');
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+
+      const arrayBuffer = await fileRes.arrayBuffer();
+      return res.send(Buffer.from(arrayBuffer));
     } else {
       res.status(404).send('File not found in Telegram');
     }

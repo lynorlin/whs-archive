@@ -38,6 +38,30 @@ def run_apify(payload):
         print("Apify error:", e)
         return []
 
+def run_apify_highlights(usernames):
+    tokens_raw = os.getenv("APIFY_TOKEN", "YOUR_APIFY_TOKEN_HERE")
+    if tokens_raw == "YOUR_APIFY_TOKEN_HERE" or not tokens_raw:
+        tokens_raw = base64.b64decode(b"YXBpZnlfYXBpX0I3YmZDbVdsa0xtY2dnRFZEeEtlTEJYcnBJd0xreTNJejdOQSxhcGlmeV9hcGlfVTNoUXB2Wm9JN2Y0MVFuWGJ1bjF4and0UlF0bUQ4MWRCZnZQ").decode("utf-8")
+    tokens = [t.strip() for t in tokens_raw.split(",")]
+    
+    url = f"https://api.apify.com/v2/acts/seemuapps~instagram-highlights-scraper/runs?token={tokens[0]}"
+    try:
+        res = requests.post(url, json={"usernames": usernames}).json()
+        run_id = res.get("data", {}).get("id")
+        if not run_id: return []
+        while True:
+            time.sleep(4)
+            status_res = requests.get(f"https://api.apify.com/v2/acts/seemuapps~instagram-highlights-scraper/runs/{run_id}?token={tokens[0]}").json()
+            status = status_res.get("data", {}).get("status")
+            if status == "SUCCEEDED":
+                dataset_id = status_res["data"]["defaultDatasetId"]
+                return requests.get(f"https://api.apify.com/v2/datasets/{dataset_id}/items?token={tokens[0]}").json()
+            elif status in ["FAILED", "ABORTED", "TIMED-OUT"]:
+                return []
+    except Exception as e:
+        print("Apify highlights error:", e)
+        return []
+
 def extract_media(item):
     video_url = item.get("videoUrl", "")
     img_url = item.get("displayUrl", "")
@@ -45,7 +69,7 @@ def extract_media(item):
         for child in item["childPosts"]:
             if child.get("videoUrl"): video_url = child.get("videoUrl"); break
             if not img_url and child.get("displayUrl"): img_url = child.get("displayUrl")
-    if not img_url: img_url = item.get("url", "https://via.placeholder.com/800")
+    if not img_url: img_url = item.get("imageUrl", "")
     return video_url, img_url
 
 def deduplicate_with_ai(memories):
@@ -83,11 +107,32 @@ def main():
     stories = run_apify({"directUrls":["https://www.instagram.com/whssgr/", "https://www.instagram.com/whs_official_alumni/"],"resultsType":"stories","resultsLimit":1000})
     for s in stories: s["is_story"] = True
 
-    highlights = run_apify({"directUrls":["https://www.instagram.com/whssgr/highlights/", "https://www.instagram.com/whs_official_alumni/highlights/"],"resultsType":"stories","resultsLimit":1000})
-    for h in highlights: h["is_story"] = True
+    print("Scraping official highlights...")
+    highlights_data = run_apify_highlights(["whssgr", "whs_official_alumni"])
+    highlight_memories = []
+    seen_h_titles = set()
+    for h in highlights_data:
+        t = h.get("title", "").strip()
+        cover = h.get("coverUrl", "")
+        if not t or not cover or t.lower() in seen_h_titles: continue
+        seen_h_titles.add(t.lower())
+        stories = h.get("stories", [])
+        first_vid = ""
+        for st in stories:
+            if st.get("videoUrl"):
+                first_vid = st["videoUrl"]
+                break
+        highlight_memories.append({
+            "title": f"Highlight: {t}",
+            "desc": f"Woodland House School Archive - {t} ({len(stories)} stories). Relive the moments and heritage.",
+            "img": cover,
+            "video": first_vid,
+            "date": today,
+            "type": "Story"
+        })
 
-    all_items = posts + stories + highlights
-    if not all_items: return
+    all_items = posts + stories
+    if not all_items and not highlight_memories: return
     
     try:
         with open("memories_data.json", "r", encoding="utf-8") as f:
@@ -109,6 +154,7 @@ def main():
         seen.add(unique_id)
         
         video_url, img_url = extract_media(item)
+        if not img_url or "placeholder" in img_url or img_url.endswith("/highlights/"): continue
         caption = item.get("caption", item.get("text", "Woodland House School."))
         date_str = item.get("timestamp", "")[:10] if item.get("timestamp") else "2024-01-01"
         type_str = "Story" if item.get("is_story") else ("Video" if video_url else "Post")
@@ -133,7 +179,8 @@ def main():
     # DEDUPLICATE BEFORE ADDING HIGHLIGHTS
     print(f"Total items before deduplication: {len(new_memories)}")
     new_memories = deduplicate_with_ai(new_memories)
-    print(f"Total items after deduplication: {len(new_memories)}")
+    new_memories = highlight_memories + new_memories
+    print(f"Total items after adding highlights: {len(new_memories)}")
 
     with open("memories_data.json", "w", encoding="utf-8") as f:
         json.dump(new_memories, f, indent=4)

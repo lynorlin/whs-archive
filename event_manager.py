@@ -57,12 +57,16 @@ def extract_events():
     else:
         old_events_data = {"upcoming": [], "past": []}
         
+    today_str = datetime.now().strftime("%Y-%m-%d")
     prompt = f'''
+    Today's date is {today_str}.
     Extract school events from these recent Instagram posts. 
-    Separate them into "upcoming" and "past" events.
+    CRITICAL: Any event that occurred on or before {today_str} MUST be placed in "past".
+    ONLY events occurring strictly in the future (after {today_str}) can be placed in "upcoming".
+    
     Output JSON format ONLY:
     {{
-        "upcoming": [{{"date": "YYYY-MM-DD or specific date mentioned", "name": "Event Name", "desc": "Short description"}}],
+        "upcoming": [{{"date": "YYYY-MM-DD", "name": "Event Name", "desc": "Short description"}}],
         "past": [{{"date": "YYYY-MM-DD", "name": "Event Name", "desc": "Short description"}}]
     }}
     
@@ -77,7 +81,19 @@ def extract_events():
             messages=[{"role": "user", "content": prompt}],
             response_format={ "type": "json_object" }
         )
-        new_events_data = json.loads(response.choices[0].message.content)
+        raw_data = json.loads(response.choices[0].message.content)
+        
+        # Enforce strict date logic in code
+        all_events = raw_data.get("upcoming", []) + raw_data.get("past", [])
+        clean_upcoming = []
+        clean_past = []
+        for ev in all_events:
+            d = ev.get("date", "")
+            if d and d > today_str:
+                clean_upcoming.append(ev)
+            else:
+                clean_past.append(ev)
+        new_events_data = {"upcoming": clean_upcoming, "past": clean_past}
     except Exception as e:
         print("Error extracting events via AI:", e)
         return

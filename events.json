@@ -1,17 +1,16 @@
 {
-    "upcoming": [
+    "upcoming": [],
+    "past": [
+        {
+            "date": "2026-09-05",
+            "name": "Alumni Sports Day",
+            "desc": "A sports-focused event for alumni to reconnect and celebrate their school legacy."
+        },
         {
             "date": "2026-09-04",
             "name": "Alumni Fun Day",
             "desc": "A day for alumni to reconnect, relive memories, and celebrate the WHS spirit."
         },
-        {
-            "date": "2026-09-05",
-            "name": "Alumni Sports Day",
-            "desc": "A sports-focused event for alumni to reconnect and celebrate their school legacy."
-        }
-    ],
-    "past": [
         {
             "date": "2024-11-01",
             "name": "60th Anniversary Milestone",

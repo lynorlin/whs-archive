@@ -336,23 +336,45 @@ const TEACHERS = [
 ];
 
 function build() {{
-    const upHtml = (RAW_EVENTS.upcoming || []).map(e => `
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const allEvents = [...(RAW_EVENTS.upcoming || []), ...(RAW_EVENTS.past || [])];
+    const seen = new Set();
+    const dedupedEvents = [];
+    allEvents.forEach(e => {{
+        if(e.name && !seen.has(e.name)) {{
+            seen.add(e.name);
+            dedupedEvents.push(e);
+        }}
+    }});
+    dedupedEvents.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+
+    const upcomingList = dedupedEvents.filter(e => e.date && e.date > todayStr);
+    const pastList = dedupedEvents.filter(e => !e.date || e.date <= todayStr);
+
+    const upHtml = upcomingList.map(e => `
         <div class="event-item anim-up">
             <div class="e-date">${{e.date}}</div>
             <div class="e-title">${{e.name}}</div>
             <div class="e-desc">${{e.desc}}</div>
             <button class="notify-btn hover-target" onclick="triggerNotify(this)">+ Notify Me</button>
         </div>
-    `).join('') || '<div class="event-item">No upcoming events scheduled.</div>';
+    `).join('') || `
+        <div class="event-item anim-up" style="border-left-color: var(--accent);">
+            <div class="e-date">LATEST UPDATE</div>
+            <div class="e-title">No upcoming events scheduled currently.</div>
+            <div class="e-desc">Stay tuned! Click below to subscribe on Telegram and receive instant notifications when WHS announces upcoming events.</div>
+            <button class="notify-btn hover-target" onclick="triggerNotify(this)">+ Subscribe on Telegram</button>
+        </div>
+    `;
     document.getElementById('up-list').innerHTML = upHtml;
 
-    const pastHtml = (RAW_EVENTS.past || []).map(e => `
+    const pastHtml = pastList.map(e => `
         <div class="event-item anim-up">
             <div class="e-date">${{e.date}}</div>
             <div class="e-title">${{e.name}}</div>
             <div class="e-desc">${{e.desc}}</div>
         </div>
-    `).join('') || '<div class="event-item">Processing...</div>';
+    `).join('') || '<div class="event-item">No past events recorded.</div>';
     document.getElementById('past-list').innerHTML = pastHtml;
 
     window._allMemories = [];
@@ -364,12 +386,17 @@ function build() {{
     RAW_MEMORIES.forEach((m, idx) => {{
         m._idx = idx;
         const imgUrl = m.tg_img ? `/api/media?id=${{m.tg_img}}` : m.img;
+        if(!imgUrl || imgUrl.includes('placeholder') || imgUrl.endsWith('/highlights/')) return;
+
         if(m.type.toLowerCase().includes("story") || m.title.toLowerCase().includes("story") || m.title.toLowerCase().includes("highlight")) {{
             hasStories = true;
+            const cleanTitle = m.title.replace(/^Highlight:\s*/i, '').replace(/^Story:\s*/i, '');
+            const hasVid = !!(m.video && m.video.trim());
             storyHtml += `
                 <div class="story-item hover-target" data-index="${{idx}}">
-                    <img src="${{imgUrl}}" loading="lazy">
-                    <div class="story-play-btn">VIEW</div>
+                    <img src="${{imgUrl}}" data-fallback="${{m.img}}" loading="lazy" referrerpolicy="no-referrer" onerror="if(this.dataset.fallback && this.src !== this.dataset.fallback) {{ this.src = this.dataset.fallback; }} else {{ this.closest('.story-item')?.remove(); }}">
+                    <div class="story-play-btn">${{hasVid ? '▶ WATCH' : 'VIEW'}}</div>
+                    <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.85)); color:#fff; padding:10px 8px 6px; font-family:'Oswald',sans-serif; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center; pointer-events:none;">${{cleanTitle}}</div>
                 </div>
             `;
             m._isStory = true;
@@ -399,8 +426,8 @@ function build() {{
             const tClass = m._hasVideo ? "type-video" : "type-post";
             const filterType = m._hasVideo ? "video" : "post";
             const media = m._hasVideo
-                ? `<img src="${{imgUrl}}" loading="lazy" referrerpolicy="no-referrer"><div class="play-btn">PLAY VIDEO</div>`
-                : `<img src="${{imgUrl}}" loading="lazy" referrerpolicy="no-referrer"><div class="play-btn">VIEW POST</div>`;
+                ? `<img src="${{imgUrl}}" data-fallback="${{m.img}}" loading="lazy" referrerpolicy="no-referrer" onerror="if(this.dataset.fallback && this.src !== this.dataset.fallback) {{ this.src = this.dataset.fallback; }} else {{ this.closest('.memory-card')?.remove(); }}"><div class="play-btn">PLAY VIDEO</div>`
+                : `<img src="${{imgUrl}}" data-fallback="${{m.img}}" loading="lazy" referrerpolicy="no-referrer" onerror="if(this.dataset.fallback && this.src !== this.dataset.fallback) {{ this.src = this.dataset.fallback; }} else {{ this.closest('.memory-card')?.remove(); }}"><div class="play-btn">VIEW POST</div>`;
             html += `
                 <div class="memory-card hover-target anim-grid" data-filter="${{filterType}}" data-index="${{m._idx}}">
                     <div class="memory-media">${{media}}</div>
@@ -543,9 +570,9 @@ function initVideoModal() {{
         const hasVideo = videoUrl && videoUrl.trim() !== "";
         
         if(hasVideo) {{
-            container.innerHTML = `<video id="modal-media" src="${{videoUrl}}" controls autoplay playsinline></video>`;
+            container.innerHTML = `<video id="modal-media" src="${{videoUrl}}" data-fallback="${{data.video}}" controls autoplay playsinline onerror="if(this.dataset.fallback && this.src !== this.dataset.fallback) {{ this.src = this.dataset.fallback; }}"></video>`;
         }} else {{
-            container.innerHTML = `<img id="modal-media" src="${{imgUrl}}">`;
+            container.innerHTML = `<img id="modal-media" src="${{imgUrl}}" data-fallback="${{data.img}}" onerror="if(this.dataset.fallback && this.src !== this.dataset.fallback) {{ this.src = this.dataset.fallback; }}">`;
         }}
         caption.innerHTML = `<strong>${{data.title}}</strong><br><br>${{data.desc}}`;
 
