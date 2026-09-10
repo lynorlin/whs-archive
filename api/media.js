@@ -1,10 +1,37 @@
 export default async function handler(req, res) {
+  const botToken = "8781356380:AAGc1w9SBiV6AOMtpNO_JpypaeXdW54WwMw";
+
+  if (req.query.action === 'bot') {
+    try {
+      const meRes = await fetch("https://api.telegram.org/bot" + botToken + "/getMe");
+      const me = await meRes.json();
+      const updatesRes = await fetch("https://api.telegram.org/bot" + botToken + "/getUpdates");
+      const updates = await updatesRes.json();
+      return res.status(200).json({ ok: true, bot: me, updates: updates });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  }
+
+  if (req.query.action === 'notify' && req.query.chat_id) {
+    try {
+      const msg = req.query.text || "🔔 Woodland House School: Telegram notification test successful!";
+      const sendRes = await fetch("https://api.telegram.org/bot" + botToken + "/sendMessage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: req.query.chat_id, text: msg })
+      });
+      const result = await sendRes.json();
+      return res.status(200).json(result);
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  }
+
   const fileId = req.query.id;
   if (!fileId) {
     return res.status(400).send('No file ID provided');
   }
-
-  const botToken = "8781356380:AAGc1w9SBiV6AOMtpNO_JpypaeXdW54WwMw";
 
   try {
     const tgRes = await fetch("https://api.telegram.org/bot" + botToken + "/getFile?file_id=" + fileId);

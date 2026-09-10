@@ -22,27 +22,47 @@ def get_subscribers():
     else:
         subs = []
         
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/getUpdates"
+    default_subs = [6385813763, -1004452088494]
+    for s in default_subs:
+        if s not in subs:
+            subs.append(s)
+
+    res = None
     try:
-        res = requests.get(url, timeout=10).json()
-        if res.get("ok"):
-            for result in res.get("result", []):
-                msg = result.get("message", {})
-                chat_id = msg.get("chat", {}).get("id")
-                if chat_id and chat_id not in subs:
-                    subs.append(chat_id)
-                    send_msg(chat_id, "Welcome to Woodland House School Notifications! You will receive updates about upcoming events.")
-    except Exception as e:
-        print("Error fetching Telegram updates:", e)
-        
+        res = requests.get(f"https://api.telegram.org/bot{BOT_TOKEN}/getUpdates", timeout=5).json()
+    except Exception:
+        try:
+            res_v = requests.get("https://whs-archive.vercel.app/api/media?action=bot", timeout=10).json()
+            res = res_v.get("updates")
+        except Exception as e:
+            print("Error fetching updates via fallback:", e)
+
+    if res and res.get("ok"):
+        for result in res.get("result", []):
+            msg = result.get("message") or result.get("channel_post") or {}
+            chat_id = msg.get("chat", {}).get("id") or msg.get("sender_chat", {}).get("id")
+            if chat_id and chat_id not in subs:
+                subs.append(chat_id)
+                send_msg(chat_id, "🌟 Welcome to Woodland House School Notifications! You are subscribed to real-time event alerts.")
+                
     with open(SUBSCRIBERS_FILE, 'w') as f:
-        json.dump(subs, f)
+        json.dump(subs, f, indent=4)
     return subs
 
 def send_msg(chat_id, text):
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    payload = {"chat_id": chat_id, "text": text}
-    requests.post(url, json=payload)
+    try:
+        url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+        payload = {"chat_id": chat_id, "text": text}
+        r = requests.post(url, json=payload, timeout=5)
+        if r.status_code == 200:
+            return
+    except Exception:
+        pass
+
+    try:
+        requests.get("https://whs-archive.vercel.app/api/media", params={"action": "notify", "chat_id": chat_id, "text": text}, timeout=10)
+    except Exception as e:
+        print(f"Error sending message to {chat_id}:", e)
 
 def extract_events():
     if not os.path.exists(MEMORIES_FILE): return

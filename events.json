@@ -2,49 +2,14 @@
     "upcoming": [],
     "past": [
         {
-            "date": "2026-09-05",
-            "name": "Alumni Sports Day",
-            "desc": "A sports-focused event for alumni to reconnect and celebrate their school legacy."
-        },
-        {
             "date": "2026-09-04",
             "name": "Alumni Fun Day",
             "desc": "A day for alumni to reconnect, relive memories, and celebrate the WHS spirit."
         },
         {
-            "date": "2024-11-01",
-            "name": "60th Anniversary Milestone",
-            "desc": "Celebrating six decades of educational excellence at Woodland House School."
-        },
-        {
-            "date": "2024-10-15",
-            "name": "Alumni Meet",
-            "desc": "An event for Woodlanders to reconnect and relive cherished memories."
-        },
-        {
-            "date": "2024-10-12",
-            "name": "Dussehra 2024",
-            "desc": "Vibrant campus festivities celebrating truth, courage, and cultural heritage."
-        },
-        {
-            "date": "2024-09-01",
-            "name": "Founder's Day",
-            "desc": "A day of reverence and reflection honoring the school's visionaries."
-        },
-        {
-            "date": "2026-08-31",
-            "name": "Science & Art Exhibition 2026",
-            "desc": "A showcase of students' scientific models, experiments, and creative artwork."
-        },
-        {
-            "date": "2026-06-21",
-            "name": "Father's Day",
-            "desc": "A celebration honoring the fathers who guide and support the students."
-        },
-        {
-            "date": "2026-07-27",
-            "name": "Farewell Class of 2026",
-            "desc": "A ceremony bidding farewell to the graduating class of 2026."
+            "date": "2026-09-05",
+            "name": "Alumni Sports Day",
+            "desc": "A sports-themed event for alumni to celebrate the 60th anniversary of Woodlands House School."
         }
     ]
 }
