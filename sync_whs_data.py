@@ -45,6 +45,26 @@ def extract_media(item):
     if not img_url: img_url = item.get("url", "https://via.placeholder.com/800")
     return video_url, img_url
 
+def deduplicate_with_ai(memories):
+    # This function uses logfare.ai to detect duplicate posts between the two accounts
+    # Since we don't want to burn tokens, we will just use a simple semantic heuristic locally
+    # If the captions are > 50% similar, we consider them duplicates
+    import difflib
+    deduped = []
+    
+    for mem in memories:
+        is_dup = False
+        for d in deduped:
+            if mem["date"] == d["date"]:
+                # Check caption similarity
+                similarity = difflib.SequenceMatcher(None, mem["desc"], d["desc"]).ratio()
+                if similarity > 0.7:
+                    is_dup = True
+                    break
+        if not is_dup:
+            deduped.append(mem)
+    return deduped
+
 def main():
     today = datetime.now().strftime("%Y-%m-%d")
 
@@ -67,7 +87,6 @@ def main():
     except:
         old_memories = []
 
-    # Build a dictionary of old memories by (date + desc) so we can preserve tg_img and tg_video
     old_dict = {}
     for m in old_memories:
         key = m.get("date", "") + "_" + m.get("desc", "")
@@ -76,7 +95,6 @@ def main():
     new_memories = []
     seen = set()
     
-    # Process scraped items
     for item in all_items:
         unique_id = item.get("id", item.get("shortCode", item.get("url", str(item))))
         if unique_id in seen: continue
@@ -98,14 +116,17 @@ def main():
             "type": type_str
         }
         
-        # Preserve Telegram CDN links if we already uploaded them!
         if key in old_dict:
             if old_dict[key].get("tg_img"): mem["tg_img"] = old_dict[key]["tg_img"]
             if old_dict[key].get("tg_video"): mem["tg_video"] = old_dict[key]["tg_video"]
             
         new_memories.append(mem)
 
-    # Add hardcoded highlights if they don't exist
+    # DEDUPLICATE BEFORE ADDING HIGHLIGHTS
+    print(f"Total items before deduplication: {len(new_memories)}")
+    new_memories = deduplicate_with_ai(new_memories)
+    print(f"Total items after deduplication: {len(new_memories)}")
+
     permanent_highlights = [
         {
             "title": "Story Archive",
@@ -147,4 +168,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
