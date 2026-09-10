@@ -39,7 +39,7 @@ def build():
                 btn.classList.add('active');
                 const filter = btn.dataset.filter;
                 memoryCards.forEach(card => {{
-                    if(filter === 'all' || card.dataset.category === filter) card.classList.remove('hidden');
+                    if(filter === 'all' || card.dataset.filter === filter) card.classList.remove('hidden');
                     else card.classList.add('hidden');
                 }});
             }});
@@ -218,7 +218,7 @@ footer h1 {{ font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 10px; line-height
 </head>
 <body>
 
-<audio id="bg-audio" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" crossorigin="anonymous"></audio>
+<audio id="bg-audio" loop src="https://archive.org/download/lofi-study/lofi-study.mp3"></audio>
 <div id="audio-controls">
     <button id="audio-toggle" class="hover-target">[ PLAY AUDIO ]</button>
 </div>
@@ -352,14 +352,16 @@ function build() {{
     let hasStories = false;
 
     RAW_MEMORIES.forEach((m, idx) => {{
-        const hasVideo = m.video && m.video.trim() !== "";
+        const imgUrl = m.tg_img ? `/api/media?id=${{m.tg_img}}` : m.img;
+        const videoUrl = m.tg_video ? `/api/media?id=${{m.tg_video}}` : m.video;
+        const hasVideo = videoUrl && videoUrl.trim() !== "";
         let tClass = "type-post";
         let filterType = "post";
         
         if(m.type.toLowerCase().includes("story") || m.title.toLowerCase().includes("story") || m.title.toLowerCase().includes("highlight")) {{
             tClass = "type-story";
             hasStories = true;
-            const media = `<img src="${{m.img}}" loading="lazy">`;
+            const media = `<img src="${{imgUrl}}" loading="lazy">`;
             storyHtml += `
                 <div class="story-item hover-target" data-index="${{idx}}">
                     ${{media}}
@@ -373,8 +375,8 @@ function build() {{
         }}
 
         const media = hasVideo ? 
-            `<video src="${{m.video}}" muted loop playsinline></video><div class="play-btn">PLAY VIDEO</div>` : 
-            `<img src="${{m.img}}" loading="lazy"><div class="play-btn">VIEW POST</div>`;
+            `<img src="${{imgUrl}}" loading="lazy" referrerpolicy="no-referrer"><div class="play-btn">PLAY VIDEO</div>` : 
+            `<img src="${{imgUrl}}" loading="lazy" referrerpolicy="no-referrer"><div class="play-btn">VIEW POST</div>`;
 
         galHtml += `
             <div class="memory-card hover-target anim-grid" data-filter="${{filterType}}" data-index="${{idx}}">
@@ -390,7 +392,7 @@ function build() {{
     
     document.getElementById('gallery').innerHTML = galHtml;
     
-    if(false) {{
+    if(hasStories) {{
         document.getElementById('story-container').style.display = 'block';
         document.getElementById('story-scroll').innerHTML = storyHtml;
     }}
@@ -438,11 +440,10 @@ function initAudio() {{
     const btn = document.getElementById('audio-toggle');
     let isPlaying = false;
     
-    btn.addEventListener('click', () => {{
+        btn.addEventListener('click', () => {{
         if(!bgAudio) {{
             bgAudio = document.getElementById('bg-audio');
-            
-            
+            bgAudio.volume = 0.5;
         }}
         
         if(isPlaying) {{
@@ -514,12 +515,14 @@ function initVideoModal() {{
         card.addEventListener('click', () => {{
             const idx = card.getAttribute('data-index');
             const data = RAW_MEMORIES[idx];
-            const hasVideo = data.video && data.video.trim() !== "";
+            const imgUrl = data.tg_img ? `/api/media?id=${{data.tg_img}}` : data.img;
+            const videoUrl = data.tg_video ? `/api/media?id=${{data.tg_video}}` : data.video;
+            const hasVideo = videoUrl && videoUrl.trim() !== "";
             
             if(hasVideo) {{
-                container.innerHTML = `<video id="modal-media" src="${{data.video}}" controls autoplay playsinline></video>`;
+                container.innerHTML = `<video id="modal-media" src="${{videoUrl}}" controls autoplay playsinline></video>`;
             }} else {{
-                container.innerHTML = `<img id="modal-media" src="${{data.img}}">`;
+                container.innerHTML = `<img id="modal-media" src="${{imgUrl}}">`;
             }}
             caption.innerHTML = `<strong>${{data.title}}</strong><br><br>${{data.desc}}`;
 
