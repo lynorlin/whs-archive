@@ -46,17 +46,22 @@ def extract_media(item):
     return video_url, img_url
 
 def deduplicate_with_ai(memories):
-    # This function uses logfare.ai to detect duplicate posts between the two accounts
-    # Since we don't want to burn tokens, we will just use a simple semantic heuristic locally
-    # If the captions are > 50% similar, we consider them duplicates
+    """Remove duplicates using exact key match first, then 70% caption similarity."""
     import difflib
+    # Step 1: exact date+desc key dedup
+    seen_keys = set()
+    unique = []
+    for m in memories:
+        key = m.get("date","") + "|" + m.get("desc","")[:80].strip()
+        if key not in seen_keys:
+            seen_keys.add(key)
+            unique.append(m)
+    # Step 2: fuzzy dedup across accounts (same date, similar caption)
     deduped = []
-    
-    for mem in memories:
+    for mem in unique:
         is_dup = False
         for d in deduped:
             if mem["date"] == d["date"]:
-                # Check caption similarity
                 similarity = difflib.SequenceMatcher(None, mem["desc"], d["desc"]).ratio()
                 if similarity > 0.7:
                     is_dup = True
