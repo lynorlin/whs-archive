@@ -390,7 +390,7 @@ function build() {{
 
         if(m.type.toLowerCase().includes("story") || m.title.toLowerCase().includes("story") || m.title.toLowerCase().includes("highlight")) {{
             hasStories = true;
-            const cleanTitle = m.title.replace(/^Highlight:\s*/i, '').replace(/^Story:\s*/i, '');
+            const cleanTitle = m.title.replace(/^Highlight:\\s*/i, '').replace(/^Story:\\s*/i, '');
             const hasVid = !!(m.video && m.video.trim());
             storyHtml += `
                 <div class="story-item hover-target" data-index="${{idx}}">
