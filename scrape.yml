@@ -1,0 +1,34 @@
+name: Auto Scrape WHS Archive
+
+on:
+  schedule:
+    - cron: '0 */2 * * *' # Runs every 2 hours
+  workflow_dispatch: # Allows you to trigger it manually
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests openai
+
+      - name: Run Scraper
+        run: |
+          python sync_whs_data.py
+          python build_html.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          git add memories_data.json index.html
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update database and build HTML" && git push)
