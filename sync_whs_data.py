@@ -127,44 +127,15 @@ def main():
     new_memories = deduplicate_with_ai(new_memories)
     print(f"Total items after deduplication: {len(new_memories)}")
 
-    permanent_highlights = [
-        {
-            "title": "Story Archive",
-            "desc": "Celebrating six decades of educational excellence, nurturing dreams, and building a legacy at Woodland House School. A milestone etched in history. #60Years",
-            "img": "assets/highlights/1.jpg",
-            "video": "",
-            "date": today,
-            "type": "Story"
-        },
-        {
-            "title": "Story Archive",
-            "desc": "Reconnecting the past with the present. Reliving cherished memories and celebrating the incredible journeys of our Woodlanders at the Alumni Meet.",
-            "img": "assets/highlights/2.jpg",
-            "video": "",
-            "date": today,
-            "type": "Story"
-        },
-        {
-            "title": "Story Archive",
-            "desc": "The vibrant festivities of Dussehra 2024 at our campus. A joyous celebration of truth, courage, and cultural heritage.",
-            "img": "assets/highlights/3.jpg",
-            "video": "",
-            "date": today,
-            "type": "Story"
-        }
-    ]
-    
-    for ph in permanent_highlights:
-        key = ph["date"] + "_" + ph["desc"]
-        if key in old_dict:
-            if old_dict[key].get("tg_img"): ph["tg_img"] = old_dict[key]["tg_img"]
-            if old_dict[key].get("tg_video"): ph["tg_video"] = old_dict[key]["tg_video"]
-        new_memories.insert(0, ph)
-
     with open("memories_data.json", "w", encoding="utf-8") as f:
         json.dump(new_memories, f, indent=4)
         
     print("Done generating fresh links!")
+    
+    # Extract events and notify Telegram subscribers
+    import subprocess
+    print("Extracting events and notifying subscribers...")
+    subprocess.run(["python", "event_manager.py"])
 
 if __name__ == "__main__":
     main()

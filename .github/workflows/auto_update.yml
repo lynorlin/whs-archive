@@ -2,7 +2,7 @@ name: WHS Auto Update
 
 on:
   schedule:
-    - cron: '0 */12 * * *'
+    - cron: '0 */2 * * *'   # Every 2 hours: scrape posts, stories, reels
   workflow_dispatch:
 
 jobs:
@@ -19,19 +19,27 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Run Build (Scraper + HTML)
+      - name: Install Dependencies
+        run: pip install requests openai
+
+      - name: Scrape Instagram (Posts, Stories, Reels)
         env:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          pip install requests openai
-          python sync_whs_data.py
-          python build_html.py
+        run: python sync_whs_data.py
+
+      - name: Extract Events & Notify Telegram Subscribers
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python event_manager.py
+
+      - name: Build HTML
+        run: python build_html.py
 
       - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add memories_data.json events.json index.html
-          git commit -m "Auto-update WHS Archive" || exit 0
+          git add memories_data.json events.json index.html subscribers.json || true
+          git commit -m "Auto-update WHS Archive [$(date +'%Y-%m-%d %H:%M')]" || exit 0
           git push
