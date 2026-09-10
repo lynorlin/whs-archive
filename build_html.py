@@ -32,16 +32,23 @@ def build():
 
     function initFilters() {{
         const filterBtns = document.querySelectorAll('.filter-btn');
-        const memoryCards = document.querySelectorAll('.memory-card');
         filterBtns.forEach(btn => {{
             btn.addEventListener('click', () => {{
                 filterBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 const filter = btn.dataset.filter;
-                memoryCards.forEach(card => {{
-                    if(filter === 'all' || card.dataset.filter === filter) card.classList.remove('hidden');
-                    else card.classList.add('hidden');
-                }});
+                if(filter === 'all') {{
+                    window._filteredMem = window._allMemories.slice();
+                }} else if(filter === 'video') {{
+                    window._filteredMem = window._allMemories.filter(m => m._hasVideo);
+                }} else {{
+                    window._filteredMem = window._allMemories.filter(m => !m._hasVideo);
+                }}
+                window._renderCount = 0;
+                document.getElementById('gallery').innerHTML = '';
+                const lb = document.getElementById('load-more-btn');
+                if(lb) lb.style.display = 'inline-block';
+                window.renderMore();
             }});
         }});
     }}
@@ -218,7 +225,7 @@ footer h1 {{ font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 10px; line-height
 </head>
 <body>
 
-<audio id="bg-audio" loop src="https://archive.org/download/lofi-study/lofi-study.mp3"></audio>
+<audio id="bg-audio" loop src="assets/billie.mp3"></audio>
 <div id="audio-controls">
     <button id="audio-toggle" class="hover-target">[ PLAY AUDIO ]</button>
 </div>
@@ -304,6 +311,7 @@ footer h1 {{ font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 10px; line-height
 <footer>
     <h1 class="footer-title">WHS 1964</h1>
     <div class="footer-poetic">"True elegance belongs to the sincere student, never to the masks of two faces."</div>
+    <div class="footer-quotes" style="font-size: 1.2rem; font-style: italic; margin-bottom: 20px;">"Maybe all this scolding was worth the memories"</div>
     <div class="footer-quotes">CRAFTED BY A STUDENT OF WOODLAND HOUSE SCHOOL, CLASS 10TH.</div>
 </footer>
 
@@ -347,55 +355,77 @@ function build() {{
     `).join('') || '<div class="event-item">Processing...</div>';
     document.getElementById('past-list').innerHTML = pastHtml;
 
-    let galHtml = '';
+    window._allMemories = [];
+    window._filteredMem = [];
+    window._renderCount = 0;
     let storyHtml = '';
     let hasStories = false;
 
     RAW_MEMORIES.forEach((m, idx) => {{
+        m._idx = idx;
         const imgUrl = m.tg_img ? `/api/media?id=${{m.tg_img}}` : m.img;
-        const videoUrl = m.tg_video ? `/api/media?id=${{m.tg_video}}` : m.video;
-        const hasVideo = videoUrl && videoUrl.trim() !== "";
-        let tClass = "type-post";
-        let filterType = "post";
-        
         if(m.type.toLowerCase().includes("story") || m.title.toLowerCase().includes("story") || m.title.toLowerCase().includes("highlight")) {{
-            tClass = "type-story";
             hasStories = true;
-            const media = `<img src="${{imgUrl}}" loading="lazy">`;
             storyHtml += `
                 <div class="story-item hover-target" data-index="${{idx}}">
-                    ${{media}}
+                    <img src="${{imgUrl}}" loading="lazy">
                     <div class="story-play-btn">VIEW</div>
                 </div>
             `;
-            return; 
-        }} else if(hasVideo || m.type.toLowerCase().includes("video")) {{
-            tClass = "type-video";
-            filterType = "video";
+            m._isStory = true;
+        }} else {{
+            const videoUrl = m.tg_video ? `/api/media?id=${{m.tg_video}}` : m.video;
+            m._hasVideo = !!(videoUrl && videoUrl.trim());
+            m._isStory = false;
+            window._allMemories.push(m);
         }}
-
-        const media = hasVideo ? 
-            `<img src="${{imgUrl}}" loading="lazy" referrerpolicy="no-referrer"><div class="play-btn">PLAY VIDEO</div>` : 
-            `<img src="${{imgUrl}}" loading="lazy" referrerpolicy="no-referrer"><div class="play-btn">VIEW POST</div>`;
-
-        galHtml += `
-            <div class="memory-card hover-target anim-grid" data-filter="${{filterType}}" data-index="${{idx}}">
-                <div class="memory-media">${{media}}</div>
-                <div class="memory-info">
-                    <div class="m-type ${{tClass}}">${{m.type}}</div>
-                    <div class="m-title">${{m.title}}</div>
-                    <div class="m-desc">${{m.desc}}</div>
-                </div>
-            </div>
-        `;
     }});
-    
-    document.getElementById('gallery').innerHTML = galHtml;
-    
+
     if(hasStories) {{
         document.getElementById('story-container').style.display = 'block';
         document.getElementById('story-scroll').innerHTML = storyHtml;
     }}
+
+    window._filteredMem = window._allMemories.slice();
+
+    window.renderMore = function() {{
+        const start = window._renderCount;
+        const end = Math.min(start + 30, window._filteredMem.length);
+        let html = '';
+        for(let i = start; i < end; i++) {{
+            const m = window._filteredMem[i];
+            const imgUrl = m.tg_img ? `/api/media?id=${{m.tg_img}}` : m.img;
+            const videoUrl = m.tg_video ? `/api/media?id=${{m.tg_video}}` : m.video;
+            const tClass = m._hasVideo ? "type-video" : "type-post";
+            const filterType = m._hasVideo ? "video" : "post";
+            const media = m._hasVideo
+                ? `<img src="${{imgUrl}}" loading="lazy" referrerpolicy="no-referrer"><div class="play-btn">PLAY VIDEO</div>`
+                : `<img src="${{imgUrl}}" loading="lazy" referrerpolicy="no-referrer"><div class="play-btn">VIEW POST</div>`;
+            html += `
+                <div class="memory-card hover-target anim-grid" data-filter="${{filterType}}" data-index="${{m._idx}}">
+                    <div class="memory-media">${{media}}</div>
+                    <div class="memory-info">
+                        <div class="m-type ${{tClass}}">${{m.type}}</div>
+                        <div class="m-title">${{m.title}}</div>
+                        <div class="m-desc">${{m.desc}}</div>
+                    </div>
+                </div>`;
+        }}
+        window._renderCount = end;
+        document.getElementById('gallery').insertAdjacentHTML('beforeend', html);
+        let btn = document.getElementById('load-more-btn');
+        if(window._renderCount >= window._filteredMem.length) {{
+            if(btn) btn.style.display = 'none';
+        }} else {{
+            if(!btn) {{
+                document.getElementById('gallery').insertAdjacentHTML('afterend',
+                    `<div style="text-align:center;padding:40px;"><button id="load-more-btn" class="notify-btn hover-target" onclick="window.renderMore()">LOAD MORE MEMORIES</button></div>`);
+            }} else {{ btn.style.display = 'inline-block'; }}
+        }}
+    }};
+
+    document.getElementById('gallery').innerHTML = '';
+    window.renderMore();
 
     document.getElementById('mentors-grid').innerHTML = TEACHERS.map(t => `
         <div class="mentor-card hover-target anim-grid">
@@ -406,17 +436,7 @@ function build() {{
 
 let isToasting = false;
 window.triggerNotify = function(btn) {{
-    if(!("Notification" in window)) {{
-        alert("This browser does not support desktop notification");
-        showToast(btn);
-    }} else if(Notification.permission !== "granted") {{
-        Notification.requestPermission().then(perm => {{
-            if(perm === "granted") {{ showToast(btn); }}
-            else {{ alert("Notifications blocked by browser."); }}
-        }});
-    }} else {{
-        showToast(btn);
-    }}
+    window.open("https://t.me/whs1966_bot?start=subscribe", "_blank");
 }}
 
 function showToast(btn) {{
@@ -511,26 +531,28 @@ function initVideoModal() {{
     const caption = document.getElementById('modal-caption');
     const closeBtn = document.getElementById('modal-close');
 
-    document.querySelectorAll('.memory-card, .story-item').forEach(card => {{
-        card.addEventListener('click', () => {{
-            const idx = card.getAttribute('data-index');
-            const data = RAW_MEMORIES[idx];
-            const imgUrl = data.tg_img ? `/api/media?id=${{data.tg_img}}` : data.img;
-            const videoUrl = data.tg_video ? `/api/media?id=${{data.tg_video}}` : data.video;
-            const hasVideo = videoUrl && videoUrl.trim() !== "";
-            
-            if(hasVideo) {{
-                container.innerHTML = `<video id="modal-media" src="${{videoUrl}}" controls autoplay playsinline></video>`;
-            }} else {{
-                container.innerHTML = `<img id="modal-media" src="${{imgUrl}}">`;
-            }}
-            caption.innerHTML = `<strong>${{data.title}}</strong><br><br>${{data.desc}}`;
+    // Event delegation — works on dynamically added cards
+    document.addEventListener('click', (e) => {{
+        const card = e.target.closest('.memory-card, .story-item');
+        if(!card) return;
+        const idx = card.getAttribute('data-index');
+        const data = RAW_MEMORIES[idx];
+        if(!data) return;
+        const imgUrl = data.tg_img ? `/api/media?id=${{data.tg_img}}` : data.img;
+        const videoUrl = data.tg_video ? `/api/media?id=${{data.tg_video}}` : data.video;
+        const hasVideo = videoUrl && videoUrl.trim() !== "";
+        
+        if(hasVideo) {{
+            container.innerHTML = `<video id="modal-media" src="${{videoUrl}}" controls autoplay playsinline></video>`;
+        }} else {{
+            container.innerHTML = `<img id="modal-media" src="${{imgUrl}}">`;
+        }}
+        caption.innerHTML = `<strong>${{data.title}}</strong><br><br>${{data.desc}}`;
 
-            modal.style.display = 'flex';
-            anime({{ targets: modal, opacity: [0, 1], duration: 400, easing: 'easeOutSine' }});
-            anime({{ targets: container, scale: [0.8, 1], translateY: [50, 0], duration: 600, easing: 'easeOutExpo' }});
-            document.body.style.overflow = 'hidden'; 
-        }});
+        modal.style.display = 'flex';
+        anime({{ targets: modal, opacity: [0, 1], duration: 400, easing: 'easeOutSine' }});
+        anime({{ targets: container, scale: [0.8, 1], translateY: [50, 0], duration: 600, easing: 'easeOutExpo' }});
+        document.body.style.overflow = 'hidden'; 
     }});
 
     closeBtn.addEventListener('click', closeModal);
