@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const botToken = "8781356380:AAGc1w9SBiV6AOMtpNO_JpypaeXdW54WwMw";
+  const botToken = process.env.TELEGRAM_BOT_TOKEN || "";
 
   if (req.query.action === 'bot') {
     try {

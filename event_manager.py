@@ -5,7 +5,7 @@ import requests
 from openai import OpenAI
 from datetime import datetime
 
-BOT_TOKEN = "8781356380:AAGc1w9SBiV6AOMtpNO_JpypaeXdW54WwMw"
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 _oai_raw = os.getenv("OPENAI_API_KEY", "")
 if not _oai_raw:
     _oai_raw = base64.b64decode(b"bGZ1X29wYjI0TWFqUHZuaHV1Y01hMTkwdGRGMjFzZTdsdXFk").decode("utf-8")
@@ -22,7 +22,7 @@ def get_subscribers():
     else:
         subs = []
         
-    default_subs = [6385813763, -1004452088494]
+    default_subs = [6385813763, -1004452088494, -1004305443024]
     for s in default_subs:
         if s not in subs:
             subs.append(s)
