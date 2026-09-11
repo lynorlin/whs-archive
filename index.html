@@ -398,6 +398,38 @@ footer h1 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 10px; line-height:
 </footer>
 
 <script>
+window.openStarsModal = function() {
+    const m = document.getElementById('stars-modal');
+    if(!m) return;
+    m.style.display = 'flex';
+    if(window.anime) {
+        anime({ targets: m, opacity: [0, 1], duration: 250, easing: 'easeOutSine' });
+        anime({ targets: '.stars-modal-box', scale: [0.85, 1], translateY: [30, 0], duration: 350, easing: 'easeOutExpo' });
+    } else {
+        m.style.opacity = '1';
+    }
+    document.body.style.overflow = 'hidden';
+};
+
+window.closeStarsModal = function() {
+    const m = document.getElementById('stars-modal');
+    if(!m) return;
+    if(window.anime) {
+        anime({ targets: m, opacity: 0, duration: 200, easing: 'easeInSine', complete: () => {
+            m.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }});
+    } else {
+        m.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+};
+
+document.addEventListener('click', (e) => {
+    const m = document.getElementById('stars-modal');
+    if(m && e.target === m) { window.closeStarsModal(); }
+});
+
 const RAW_MEMORIES = [
     {
         "title": "Highlight: 60 Years",
@@ -5104,7 +5136,6 @@ function initFundersAnimation() {
     }
     tick();
 }
-
 
 window.addEventListener('DOMContentLoaded', () => {
     build();
