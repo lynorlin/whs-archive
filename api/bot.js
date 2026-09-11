@@ -145,9 +145,7 @@ export default async function handler(req, res) {
           `3️⃣ If you have Stars in your account, tap *"Pay"*.\n` +
           `   If you don't have Stars, Telegram will prompt you to purchase them instantly with 1 tap using *Apple Pay* (iPhone), *Google Play* (Android), or Card.\n` +
           `4️⃣ Once paid, you'll get an immediate confirmation receipt!\n` +
-          `5️⃣ The bot will ask for the name you want featured on the website gallery.\n\n` +
-          `*Prefer direct UPI/QR payment?*\n` +
-          `Join our channel: ${FUNDER_CHANNEL_INVITE}`;
+          `5️⃣ The bot will ask for the name you want featured on the website gallery.`;
 
         await callTg("sendMessage", {
           chat_id: chatId,
@@ -248,9 +246,6 @@ export default async function handler(req, res) {
           ],
           [
             { text: "❓ How do Stars work? (Guide)", callback_data: "how_to_pay" }
-          ],
-          [
-            { text: "💬 Alternative Direct Payment (Channel)", url: FUNDER_CHANNEL_INVITE }
           ]
         ]
       };

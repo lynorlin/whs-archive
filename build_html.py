@@ -364,7 +364,7 @@ footer h1 {{ font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 10px; line-height
         </div>
         <div class="funders-cta-wrap">
             <button class="funder-pledge-btn hover-target" onclick="openStarsModal()">⭐ BECOME A FUNDER</button>
-            <span class="funder-stars-note">anonymous · in-app Stars or direct</span>
+            <span class="funder-stars-note">100% anonymous · in-app Stars</span>
         </div>
     </div>
     <div class="funders-grid" id="funders-grid"></div>
@@ -389,12 +389,8 @@ footer h1 {{ font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 10px; line-height
 
         <div class="stars-tiers">
             <a href="https://t.me/whs1966_bot?start=funder" target="_blank" class="stars-tier-btn hover-target">
-                <span>⭐ OPTION 1: PAY WITH TELEGRAM STARS</span>
+                <span>⭐ PAY WITH TELEGRAM STARS</span>
                 <span class="stars-tier-amount">@whs1966_bot →</span>
-            </a>
-            <a href="https://t.me/+d7riC1CS1eowZGFl" target="_blank" class="stars-tier-btn hover-target">
-                <span>💬 OPTION 2: ALTERNATIVE DIRECT PAYMENT</span>
-                <span class="stars-tier-amount">Funder Channel →</span>
             </a>
         </div>
         <p class="stars-disclaimer">
