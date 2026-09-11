@@ -7,6 +7,7 @@ const FUNDER_CHANNEL_ID = "-1004305443024"; // Admin "Funder" Telegram Channel
 const BACKUP_CHANNEL_ID = "-1004452088494"; // Secondary Archive Channel
 const BASE_URL = "https://whs-archive.vercel.app";
 const FUNDER_CHANNEL_INVITE = "https://t.me/+d7riC1CS1eowZGFl";
+const WEBHOOK_SECRET = "whs_vault_secret_964_bot";
 
 // Telegram Stars donation tiers
 const STAR_TIERS = {
@@ -59,6 +60,7 @@ export default async function handler(req, res) {
       const webhookUrl = `${BASE_URL}/api/bot`;
       const result = await callTg("setWebhook", {
         url: webhookUrl,
+        secret_token: WEBHOOK_SECRET,
         allowed_updates: [
           "message",
           "edited_message",
@@ -97,6 +99,13 @@ export default async function handler(req, res) {
 
   // ── POST: Telegram Webhook ─────────────────────────────────────────────────
   if (req.method === "POST") {
+    // Security check: Only allow genuine Telegram servers with valid secret token
+    const reqSecret = req.headers["x-telegram-bot-api-secret-token"];
+    if (WEBHOOK_SECRET && reqSecret !== WEBHOOK_SECRET) {
+      console.warn("Rejected unauthorized POST to /api/bot");
+      return res.status(401).json({ ok: false, error: "Unauthorized" });
+    }
+
     const update = req.body || {};
 
     // ── 1. PRE-CHECKOUT QUERY: Must answer within 10s with ok=true ───────────
@@ -200,7 +209,7 @@ export default async function handler(req, res) {
         `You are now officially an honored *${tier.label}* of the WHS Archive.\n\n` +
         `📝 *How would you like to appear on the website?*\n` +
         `Please reply directly to this message with the **Name** and optional **Class/Batch** you want displayed in the *Funders & Benefactors* gallery:\n\n` +
-        `_Example reply: "Hadi - Class of 2026"_\n\n` +
+        `_Example: "Alumnus - Class of 2024" or "Class of 2026 Patron"_\n\n` +
         `*(Or reply "Anonymous" if you prefer to keep your sponsorship private).*`;
 
       await callTg("sendMessage", {
