@@ -341,12 +341,46 @@ footer h1 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 10px; line-height:
             <p>This archive exists because of people who believe memories deserve permanence. All voluntary contributions support website hosting, server costs &amp; digital events run by the website team — not school administrative functions. Free to access. Always.</p>
         </div>
         <div class="funders-cta-wrap">
-            <a href="https://t.me/+d7riC1CS1eowZGFl" target="_blank" class="funder-pledge-btn hover-target">⭐ BECOME A FUNDER</a>
-            <span class="funder-stars-note">join the channel · see payment details</span>
+            <button class="funder-pledge-btn hover-target" onclick="openStarsModal()">⭐ BECOME A FUNDER</button>
+            <span class="funder-stars-note">anonymous · in-app Stars or direct</span>
         </div>
     </div>
     <div class="funders-grid" id="funders-grid"></div>
 </section>
+
+<!-- Telegram Stars & Direct Support Modal -->
+<div id="stars-modal" role="dialog" aria-modal="true">
+    <div class="stars-modal-box">
+        <button class="stars-modal-close hover-target" onclick="closeStarsModal()" aria-label="Close">✕</button>
+        <div class="stars-modal-title">⭐ Support WHS Archive</div>
+        <p class="stars-modal-sub">
+            Your voluntary sponsorship keeps our digital archive servers running. <strong>Your identity and banking details remain completely protected.</strong>
+        </p>
+
+        <!-- Stars Tutorial Box -->
+        <div style="background: rgba(0,0,0,0.03); border: 1px dashed var(--border); padding: 14px 16px; margin-bottom: 20px; text-align: left; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; line-height: 1.65;">
+            <strong style="color: var(--accent); display: block; margin-bottom: 6px;">💡 HOW TELEGRAM STARS WORK:</strong>
+            1. Tap <strong>"Pay with Telegram Stars"</strong> below to open our verified bot.<br>
+            2. Choose your tier (25, 50, 100, or 250 Stars). Telegram opens an in-app sheet. Pay via Apple Pay, Google Play, or Card with 1 tap.<br>
+            3. Reply to the bot with your Name to be honored in this gallery!
+        </div>
+
+        <div class="stars-tiers">
+            <a href="https://t.me/whs1966_bot?start=funder" target="_blank" class="stars-tier-btn hover-target">
+                <span>⭐ OPTION 1: PAY WITH TELEGRAM STARS</span>
+                <span class="stars-tier-amount">@whs1966_bot →</span>
+            </a>
+            <a href="https://t.me/+d7riC1CS1eowZGFl" target="_blank" class="stars-tier-btn hover-target">
+                <span>💬 OPTION 2: ALTERNATIVE DIRECT PAYMENT</span>
+                <span class="stars-tier-amount">Funder Channel →</span>
+            </a>
+        </div>
+        <p class="stars-disclaimer">
+            ⚠️ Contributions strictly fund website hosting, server infrastructure &amp; website-team digital events.<br>
+            NOT for school administration or school-run events. Non-profit memory vault.
+        </p>
+    </div>
+</div>
 
 <footer>
     <h1 class="footer-title">WHS 1964</h1>
