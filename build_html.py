@@ -2,16 +2,23 @@ import json
 
 def build():
     try:
-        with open('memories_data.json', 'r', encoding='utf-8') as f:
-            memories = f.read()
+        with open('memories_data.json', 'r', encoding='utf-8-sig') as f:
+            memories = f.read().strip()
     except:
         memories = "[]"
         
     try:
-        with open('events.json', 'r', encoding='utf-8') as f:
-            events = f.read()
+        with open('events.json', 'r', encoding='utf-8-sig') as f:
+            events = f.read().strip()
     except:
         events = '{"upcoming":[], "past":[]}'
+
+    try:
+        with open('funders.json', 'r', encoding='utf-8-sig') as f:
+            funders = f.read().strip()
+    except:
+        funders = '[{"name": "Founding Patron", "role": "Legacy Benefactor", "tier": "Diamond Patron", "note": "The primary visionary who funded and made the creation of this permanent archive possible."}]'
+
 
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
@@ -216,6 +223,38 @@ section {{ border-bottom: 2px solid var(--border); }}
 .mentor-role {{ font-size: 0.8rem; color: var(--accent); text-transform: uppercase; font-weight: 700; transition: color 0.3s; }}
 @media (max-width: 768px) {{ .mentor-card {{ padding: 30px; }} }}
 
+/* Funders Section */
+#funders {{ position: relative; border-bottom: 2px solid var(--border); overflow: hidden; background: var(--bg); }}
+.funders-intro-banner {{ padding: 30px 40px; border-bottom: 2px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 30px; background: rgba(217, 165, 32, 0.05); position: relative; z-index: 2; }}
+.funders-intro-text {{ display: flex; gap: 20px; align-items: flex-start; max-width: 800px; }}
+.funders-heart {{ font-size: 2.2rem; line-height: 1; filter: drop-shadow(0 2px 8px rgba(217, 56, 30, 0.4)); animation: heartBeat 2s infinite ease-in-out; }}
+@keyframes heartBeat {{ 0%, 100% {{ transform: scale(1); }} 50% {{ transform: scale(1.15); }} }}
+.funders-intro-text strong {{ display: block; font-family: 'Oswald', sans-serif; font-size: 1.3rem; color: #b8860b; letter-spacing: 1px; margin-bottom: 6px; text-transform: uppercase; }}
+.funders-intro-text p {{ font-size: 0.9rem; line-height: 1.6; opacity: 0.85; margin: 0; }}
+.funders-cta-wrap {{ flex-shrink: 0; }}
+.funder-pledge-btn {{ display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 1rem; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; border: 2px solid #000; box-shadow: 4px 4px 0 #000; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }}
+.funder-pledge-btn:hover {{ transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #000; background: linear-gradient(135deg, #ffae19, #ffd700); }}
+.funders-canvas-container {{ position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }}
+.funders-floating-coin {{ position: absolute; font-size: 1.4rem; pointer-events: none; user-select: none; opacity: 0; }}
+.funders-grid {{ display: flex; flex-wrap: wrap; position: relative; z-index: 2; }}
+.funder-card {{ flex: 1 1 280px; border-right: 2px solid var(--border); border-bottom: 2px solid var(--border); padding: 45px 35px; text-align: center; position: relative; overflow: hidden; background: var(--bg); transition: background 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s; cursor: pointer; }}
+.funder-card::before {{ content: ''; position: absolute; top: 0; left: -150%; width: 80%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.25), transparent); transform: skewX(-25deg); transition: left 0.75s ease; pointer-events: none; }}
+.funder-card:hover::before {{ left: 200%; }}
+.funder-card:hover {{ background: #0d0d0d; color: #fff; border-color: #ffd700; box-shadow: 0 15px 35px rgba(255, 215, 0, 0.15); }}
+.funder-card:hover .funder-role {{ color: #ffd700; }}
+.funder-card:hover .funder-badge {{ background: #ffd700; color: #000; box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }}
+.funder-badge {{ display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-family: 'JetBrains Mono', monospace; font-weight: 700; text-transform: uppercase; background: rgba(217, 165, 32, 0.15); color: #b8860b; border: 1px solid rgba(217, 165, 32, 0.35); padding: 5px 14px; margin-bottom: 18px; letter-spacing: 1px; transition: all 0.3s; }}
+.funder-name {{ font-size: 2.2rem; font-family: 'Oswald', sans-serif; margin-bottom: 8px; letter-spacing: 0.5px; line-height: 1.1; }}
+.funder-role {{ font-size: 0.85rem; color: var(--accent); text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 14px; transition: color 0.3s; }}
+.funder-note {{ font-size: 0.82rem; line-height: 1.6; opacity: 0.8; max-width: 320px; margin: 0 auto; }}
+.coin-burst-particle {{ position: absolute; font-size: 1.6rem; pointer-events: none; z-index: 999999; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3)); }}
+@media (max-width: 768px) {{ .funders-intro-banner {{ flex-direction: column; align-items: flex-start; padding: 25px 20px; }} .funder-card {{ padding: 30px 20px; }} }}
+
+/* Disclaimer Box in Footer */
+.disclaimer-container {{ margin: 25px auto 10px; max-width: 840px; border: 1px dashed rgba(244, 244, 240, 0.35); background: rgba(0, 0, 0, 0.4); padding: 22px 28px; text-align: left; border-radius: 2px; }}
+.disclaimer-badge {{ font-family: 'Oswald', sans-serif; font-size: 0.85rem; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }}
+.disclaimer-text {{ font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; line-height: 1.7; color: var(--bg); opacity: 0.88; margin: 0; }}
+
 footer {{ padding: 80px 40px; background: var(--text); color: var(--bg); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }}
 footer h1 {{ font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 10px; line-height: 1; }}
 .footer-quotes {{ font-size: 0.9rem; max-width: 600px; line-height: 1.6; opacity: 0.8; }}
@@ -254,6 +293,7 @@ footer h1 {{ font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 10px; line-height
         <a href="#events" class="hover-target">Events</a>
         <a href="#archives" class="hover-target">Archives</a>
         <a href="#mentors" class="hover-target">Mentors</a>
+        <a href="#funders" class="hover-target">Funders</a>
     </div>
 </nav>
 
@@ -308,16 +348,47 @@ footer h1 {{ font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 10px; line-height
     <div class="mentors-grid" id="mentors-grid"></div>
 </section>
 
+<section id="funders">
+    <div class="section-header"><h2 class="section-title">Funders & Benefactors</h2></div>
+    <div class="funders-intro-banner">
+        <div class="funders-intro-text">
+            <span class="funders-heart">❤️</span>
+            <div>
+                <strong>OUR HEARTFELT GRATITUDE</strong>
+                <p>This archive is kept ongoing and alive through the generosity of our supporters and alumni. We extend our deepest thanks to those who funded this website—you are the reason these memories will never fade. Want to support the digital vault?</p>
+            </div>
+        </div>
+        <div class="funders-cta-wrap">
+            <a href="https://t.me/whs1966_bot?start=support" target="_blank" class="funder-pledge-btn hover-target">
+                <span>🪙</span> BECOME A FUNDER
+            </a>
+        </div>
+    </div>
+    <div class="funders-canvas-container">
+        <div id="funders-coins-layer"></div>
+    </div>
+    <div class="funders-grid" id="funders-grid"></div>
+</section>
+
 <footer>
     <h1 class="footer-title">WHS 1964</h1>
     <div class="footer-poetic">"True elegance belongs to the sincere student, never to the masks of two faces."</div>
     <div class="footer-quotes" style="font-size: 1.2rem; font-style: italic; margin-bottom: 20px;">"Maybe all this scolding was worth the memories"</div>
-    <div class="footer-quotes">CRAFTED BY A STUDENT OF WOODLAND HOUSE SCHOOL, CLASS 10TH.</div>
+    
+    <div class="disclaimer-container">
+        <div class="disclaimer-badge">⚖️ LEGAL DISCLAIMER & FAIR USE NOTICE</div>
+        <p class="disclaimer-text">
+            We do not claim or hold ownership over any videos, photographs, or audio tracks used on this website. All copyrights, trademarks, and media assets belong strictly to their original creators, artists, and copyright holders. This website is strictly an independent, non-commercial school community project created by students of Woodland House School solely for storing, preserving, and celebrating our memories for fun.
+        </p>
+    </div>
+
+    <div class="footer-quotes" style="margin-top: 15px;">CRAFTED BY A STUDENT OF WOODLAND HOUSE SCHOOL, CLASS 10TH.</div>
 </footer>
 
 <script>
 const RAW_MEMORIES = {memories};
 const RAW_EVENTS = {events};
+const RAW_FUNDERS = {funders};
 
 const TEACHERS = [
   {{ name: "Sana Ma'am", role: "Educator" }}, 
@@ -457,6 +528,15 @@ function build() {{
     document.getElementById('mentors-grid').innerHTML = TEACHERS.map(t => `
         <div class="mentor-card hover-target anim-grid">
             <div class="mentor-name">${{t.name}}</div><div class="mentor-role">${{t.role}}</div>
+        </div>
+    `).join('');
+
+    document.getElementById('funders-grid').innerHTML = (RAW_FUNDERS || []).map(f => `
+        <div class="funder-card hover-target anim-grid">
+            <div class="funder-badge">🪙 ${{f.tier || 'HONORARY PATRON'}}</div>
+            <div class="funder-name">${{f.name}}</div>
+            <div class="funder-role">${{f.role || 'Contributor'}}</div>
+            <div class="funder-note">${{f.note || 'Generously supported the Woodland House School Archive.'}}</div>
         </div>
     `).join('');
 }}
@@ -637,6 +717,69 @@ function initAnimations() {{
     }});
 }}
 
+function initFundersAnimation() {{
+    const container = document.getElementById('funders-coins-layer');
+    if(!container) return;
+
+    // Ambient floating gold coins, sparkles & currency symbols
+    const symbols = ['🪙', '✨', '💸', '💎', '🪙', '✨'];
+    const count = 14;
+    for(let i = 0; i < count; i++) {{
+        const coin = document.createElement('div');
+        coin.className = 'funders-floating-coin';
+        coin.innerText = symbols[i % symbols.length];
+        coin.style.left = (Math.random() * 95) + '%';
+        coin.style.top = (Math.random() * 85 + 5) + '%';
+        container.appendChild(coin);
+
+        anime({{
+            targets: coin,
+            translateY: [0, -70 - Math.random() * 80],
+            translateX: [0, (Math.random() - 0.5) * 50],
+            rotate: [(Math.random() - 0.5) * 30, (Math.random() - 0.5) * 90],
+            opacity: [0, 0.75, 0],
+            scale: [0.6, 1.1, 0.7],
+            duration: 3500 + Math.random() * 2500,
+            delay: i * 300,
+            loop: true,
+            easing: 'easeInOutSine'
+        }});
+    }}
+
+    // Interactive money burst on funder cards (hover & click)
+    const cards = document.querySelectorAll('.funder-card');
+    cards.forEach(card => {{
+        const triggerBurst = () => {{
+            const burstSymbols = ['🪙', '✨', '💸', '🪙', '💎', '✨'];
+            const rect = card.getBoundingClientRect();
+            for(let j = 0; j < 6; j++) {{
+                const particle = document.createElement('div');
+                particle.className = 'coin-burst-particle';
+                particle.innerText = burstSymbols[j % burstSymbols.length];
+                particle.style.left = (rect.left + rect.width / 2 + (Math.random() - 0.5) * 60) + 'px';
+                particle.style.top = (rect.top + rect.height / 2) + 'px';
+                particle.style.position = 'fixed';
+                document.body.appendChild(particle);
+
+                anime({{
+                    targets: particle,
+                    translateY: -80 - Math.random() * 80,
+                    translateX: (Math.random() - 0.5) * 140,
+                    scale: [0.4, 1.3, 0],
+                    rotate: (Math.random() - 0.5) * 360,
+                    opacity: [1, 1, 0],
+                    duration: 900 + Math.random() * 300,
+                    easing: 'easeOutExpo',
+                    complete: () => particle.remove()
+                }});
+            }}
+        }};
+
+        card.addEventListener('mouseenter', triggerBurst);
+        card.addEventListener('click', triggerBurst);
+    }});
+}}
+
 window.addEventListener('DOMContentLoaded', () => {{
     build();
     initFilters();
@@ -644,6 +787,7 @@ window.addEventListener('DOMContentLoaded', () => {{
     initCustomCursor();
     initVideoModal();
     initAnimations();
+    initFundersAnimation();
 }});
 </script>
 </body>

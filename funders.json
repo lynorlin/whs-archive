@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Founding Patron",
+    "role": "Legacy Benefactor",
+    "tier": "Diamond Patron",
+    "note": "The primary visionary who funded and made the creation of this permanent archive possible."
+  },
+  {
+    "name": "WHS Alumni Supporters",
+    "role": "Community Sponsors",
+    "tier": "Gold Backer",
+    "note": "Generous contributions dedicated to keeping the archive servers and memories running."
+  },
+  {
+    "name": "Class of 2026 Friends",
+    "role": "Archive Keepers",
+    "tier": "Honorary Supporter",
+    "note": "Supporting the preservation of high school memories for every student to cherish forever."
+  }
+]
