@@ -4,12 +4,32 @@
         {
             "date": "2026-09-04",
             "name": "Alumni Fun Day",
-            "desc": "A celebration for the school's 60th anniversary to help alumni reconnect and relive memories."
+            "desc": "A day for alumni to reconnect, relive memories, and celebrate the WHS spirit."
         },
         {
             "date": "2026-09-05",
             "name": "Alumni Sports Day",
-            "desc": "A sports event held as part of the WHS 60th anniversary celebrations for alumni."
+            "desc": "A sports event held for the alumni community."
+        },
+        {
+            "date": "2024-01-01",
+            "name": "Dussehra 2024",
+            "desc": "Archive of moments and heritage from Dussehra 2024."
+        },
+        {
+            "date": "2023-03-08",
+            "name": "Women's Day 2023",
+            "desc": "Archive of Women's Day 2023 celebrations."
+        },
+        {
+            "date": "2023-04-01",
+            "name": "April 2023",
+            "desc": "Archive of school moments from April 2023."
+        },
+        {
+            "date": "2022-09-01",
+            "name": "September 2022",
+            "desc": "Archive of school moments from September 2022."
         }
     ]
 }
