@@ -4,12 +4,12 @@
         {
             "date": "2026-09-04",
             "name": "Alumni Fun Day",
-            "desc": "A celebration for alumni to reconnect and relive memories as part of WHS's 60th anniversary."
+            "desc": "A day for alumni to reconnect, relive memories, and celebrate the WHS spirit."
         },
         {
             "date": "2026-09-05",
             "name": "Alumni Sports Day",
-            "desc": "An event for alumni to celebrate the WHS spirit through sports."
+            "desc": "A sports day event organized for the alumni community."
         }
     ]
 }
