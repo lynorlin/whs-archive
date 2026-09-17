@@ -1,15 +1,4 @@
 {
     "upcoming": [],
-    "past": [
-        {
-            "date": "2026-09-04",
-            "name": "Alumni Fun Day",
-            "desc": "An event held as part of the 60th-anniversary celebration of Woodlands House School."
-        },
-        {
-            "date": "2026-09-05",
-            "name": "Alumni Sports Day",
-            "desc": "An event held as part of the 60th-anniversary celebration of Woodlands House School."
-        }
-    ]
+    "past": []
 }
